@@ -9,6 +9,8 @@ import Data.List
 import Data.Maybe
 import qualified Data.Map as Map
 import qualified CompiledMorseBook as Book
+import Control.Exception (catch, SomeException)
+import Text.Read (readMaybe)
 
 -- ============================================================================
 -- 1. 将棋盤と駒の基本データ構造
@@ -358,21 +360,59 @@ f5SyzygyFilter state moves =
 -- 4. モースポテンシャル ＆ 駒得（Material）統合評価関数
 -- ============================================================================
 
+-- | 玉の現在位置を取得する
+findKing :: Player -> Board -> Maybe Square
+findKing plr b = listToMaybe [sq | (sq, Piece p pt) <- Map.toList b, p == plr, pt == King]
+
 pieceValue :: PieceType -> Double
 pieceValue Pawn    = 100.0
 pieceValue Lance   = 300.0
-pieceValue Knight  = 400.0
+pieceValue Knight  = 350.0
 pieceValue Silver  = 500.0
 pieceValue Gold    = 600.0
-pieceValue Bishop  = 800.0
+pieceValue Bishop  = 850.0
 pieceValue Rook    = 1000.0
 pieceValue King    = 15000.0
-pieceValue PPawn   = 600.0
-pieceValue PLance  = 600.0
-pieceValue PKnight = 600.0
-pieceValue PSilver = 600.0
-pieceValue PBishop = 1100.0
-pieceValue PRook   = 1300.0
+pieceValue PPawn   = 550.0  -- と金は金と同等の破壊力
+pieceValue PLance  = 500.0
+pieceValue PKnight = 500.0
+pieceValue PSilver = 550.0
+pieceValue PBishop = 1150.0 -- 馬
+pieceValue PRook   = 1350.0 -- 龍
+
+-- ============================================================================
+-- 4.1 中盤強化学習パラメータ (Midgame Reinforcement Weights)
+-- ============================================================================
+
+data MidgameWeights = MidgameWeights
+  { wMaterial       :: !Double -- 駒得重み (標準 1.0)
+  , wMorseDanger    :: !Double -- モース玉ポテンシャル重み (標準 6.0)
+  , wAttack         :: !Double -- 中盤攻め筋（成駒・玉頭圧力・拠点）重み (標準 1.3)
+  , wDefense        :: !Double -- 中盤受け筋（金銀囲い・連結・敵成駒排除）重み (標準 1.3)
+  , wKakuto         :: !Double -- 序盤角頭・桂頭防衛重み (標準 1.0)
+  , wLoosePenalty   :: !Double -- 放れ駒ペナルティ重み (標準 1.0)
+  } deriving (Show, Read, Eq)
+
+defaultWeights :: MidgameWeights
+defaultWeights = MidgameWeights
+  { wMaterial       = 1.0
+  , wMorseDanger    = 6.0
+  , wAttack         = 1.3
+  , wDefense        = 1.3
+  , wKakuto         = 1.0
+  , wLoosePenalty   = 1.0
+  }
+
+-- | 設定ファイルから中盤学習重みを読み込む（存在しない場合は defaultWeights）
+loadMidgameWeights :: IO MidgameWeights
+loadMidgameWeights = do
+  let configFile = "midgame_weights.config"
+  catch (do
+    content <- readFile configFile
+    case readMaybe content of
+      Just w  -> return w
+      Nothing -> return defaultWeights
+    ) (\(_ :: SomeException) -> return defaultWeights)
 
 evalMaterial :: Player -> State -> Double
 evalMaterial plr st =
@@ -398,7 +438,6 @@ evalMorsePotential player bd =
           wallPenalties = sum [ if outOfBounds sq || Map.member sq bd then 0.0 else 1.5 | sq <- surroundings ]
       in influenceSum + wallPenalties
   where
-    findKing plr b = listToMaybe [sq | (sq, Piece p pt) <- Map.toList b, p == plr, pt == King]
     dist (x1, y1) (x2, y2) = abs (x1 - x2) + abs (y1 - y2)
     outOfBounds (x, y) = x < 1 || x > 9 || y < 1 || y > 9
 
@@ -480,17 +519,132 @@ evalLoosePieces plr st =
       oppLoose = countLoose opp
   in (fromIntegral oppLoose - fromIntegral myLoose) * 40.0
 
--- 局面の総合評価：(敵玉のモースポテンシャル - 自玉のモースポテンシャル) + (駒得マテリアル差) + 角頭桂頭防衛 + 放れ駒ペナルティ
-evaluateState :: Player -> State -> Double
-evaluateState player st =
+-- | 移動先マスが相手の利きに晒されており、かつ味方の紐が付いていない（または安い駒で取られる）大悪手・タダ捨て手か判定
+isBlunderMove :: State -> Move -> Bool
+isBlunderMove st m =
+  let plr = turn st
+      opp = opponent plr
+      bd = board st
+      (toSq, ptMoved) = case m of
+        NormalMove from to _ ->
+          case Map.lookup from bd of
+            Just (Piece _ pt) -> (to, pt)
+            Nothing           -> (to, Pawn)
+        DropMove pt to       -> (to, pt)
+      
+      -- 移動先マスにおける相手の利き駒一覧
+      oppAttackers = getPiecesCovering opp toSq bd
+      -- 移動後にそのマスに味方の利き（紐）が付いているか
+      nextBd = board (applyMove m st)
+      friendlyDefenders = [ fromSq | (fromSq, Piece p _) <- Map.toList nextBd
+                                   , p == plr, fromSq /= toSq
+                                   , canPieceReachTarget fromSq (Piece plr ptMoved) toSq nextBd ]
+  in if null oppAttackers
+     then False
+     else
+       let minOppVal = minimum [ pieceValue oppPt | (_, Piece _ oppPt) <- oppAttackers ]
+           movedVal  = pieceValue ptMoved
+       in if null friendlyDefenders
+          then ptMoved /= Pawn -- 紐なしで歩以外の駒（銀、金、飛、角、桂、香）を相手の利きに飛び込ませるのは絶対タダ捨て！
+          else movedVal > minOppVal + 250.0 -- 紐があっても、歩などで金銀飛角を取られる大損交換は悪手
+
+-- | 中盤の攻め筋評価（成駒の破壊力、敵玉包囲度・玉頭圧力、敵陣への拠点・垂れ歩）
+evalMidgameAttack :: Player -> State -> Double
+evalMidgameAttack plr st =
   let bd = board st
+      opp = opponent plr
+      oppKingSq = findKing opp bd
+      
+      -- 1. 成駒（龍・馬・と金）の威力
+      promotedBonus = sum
+        [ case pt of
+            PRook   -> if inEnemyCamp plr (snd sq) then 320.0 else 200.0
+            PBishop -> 240.0
+            PPawn   -> if inEnemyCamp plr (snd sq) then 160.0 else 90.0
+            PSilver -> 110.0
+            PKnight -> 90.0
+            PLance  -> 90.0
+            _       -> 0.0
+        | (sq, Piece p pt) <- Map.toList bd, p == plr
+        ]
+      
+      -- 2. 敵玉周辺への利き・圧力（玉頭・包囲網）
+      kingPressureBonus = case oppKingSq of
+        Nothing -> 0.0
+        Just (kx, ky) ->
+          let kingNeighbors = [ (kx + dx, ky + dy) | dx <- [-1..1], dy <- [-1..1], (dx, dy) /= (0, 0), not (isOutOfBounds (kx + dx, ky + dy)) ]
+              headSq = (kx, ky + (if opp == Sente then -1 else 1)) -- 敵玉の頭
+              neighborPressures = sum [ if isCoveredBy plr sq bd then 40.0 else 0.0 | sq <- kingNeighbors ]
+              headPressure = if isCoveredBy plr headSq bd then 80.0 else 0.0
+          in neighborPressures + headPressure
+      
+      -- 3. 敵陣深くへの拠点（と金・歩）
+      footholdBonus = sum
+        [ 50.0 | (sq, Piece p pt) <- Map.toList bd, p == plr, inEnemyCamp plr (snd sq), pt `elem` [Pawn, PPawn] ]
+  in promotedBonus + kingPressureBonus + footholdBonus
+  where
+    inEnemyCamp Sente y = y <= 3
+    inEnemyCamp Gote  y = y >= 7
+
+-- | 中盤の受け筋評価（自玉守備陣・金銀の近接配置と連結スクラム、敵成駒の侵入阻止）
+evalMidgameDefense :: Player -> State -> Double
+evalMidgameDefense plr st =
+  let bd = board st
+      opp = opponent plr
+      myKingSq = findKing plr bd
+      
+      -- 1. 自玉の守備陣（金銀の近接配置と連結スクラム）
+      (castleBonus, dangerAroundKing) = case myKingSq of
+        Nothing -> (0.0, 0.0)
+        Just (kx, ky) ->
+          let myGuards = [ (sq, pt) | (sq, Piece p pt) <- Map.toList bd
+                                    , p == plr
+                                    , pt `elem` [Gold, Silver, PPawn, PSilver]
+                                    , abs (fst sq - kx) <= 2 && abs (snd sq - ky) <= 2 ]
+              guardCount = length myGuards
+              -- 金銀同士の紐付き（連結度）
+              linkPairs = [ 1 | ((sq1, _), (sq2, _)) <- [(g1, g2) | g1 <- myGuards, g2 <- myGuards, fst g1 < fst g2]
+                              , canPieceReachTarget sq1 (Piece plr Gold) sq2 bd ]
+              connectedBonus = fromIntegral (sum linkPairs) * 50.0
+              guardBonus = fromIntegral guardCount * 45.0
+              
+              -- 自玉周辺への敵利きの侵入ペナルティ
+              kingNeighbors = [ (kx + dx, ky + dy) | dx <- [-1..1], dy <- [-1..1], (dx, dy) /= (0, 0), not (isOutOfBounds (kx + dx, ky + dy)) ]
+              enemyAttacks = sum [ if isCoveredBy opp sq bd then 50.0 else 0.0 | sq <- kingNeighbors ]
+          in (guardBonus + connectedBonus, enemyAttacks)
+      
+      -- 2. 自陣への敵の成駒（龍・馬）侵入ペナルティ
+      enemyPromotedInCamp = sum
+        [ case pt of
+            PRook   -> 260.0
+            PBishop -> 210.0
+            PPawn   -> 110.0
+            _       -> 0.0
+        | (sq, Piece p pt) <- Map.toList bd, p == opp, inMyCamp plr (snd sq)
+        ]
+  in castleBonus - dangerAroundKing - enemyPromotedInCamp
+  where
+    inMyCamp Sente y = y >= 7
+    inMyCamp Gote  y = y <= 3
+
+-- | 局面の総合評価：重み付き中盤攻防統合評価関数
+evaluateState :: MidgameWeights -> Player -> State -> Double
+evaluateState weights player st =
+  let opp = opponent player
+      bd = board st
       myDanger = evalMorsePotential player bd
-      enemyDanger = evalMorsePotential (opponent player) bd
-      morseAdvantage = (enemyDanger - myDanger) * 10.0
-      materialAdvantage = evalMaterial player st
-      kakutoKeitoAdvantage = evalKakutoKeitoDefense player st
-      looseAdvantage = evalLoosePieces player st
-  in morseAdvantage + materialAdvantage + kakutoKeitoAdvantage + looseAdvantage
+      enemyDanger = evalMorsePotential opp bd
+      morseAdvantage = (enemyDanger - myDanger) * wMorseDanger weights
+      materialAdvantage = evalMaterial player st * wMaterial weights
+      attackAdvantage = (evalMidgameAttack player st - evalMidgameAttack opp st) * wAttack weights
+      defenseAdvantage = (evalMidgameDefense player st - evalMidgameDefense opp st) * wDefense weights
+      kakutoKeitoAdvantage = evalKakutoKeitoDefense player st * wKakuto weights
+      looseAdvantage = evalLoosePieces player st * wLoosePenalty weights
+  in materialAdvantage + morseAdvantage + attackAdvantage + defenseAdvantage + kakutoKeitoAdvantage + looseAdvantage
+
+-- | デフォルト重みでの評価関数（後方互換）
+evaluateStateDefault :: Player -> State -> Double
+evaluateStateDefault = evaluateState defaultWeights
 
 -- ============================================================================
 -- 5. 合法手生成
@@ -627,14 +781,41 @@ lookupBookMove currentMoves st =
   in listToMaybe sortedMoves
 
 -- ============================================================================
--- 8. 最善手選択 (型レベル定跡 ＆ 3手先読みα-β探索 ＆ Garside置換表 ＆ F5フィルター ＆ 千日手回避)
+-- 8. 最善手選択 (型レベル定跡 ＆ 静止探索付きα-β探索 ＆ Garside置換表 ＆ F5フィルター ＆ 千日手回避)
 -- ============================================================================
 
--- | ネガマックス α-β 探索 (自手番の視点でのスコアと最善手を返す: 3-Ply Lookahead)
-searchAlphaBeta :: Int -> Double -> Double -> State -> (Double, Maybe Move)
-searchAlphaBeta 0 _ _ st =
-  (evaluateState (turn st) st, Nothing)
-searchAlphaBeta depth alpha beta st =
+-- | 静止探索（駒の取り合いが落ち着くまで捕獲手を先読みする: 水平線効果の解消）
+searchQuiescence :: MidgameWeights -> Int -> Double -> Double -> State -> Double
+searchQuiescence weights 0 _ _ st = evaluateState weights (turn st) st
+searchQuiescence weights qdepth alpha beta st =
+  let standPat = evaluateState weights (turn st) st
+  in if standPat >= beta
+     then beta
+     else
+       let curAlpha = max alpha standPat
+           rawMoves = generateMoves st
+           captures = filter isCaptureMove rawMoves
+           f5Captures = f5SyzygyFilter st captures
+       in if null f5Captures
+          then curAlpha
+          else qLoop f5Captures curAlpha beta
+  where
+    isCaptureMove (NormalMove _ to _) = Map.member to (board st)
+    isCaptureMove (DropMove _ _)       = False
+
+    qLoop [] curA _ = curA
+    qLoop (m:ms) curA b =
+      let nextSt = applyMove m st
+          score = - searchQuiescence weights (qdepth - 1) (-b) (-curA) nextSt
+      in if score >= b
+         then b
+         else qLoop ms (max curA score) b
+
+-- | ネガマックス α-β 探索 (自手番の視点でのスコアと最善手を返す: 3-Ply + 静止探索2-Ply)
+searchAlphaBeta :: MidgameWeights -> Int -> Double -> Double -> State -> (Double, Maybe Move)
+searchAlphaBeta weights 0 alpha beta st =
+  (searchQuiescence weights 2 alpha beta st, Nothing)
+searchAlphaBeta weights depth alpha beta st =
   let rawMoves = generateMoves st
       f5Moves = f5SyzygyFilter st rawMoves
       (_sennichite, safeMoves) = partition (\m -> 
@@ -649,18 +830,21 @@ searchAlphaBeta depth alpha beta st =
      else if null effectiveMoves
        then (0.0, Nothing)     -- 千日手引き分け
        else
-         -- 枝刈り効率化のため、1手先静的評価で降順ソート (Move Ordering)
-         let orderedMoves = sortBy (\m1 m2 ->
-               let s1 = evaluateState (turn st) (applyMove m1 st)
-                   s2 = evaluateState (turn st) (applyMove m2 st)
-               in compare s2 s1) effectiveMoves
-             topMoves = take (if depth >= 2 then 6 else 4) orderedMoves
+         -- 枝刈り効率化のため、タダ捨て手を強烈ペナルティ化し、1手先静的評価で降順ソート
+         let scoreMove m =
+               let isBlunder = isBlunderMove st m
+                   blunderPen = if isBlunder then -2000.0 else 0.0
+                   nextSt = applyMove m st
+                   s = evaluateState weights (turn st) nextSt
+               in s + blunderPen
+             orderedMoves = sortBy (\m1 m2 -> compare (scoreMove m2) (scoreMove m1)) effectiveMoves
+             topMoves = take (if depth >= 2 then 8 else 6) orderedMoves
          in loop topMoves alpha Nothing
   where
     loop [] curAlpha bestMv = (curAlpha, bestMv)
     loop (m:ms) curAlpha bestMv =
       let nextSt = applyMove m st
-          (childScore, _) = searchAlphaBeta (depth - 1) (-beta) (-curAlpha) nextSt
+          (childScore, _) = searchAlphaBeta weights (depth - 1) (-beta) (-curAlpha) nextSt
           score = -childScore
       in if score >= beta
          then (score, Just m)
@@ -668,15 +852,15 @@ searchAlphaBeta depth alpha beta st =
               then loop ms score (Just m)
               else loop ms curAlpha (if isJust bestMv then bestMv else Just m)
 
-searchBestMoveWithCache :: State -> (Either String Move, State)
-searchBestMoveWithCache state =
+searchBestMoveWithCache :: MidgameWeights -> State -> (Either String Move, State)
+searchBestMoveWithCache weights state =
   -- 1. まず型レベル定跡（V-Path スライド）を照会
   case lookupBookMove (moveHistory state) state of
     Just bookMove ->
       -- ★ 定跡ヒット：探索なしでノータイム指し
       (Right bookMove, state)
     Nothing ->
-      -- 2. 定跡外または定跡完了後は、3手先読みα-β探索（Garsideキャッシュ + F5フィルター + 角頭防衛）
+      -- 2. 定跡外または定跡完了後は、中盤強化学習先読みα-β探索（Garsideキャッシュ + F5フィルター + タダ捨て防止 + 静止探索）
       let moves = generateMoves state
           f5FilteredMoves = f5SyzygyFilter state moves
           
@@ -695,13 +879,12 @@ searchBestMoveWithCache state =
              case Map.lookup (positionKey state) (cache state) of
                Just (_score, mv) | mv `elem` effectiveMoves -> (Right mv, state)
                _ ->
-                 let (bestScore, maybeBestMove) = searchAlphaBeta 3 (-99999.0) 99999.0 state
+                 let (bestScore, maybeBestMove) = searchAlphaBeta weights 3 (-99999.0) 99999.0 state
                  in case maybeBestMove of
                       Just bestMove ->
                         let newCache = Map.insert (positionKey state) (bestScore, bestMove) (cache state)
                         in (Right bestMove, state { cache = newCache })
                       Nothing ->
-                        -- 万が一見つからない場合は安全な手から選択
                         case effectiveMoves of
                           (m:_) -> (Right m, state)
                           []    -> (Left "resign", state)
@@ -714,27 +897,29 @@ main :: IO ()
 main = do
   hSetBuffering stdin LineBuffering
   hSetBuffering stdout LineBuffering
-  usiLoop initState
+  weights <- loadMidgameWeights
+  usiLoop weights initState
 
-usiLoop :: State -> IO ()
-usiLoop currentState = do
+usiLoop :: MidgameWeights -> State -> IO ()
+usiLoop weights currentState = do
   line <- getLine
   let tokens = words line
   case tokens of
-    [] -> usiLoop currentState
+    [] -> usiLoop weights currentState
     (cmd:_) -> case cmd of
       "usi" -> do
         putStrLn "id name ShogiMorseEngine_Haskell_with_F5_Garside_and_Sennichite"
         putStrLn "id author Shogi_Topology_Project"
         putStrLn "usiok"
-        usiLoop currentState
+        usiLoop weights currentState
       
       "isready" -> do
         putStrLn "readyok"
-        usiLoop currentState
+        usiLoop weights currentState
       
       "usinewgame" -> do
-        usiLoop initState { cache = Map.empty }
+        w <- loadMidgameWeights
+        usiLoop w initState { cache = Map.empty }
       
       "position" -> do
         let movesTokens = case elemIndex "moves" tokens of
@@ -748,22 +933,22 @@ usiLoop currentState = do
               ("sfen":sfenParts) -> parseSfen sfenParts
               _ -> initState
             finalState = foldl' (\st mvStr -> applyMove (parseMove mvStr) st) baseState movesTokens
-        usiLoop finalState { cache = cache currentState, moveHistory = movesTokens }
+        usiLoop weights finalState { cache = cache currentState, moveHistory = movesTokens }
       
       "go" -> do
-        let (res, nextState) = searchBestMoveWithCache currentState
+        let (res, nextState) = searchBestMoveWithCache weights currentState
         case res of
           Left "draw" -> do
             putStrLn "bestmove draw"
-            usiLoop nextState
+            usiLoop weights nextState
           Left _ -> do
             putStrLn "bestmove resign"
-            usiLoop nextState
+            usiLoop weights nextState
           Right best -> do
             putStrLn $ "bestmove " ++ showMove best
-            usiLoop nextState
+            usiLoop weights nextState
       
       "quit" -> do
         exitSuccess
       
-      _ -> usiLoop currentState
+      _ -> usiLoop weights currentState
