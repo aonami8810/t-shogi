@@ -394,7 +394,11 @@ data MidgameWeights = MidgameWeights
   , wAttack         :: !Double -- 中盤攻め筋（成駒・玉頭圧力・拠点）重み (標準 1.3)
   , wDefense        :: !Double -- 中盤受け筋（金銀囲い・連結・敵成駒排除）重み (標準 1.3)
   , wKakuto         :: !Double -- 序盤角頭・桂頭防衛重み (標準 1.0)
-  , wLoosePenalty   :: !Double -- 放れ駒ペナルティ重み (標準 1.0)
+  , wLoosePenalty   :: !Double -- 駒損（放れ駒・大損交換）ペナルティ重み (標準 1.2)
+  , wPieceControl   :: !Double -- 駒の利き（大駒射線・銀桂攻撃参加・マス支配）重み (標準 1.5)
+  , wTempoLoss      :: !Double -- 手得・手損（18香無駄上がり・飛車先不突き金寄り等の手損排除、手得追求）重み (標準 2.0)
+  , wGoldKingCoord  :: !Double -- 金と玉の連携（金玉近接・守護スクラム）重み (標準 1.5)
+  , wDistanceToMate :: !Double -- 詰み筋までの距離（DTM短縮・QEGTB接続）重み (標準 5.0)
   } deriving (Show, Read, Eq)
 
 defaultWeights :: MidgameWeights
@@ -404,7 +408,11 @@ defaultWeights = MidgameWeights
   , wAttack         = 1.3
   , wDefense        = 1.3
   , wKakuto         = 1.0
-  , wLoosePenalty   = 1.0
+  , wLoosePenalty   = 1.2
+  , wPieceControl   = 1.5
+  , wTempoLoss      = 2.0
+  , wGoldKingCoord  = 1.5
+  , wDistanceToMate = 5.0
   }
 
 -- | 設定ファイルから中盤学習重みを読み込む（存在しない場合は defaultWeights）
@@ -464,8 +472,8 @@ isPushingKakutoPawn st m =
         _                       -> True  -- 角が2二にいる/飛車がいないのに2三歩を突くのは絶対禁止
     _ -> False
 
--- | 無駄な香車上がりなどの手損手を判定
--- （穴熊の囲い手順や端の交戦・緊迫がない場合の1段目香車上がりを完全排除）
+-- | 無駄な香車上がりなどの手損手を厳密に判定
+-- （1八香、9八香、1二香、9二香など、端攻めがない限り手損として徹底排除）
 isFutileLanceLift :: State -> Move -> Bool
 isFutileLanceLift st (NormalMove from to _) =
   let bd = board st
@@ -474,30 +482,202 @@ isFutileLanceLift st (NormalMove from to _) =
        Just (Piece p Lance) | p == plr ->
          let (fx, fy) = from
              (tx, ty) = to
-             isOneStepForward = (fx == tx) && (if plr == Sente then fy - ty == 1 else ty - fy == 1)
-             isFromBackRank = if plr == Sente then fy == 9 else fy == 1
-         in if isFromBackRank && isOneStepForward
-            then
-              -- 穴熊（玉が香車元位置付近にいる/向かっている）かチェック
-              let kingPos = findKing plr bd
-                  isAnagumaPreparation = case kingPos of
-                    Just (kx, ky) ->
-                      if plr == Sente
-                        then (fx == 1 && kx <= 2 && ky >= 8) || (fx == 9 && kx >= 8 && ky >= 8)
-                        else (fx == 1 && kx <= 2 && ky <= 2) || (fx == 9 && kx >= 8 && ky <= 2)
-                    Nothing -> False
-                  
-                  -- 端攻め・端受け（相手の端歩・端駒が迫っている）かチェック
-                  opp = opponent plr
-                  hasOpponentEdgeThreat =
-                    any (\((ox, oy), Piece op _) ->
-                          op == opp && ox == fx &&
-                          (if plr == Sente then oy >= 4 else oy <= 6)
-                        ) (Map.toList bd)
-              in not isAnagumaPreparation && not hasOpponentEdgeThreat
-            else False
+             -- 1段目または2段目からの香車前進
+             isFromBackRank = if plr == Sente then fy >= 8 else fy <= 2
+             -- 端攻め・端受け（相手の端歩・端駒が迫っている）かチェック
+             opp = opponent plr
+             hasOpponentEdgeThreat =
+               any (\((ox, oy), Piece op _) ->
+                     op == opp && ox == fx &&
+                     (if plr == Sente then oy >= 4 else oy <= 6)
+                   ) (Map.toList bd)
+             -- 穴熊の完成形（玉がすでに香車の初期位置に入城している場合のみ例外許可）
+             kingPos = findKing plr bd
+             isCompletedAnaguma = case kingPos of
+               Just (kx, ky) -> if plr == Sente
+                                  then (fx == 1 && kx == 1 && ky == 9) || (fx == 9 && kx == 9 && ky == 9)
+                                  else (fx == 1 && kx == 1 && ky == 1) || (fx == 9 && kx == 9 && ky == 1)
+               Nothing -> False
+         in isFromBackRank && not hasOpponentEdgeThreat && not isCompletedAnaguma
        _ -> False
 isFutileLanceLift _ _ = False
+
+-- | 1. 駒の利きと活用度（大駒射線・銀桂攻撃参加・マス支配度）
+evalPieceControl :: Player -> State -> Double
+evalPieceControl plr st =
+  let bd = board st
+      opp = opponent plr
+      dirY = if plr == Sente then -1 else 1
+
+      -- A. 大駒（飛車・角）の射線と活用
+      evalMajorPieces p =
+        let pDir = if p == Sente then -1 else 1
+            myRooks = [ (sq, pt) | (sq, Piece owner pt) <- Map.toList bd, owner == p, pt `elem` [Rook, PRook] ]
+            myBishops = [ (sq, pt) | (sq, Piece owner pt) <- Map.toList bd, owner == p, pt `elem` [Bishop, PBishop] ]
+            
+            -- 飛車先の歩突き・縦の射線
+            rookScore = sum
+              [ let (rx, ry) = sq
+                    pawnFrontSq = (rx, ry + pDir)
+                    hasPawnBlocking = case Map.lookup pawnFrontSq bd of
+                                        Just (Piece owner Pawn) | owner == p -> True
+                                        _ -> False
+                    -- 飛車の縦の利き（前方に何マス伸びているか）
+                    forwardSquares = takeWhile (\s -> not (isOutOfBounds s) && not (isFriendlySquare s p bd))
+                                               [ (rx, ry + d * pDir) | d <- [1..8] ]
+                    forwardRookMobility = fromIntegral (length forwardSquares) * 20.0
+                    -- 飛車先の歩が突かれている（初期位置から前進している）ボーナス
+                    pawnAdvancedBonus =
+                      if p == Sente
+                        then if ry == 8 && not hasPawnBlocking then 90.0 else 0.0
+                        else if ry == 2 && not hasPawnBlocking then 90.0 else 0.0
+                in forwardRookMobility + pawnAdvancedBonus
+              | (sq, _) <- myRooks
+              ]
+            
+            -- 角道の開放と斜めの射線
+            bishopScore = sum
+              [ let (bx, by) = sq
+                    diagTargets = [ (bx + d*dx, by + d*dy) | dx <- [-1, 1], dy <- [-1, 1], d <- [1..8] ]
+                    openDiags = length [ s | s <- diagTargets, not (isOutOfBounds s), canPieceReachTarget sq (Piece p Bishop) s bd ]
+                    -- 7六歩(先手) / 3四歩(後手) による角道オープンボーナス
+                    isKakudoOpen = if p == Sente
+                                     then Map.lookup (7, 6) bd == Just (Piece Sente Pawn)
+                                     else Map.lookup (3, 4) bd == Just (Piece Gote Pawn)
+                    kakudoBonus = if isKakudoOpen then 70.0 else 0.0
+                in fromIntegral openDiags * 8.0 + kakudoBonus
+              | (sq, _) <- myBishops
+              ]
+        in rookScore + bishopScore
+
+      -- B. 銀と桂馬の攻撃参加（Forward Attack Mobility）
+      evalSilverKnightAttack p =
+        let mySilvers = [ sq | (sq, Piece owner pt) <- Map.toList bd, owner == p, pt `elem` [Silver, PSilver] ]
+            myKnights = [ sq | (sq, Piece owner pt) <- Map.toList bd, owner == p, pt `elem` [Knight, PKnight] ]
+            
+            -- 銀の前進・攻撃参加
+            silverScore = sum
+              [ let (_, sy) = sq
+                    advancement = if p == Sente then 9 - sy else sy - 1
+                    advanceBonus = if advancement >= 2 then fromIntegral advancement * 35.0 else 0.0
+                    inBattleZone = if p == Sente then sy <= 6 else sy >= 4
+                    battleBonus = if inBattleZone then 60.0 else 0.0
+                in advanceBonus + battleBonus
+              | sq <- mySilvers
+              ]
+            
+            -- 桂馬の跳躍・攻撃参加
+            knightScore = sum
+              [ let (_, ky) = sq
+                    advancement = if p == Sente then 9 - ky else ky - 1
+                    advanceBonus = if advancement >= 2 then fromIntegral advancement * 40.0 else 0.0
+                in advanceBonus
+              | sq <- myKnights
+              ]
+        in silverScore + knightScore
+
+  in (evalMajorPieces plr - evalMajorPieces opp) + (evalSilverKnightAttack plr - evalSilverKnightAttack opp)
+
+-- | 2. 手得・手損判定（18香無駄上がり、飛車先不突き金寄り等の手損を排除し手得を最大化）
+evalTempoLoss :: Player -> State -> Double
+evalTempoLoss plr st =
+  let bd = board st
+      opp = opponent plr
+      
+      -- 18香車（1九香〜1八香、9九香〜9八香、後手1一香〜1二香、9一香〜9二香）の無駄上がり検知
+      lanceIdlingPenalty p =
+        let myLances = [ sq | (sq, Piece owner pt) <- Map.toList bd, owner == p, pt == Lance ]
+            isEdgeAttacked x =
+              any (\((ox, oy), Piece op _) -> op /= p && ox == x && (if p == Sente then oy >= 4 else oy <= 6)) (Map.toList bd)
+            kingSq = findKing p bd
+            isTrueAnaguma = case kingSq of
+              Just (kx, ky) -> if p == Sente
+                                 then (kx == 1 && ky == 9) || (kx == 9 && ky == 9)
+                                 else (kx == 1 && ky == 1) || (kx == 9 && ky == 1)
+              Nothing -> False
+            penalties = sum
+              [ let (lx, ly) = sq
+                    isFutilePos = if p == Sente
+                                    then (lx == 1 && ly == 8) || (lx == 9 && ly == 8)
+                                    else (lx == 1 && ly == 2) || (lx == 9 && ly == 2)
+                in if isFutilePos && not (isEdgeAttacked lx) && not isTrueAnaguma
+                     then -600.0 -- 強烈な18香無駄上がり手損ペナルティ！
+                     else 0.0
+              | sq <- myLances
+              ]
+        in penalties
+
+      -- 飛車先不突きなのに金が中央に寄る手損
+      driftGoldWithoutRookAdvance p =
+        let myRooks = [ sq | (sq, Piece owner pt) <- Map.toList bd, owner == p, pt == Rook ]
+            myGolds = [ sq | (sq, Piece owner pt) <- Map.toList bd, owner == p, pt == Gold ]
+            isRookPawnNotAdvanced = any (\(rx, _) ->
+              let pawnSq = (rx, if p == Sente then 7 else 3)
+              in Map.lookup pawnSq bd == Just (Piece p Pawn)
+              ) myRooks
+            isGoldDrifting = any (\(gx, gy) ->
+              if p == Sente
+                then gy == 8 && (gx == 5 || gx == 6 || gx == 4)
+                else gy == 2 && (gx == 5 || gx == 6 || gx == 4)
+              ) myGolds
+        in if isRookPawnNotAdvanced && isGoldDrifting
+             then -250.0 -- 飛車先不突き金寄り手損ペナルティ！
+             else 0.0
+
+  in (lanceIdlingPenalty plr + driftGoldWithoutRookAdvance plr) -
+     (lanceIdlingPenalty opp + driftGoldWithoutRookAdvance opp)
+
+-- | 3. 金と玉の連携（金玉近接・守護スクラム・遊離金排除）
+evalGoldKingCoordination :: Player -> State -> Double
+evalGoldKingCoordination plr st =
+  let bd = board st
+      opp = opponent plr
+      
+      evalCoord p =
+        let kingSq = findKing p bd
+            myGolds = [ sq | (sq, Piece owner pt) <- Map.toList bd, owner == p, pt `elem` [Gold, PPawn, PSilver, PKnight, PLance] ]
+        in case kingSq of
+             Nothing -> 0.0
+             Just (kx, ky) ->
+               sum [ let dist = abs (gx - kx) + abs (gy - ky)
+                         coversKing = canPieceReachTarget (gx, gy) (Piece p Gold) (kx, ky) bd
+                         coverBonus = if coversKing then 70.0 else 0.0
+                         distScore = case dist of
+                           1 -> 120.0 -- ぴったり隣接（最強の守護連携）
+                           2 -> 80.0  -- 近接（連携囲い）
+                           3 -> 10.0
+                           _ -> -80.0 -- 玉から遠く離れて孤立（遊離金ペナルティ）
+                     in distScore + coverBonus
+                   | (gx, gy) <- myGolds
+                   ]
+  in evalCoord plr - evalCoord opp
+
+-- | 4. 詰み筋までの距離（DTM短縮・QEGTB接続・敵玉退路封鎖度）
+evalDistanceToMate :: Player -> State -> Double
+evalDistanceToMate plr st =
+  let bd = board st
+      opp = opponent plr
+      oppKingSq = findKing opp bd
+      
+      qegtbBonus = case lookupQuotientTablebase st of
+        Just (dtm, _) -> 10000.0 - fromIntegral dtm * 100.0
+        Nothing       -> 0.0
+      
+      kingNetScore = case oppKingSq of
+        Nothing -> 5000.0
+        Just (kx, ky) ->
+          let surroundings = [ (kx + dx, ky + dy) | dx <- [-1..1], dy <- [-1..1], (dx, dy) /= (0, 0), not (isOutOfBounds (kx + dx, ky + dy)) ]
+              blockedOrCovered = length [ s | s <- surroundings, Map.member s bd || isCoveredBy plr s bd ]
+              totalNeighbors = length surroundings
+              netRatio = fromIntegral blockedOrCovered / fromIntegral totalNeighbors
+          in netRatio * 200.0
+  in qegtbBonus + kingNetScore
+
+isFriendlySquare :: Square -> Player -> Board -> Bool
+isFriendlySquare sq p bd = case Map.lookup sq bd of
+  Just (Piece owner _) -> owner == p
+  Nothing              -> False
+
 
 -- | 角頭および桂頭の防衛評価
 
@@ -667,7 +847,7 @@ evalMidgameDefense plr st =
     inMyCamp Sente y = y >= 7
     inMyCamp Gote  y = y <= 3
 
--- | 局面の総合評価：重み付き中盤攻防統合評価関数
+-- | 局面の総合評価：重み付き中盤攻防統合評価関数（駒の利き・手得・手損・駒得・駒損・金玉連携・詰み筋距離で最適化）
 evaluateState :: MidgameWeights -> Player -> State -> Double
 evaluateState weights player st =
   let opp = opponent player
@@ -680,7 +860,14 @@ evaluateState weights player st =
       defenseAdvantage = (evalMidgameDefense player st - evalMidgameDefense opp st) * wDefense weights
       kakutoKeitoAdvantage = evalKakutoKeitoDefense player st * wKakuto weights
       looseAdvantage = evalLoosePieces player st * wLoosePenalty weights
-  in materialAdvantage + morseAdvantage + attackAdvantage + defenseAdvantage + kakutoKeitoAdvantage + looseAdvantage
+      pieceControlAdvantage = evalPieceControl player st * wPieceControl weights
+      tempoLossAdvantage = evalTempoLoss player st * wTempoLoss weights
+      goldKingCoordAdvantage = evalGoldKingCoordination player st * wGoldKingCoord weights
+      distanceToMateAdvantage = (evalDistanceToMate player st - evalDistanceToMate opp st) * wDistanceToMate weights
+  in materialAdvantage + morseAdvantage + attackAdvantage + defenseAdvantage
+     + kakutoKeitoAdvantage + looseAdvantage + pieceControlAdvantage
+     + tempoLossAdvantage + goldKingCoordAdvantage + distanceToMateAdvantage
+
 
 -- | デフォルト重みでの評価関数（後方互換）
 evaluateStateDefault :: Player -> State -> Double
@@ -878,11 +1065,24 @@ searchAlphaBeta weights depth alpha beta st =
          let scoreMove m =
                let isBlunder = isBlunderMove st m
                    blunderPen = if isBlunder then -2000.0 else 0.0
+                   isFutileLance = isFutileLanceLift st m
+                   lancePen = if isFutileLance then -5000.0 else 0.0
+                   
+                   -- 飛車先の歩突き・角道オープンの最優先化
+                   openBonus = case m of
+                     NormalMove (2, 7) (2, 6) _ | turn st == Sente -> 280.0 -- 2六歩
+                     NormalMove (2, 6) (2, 5) _ | turn st == Sente -> 240.0 -- 2五歩
+                     NormalMove (8, 3) (8, 4) _ | turn st == Gote  -> 280.0 -- 8四歩
+                     NormalMove (8, 4) (8, 5) _ | turn st == Gote  -> 240.0 -- 8五歩
+                     NormalMove (7, 7) (7, 6) _ | turn st == Sente -> 220.0 -- 7六歩
+                     NormalMove (3, 3) (3, 4) _ | turn st == Gote  -> 220.0 -- 3四歩
+                     _ -> 0.0
+                   
                    nextSt = applyMove m st
                    s = evaluateState weights (turn st) nextSt
-               in s + blunderPen
+               in s + blunderPen + lancePen + openBonus
              orderedMoves = sortBy (\m1 m2 -> compare (scoreMove m2) (scoreMove m1)) effectiveMoves
-             topMoves = take (if depth >= 2 then 8 else 6) orderedMoves
+             topMoves = take (if depth >= 2 then 10 else 8) orderedMoves
          in loop topMoves alpha Nothing
   where
     loop [] curAlpha bestMv = (curAlpha, bestMv)

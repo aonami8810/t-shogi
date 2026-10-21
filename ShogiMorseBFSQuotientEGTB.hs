@@ -307,8 +307,8 @@ isPushingKakutoPawn st (NormalMove from to _) =
        _ -> False
 isPushingKakutoPawn _ _ = False
 
--- | 無駄な香車上がりなどの手損手を判定
--- （穴熊の囲い手順や端の交戦・緊迫がない場合の1段目香車上がりを完全排除）
+-- | 無駄な香車上がりなどの手損手を厳密に判定
+-- （1八香、9八香、1二香、9二香など、端攻めがない限り手損として徹底排除）
 isFutileLanceLift :: State -> Move -> Bool
 isFutileLanceLift st (NormalMove from to _) =
   let bd = board st
@@ -317,30 +317,26 @@ isFutileLanceLift st (NormalMove from to _) =
        Just (Piece p Lance) | p == plr ->
          let (fx, fy) = from
              (tx, ty) = to
-             isOneStepForward = (fx == tx) && (if plr == Sente then fy - ty == 1 else ty - fy == 1)
-             isFromBackRank = if plr == Sente then fy == 9 else fy == 1
-         in if isFromBackRank && isOneStepForward
-            then
-              -- 穴熊（玉が香車元位置付近にいる/向かっている）かチェック
-              let kingPos = findKing plr bd
-                  isAnagumaPreparation = case kingPos of
-                    Just (kx, ky) ->
-                      if plr == Sente
-                        then (fx == 1 && kx <= 2 && ky >= 8) || (fx == 9 && kx >= 8 && ky >= 8)
-                        else (fx == 1 && kx <= 2 && ky <= 2) || (fx == 9 && kx >= 8 && ky <= 2)
-                    Nothing -> False
-                  
-                  -- 端攻め・端受け（相手の端歩・端駒が迫っている）かチェック
-                  opp = opponent plr
-                  hasOpponentEdgeThreat =
-                    any (\((ox, oy), Piece op _) ->
-                          op == opp && ox == fx &&
-                          (if plr == Sente then oy >= 4 else oy <= 6)
-                        ) (Map.toList bd)
-              in not isAnagumaPreparation && not hasOpponentEdgeThreat
-            else False
+             -- 1段目または2段目からの香車前進
+             isFromBackRank = if plr == Sente then fy >= 8 else fy <= 2
+             -- 端攻め・端受け（相手の端歩・端駒が迫っている）かチェック
+             opp = opponent plr
+             hasOpponentEdgeThreat =
+               any (\((ox, oy), Piece op _) ->
+                     op == opp && ox == fx &&
+                     (if plr == Sente then oy >= 4 else oy <= 6)
+                   ) (Map.toList bd)
+             -- 穴熊の完成形（玉がすでに香車の初期位置に入城している場合のみ例外許可）
+             kingPos = findKing plr bd
+             isCompletedAnaguma = case kingPos of
+               Just (kx, ky) -> if plr == Sente
+                                  then (fx == 1 && kx == 1 && ky == 9) || (fx == 9 && kx == 9 && ky == 9)
+                                  else (fx == 1 && kx == 1 && ky == 1) || (fx == 9 && kx == 9 && ky == 1)
+               Nothing -> False
+         in isFromBackRank && not hasOpponentEdgeThreat && not isCompletedAnaguma
        _ -> False
 isFutileLanceLift _ _ = False
+
 
 -- | 総合的な手損・悪手判定（定跡本筋や最善応手から完全排除）
 isTempoLossMove :: State -> Move -> Bool
