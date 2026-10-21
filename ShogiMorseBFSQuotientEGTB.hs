@@ -293,6 +293,61 @@ isBlunderMove st m =
           then ptMoved /= Pawn
           else movedVal > minOppVal + 250.0
 
+-- | 角頭の歩を無防備に突いてあっさり取られる大悪手を判定
+isPushingKakutoPawn :: State -> Move -> Bool
+isPushingKakutoPawn st (NormalMove from to _) =
+  let bd = board st
+      plr = turn st
+  in case Map.lookup from bd of
+       Just (Piece p Pawn) | p == plr ->
+         let opp = opponent plr
+             isOppCovered = isCoveredBy opp to bd
+             isSelfCovered = isCoveredBy plr to bd
+         in isOppCovered && not isSelfCovered
+       _ -> False
+isPushingKakutoPawn _ _ = False
+
+-- | 無駄な香車上がりなどの手損手を判定
+-- （穴熊の囲い手順や端の交戦・緊迫がない場合の1段目香車上がりを完全排除）
+isFutileLanceLift :: State -> Move -> Bool
+isFutileLanceLift st (NormalMove from to _) =
+  let bd = board st
+      plr = turn st
+  in case Map.lookup from bd of
+       Just (Piece p Lance) | p == plr ->
+         let (fx, fy) = from
+             (tx, ty) = to
+             isOneStepForward = (fx == tx) && (if plr == Sente then fy - ty == 1 else ty - fy == 1)
+             isFromBackRank = if plr == Sente then fy == 9 else fy == 1
+         in if isFromBackRank && isOneStepForward
+            then
+              -- 穴熊（玉が香車元位置付近にいる/向かっている）かチェック
+              let kingPos = findKing plr bd
+                  isAnagumaPreparation = case kingPos of
+                    Just (kx, ky) ->
+                      if plr == Sente
+                        then (fx == 1 && kx <= 2 && ky >= 8) || (fx == 9 && kx >= 8 && ky >= 8)
+                        else (fx == 1 && kx <= 2 && ky <= 2) || (fx == 9 && kx >= 8 && ky <= 2)
+                    Nothing -> False
+                  
+                  -- 端攻め・端受け（相手の端歩・端駒が迫っている）かチェック
+                  opp = opponent plr
+                  hasOpponentEdgeThreat =
+                    any (\((ox, oy), Piece op _) ->
+                          op == opp && ox == fx &&
+                          (if plr == Sente then oy >= 4 else oy <= 6)
+                        ) (Map.toList bd)
+              in not isAnagumaPreparation && not hasOpponentEdgeThreat
+            else False
+       _ -> False
+isFutileLanceLift _ _ = False
+
+-- | 総合的な手損・悪手判定（定跡本筋や最善応手から完全排除）
+isTempoLossMove :: State -> Move -> Bool
+isTempoLossMove st m =
+  isFutileLanceLift st m || isPushingKakutoPawn st m
+
+
 -- ============================================================================
 -- 3. モースポテンシャル ＆ 互角局面判定
 -- ============================================================================
@@ -438,7 +493,7 @@ runBFSQuotientClosure targetMaxPly = do
   let baseBookMoves =
         [ ("Aigakari_Equilibrium", ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","4b3c","6h7h","7b6c","3h2g","8b8d","2h2f","8d7d","2f2e","7d8d","2e2f","8d7d","8h3c+"])
         , ("Kakugawari_Equilibrium", ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","P*2c","2d2h","3d3e","S*5h","S*3a","P*3c","3b3c","B*1f"])
-        , ("Yagura_Equilibrium", ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","3i4h","4c3b","4h4g","6a5b","2e2d","4a4b","B*1f","9a9b","8h7i"])
+        , ("Yagura_Equilibrium", ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","3i4h","4c3b","4h4g","6a5b","2e2d","4a4b","B*1f","2b3c","8h7i"])
         , ("Shikenbisha_Equilibrium", ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","1g1f","5c5d","2g2f","4b3a","2f2e","2b3c","3g3f","R*4i","S*9h","4i6i+","2e2d","3c2d","6f6e"])
         , ("Yokofudori_Equilibrium", ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","8e8f","8g8f","8b8f","2d3d","8f8h+","7i8h","B*4e","3d3f","4e2g+","3f3d","2g1g","3d3f","1g1f","3f3e","1f2f","B*3c","2f2e","3c5a+"])
         , ("Sankenbisha_Equilibrium", ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","1g1f","1c1d","3g3f","2b3c","7h7f","4b5a","6i7h","8e8f","7f8f","8b8f","7g8f"])
@@ -465,7 +520,10 @@ runBFSQuotientClosure targetMaxPly = do
         
         -- 各節点で逸脱手を分岐探索
         (newRefutedPaths, updatedQEGTB) <- foldM (\(accP, curQEGTB) (idx, st) -> do
-          let legalMoves = f5SyzygyFilter st (generateMoves st)
+          let rawLegalMoves = f5SyzygyFilter st (generateMoves st)
+              -- 手損手・無駄な香車上がりは排除
+              filteredMoves = filter (not . isTempoLossMove st) rawLegalMoves
+              legalMoves = if null filteredMoves then rawLegalMoves else filteredMoves
               correctMove = if idx < length moves then Just (moves !! idx) else Nothing
               curEval = evaluateStateSafe (turn st) st
               -- 互角手（本筋）から逸脱した悪手・疑問手をフィルタ（タダ捨て手、または評価値が80点以上急落する手）
@@ -478,15 +536,15 @@ runBFSQuotientClosure targetMaxPly = do
                 )
                 ) legalMoves
           
-          -- 逸脱手をそれぞれ前進探索してQEGTBへの接続を検証
+          -- 逸脱手をそれぞれ前進探索してQEGTBへの接続を検証（最大深さ512まで制限なしIDS探索）
           let (branchPaths, finalQEGTB) = foldl' (\(bP, qAcc) devM ->
                 let devSt = applyMove devM st
-                    -- 逸脱局面から最短咎め手（Punishment line）を探索
-                    (refutedMvSeq, qegtbHit, newQ) = searchPunishmentToQEGTB devSt qAcc 7
+                    -- 逸脱局面からIDS探索（最大深さ512まで制限なし）で最短咎め手を探索しQEGTBへ接続
+                    (refutedMvSeq, qegtbHit, newQ) = searchPunishmentIDS512 devSt qAcc 512
                     fullSeq = take idx moves ++ [devM] ++ refutedMvSeq
                     branchName = printf "%s_DevPly%02d_%s" pathName (idx + 1) (showMove devM)
                     pathObj = BFSPath branchName fullSeq qegtbHit (length refutedMvSeq)
-                in (pathObj : bP, newQ)
+                in (pathObj `seq` (pathObj : bP), newQ `seq` newQ)
                 ) ([], curQEGTB) (take 2 deviatingMoves)
           
           return (accP ++ branchPaths, finalQEGTB)
@@ -512,39 +570,65 @@ runBFSQuotientClosure targetMaxPly = do
 
   return (allPaths, finalQEGTB)
 
--- | 逸脱局面から前進探索を行い、QEGTBへの接続（または詰み到達・QEGTBバックプロパゲーション）を達成する
-searchPunishmentToQEGTB :: State -> DynamicQEGTB -> Int -> ([Move], Bool, DynamicQEGTB)
-searchPunishmentToQEGTB st qegtb maxDepth
-  | isCheckmatePosition st =
-      -- 既に詰み局面！
-      let dummyMv = DropMove Gold (5, 2)
-          newQ = extractAndBackpropagateQEGTB st dummyMv 0 qegtb
-      in ([], True, newQ)
-  | maxDepth <= 0 =
-      -- 深さ限界：QEGTBヒットチェック
-      case matchQEGTB st qegtb of
-        Just (dtm, mateM) -> ([mateM], True, qegtb)
-        Nothing           -> ([], False, qegtb)
-  | otherwise =
-      case matchQEGTB st qegtb of
-        Just (dtm, mateM) -> ([mateM], True, qegtb)
-        Nothing ->
-          let legalMoves = f5SyzygyFilter st (generateMoves st)
-              -- 最善の咎め手（相手玉への王手・成駒・急所攻め）を選択
-              scoredMoves = sortBy (\m1 m2 ->
-                let s1 = evaluateStateSafe (turn st) (applyMove m1 st)
-                    s2 = evaluateStateSafe (turn st) (applyMove m2 st)
-                in compare s2 s1) legalMoves
-          in case scoredMoves of
-               [] -> ([], True, qegtb) -- 相手に手がない
-               (bestPunish:_) ->
-                 let nextSt = applyMove bestPunish st
-                     (restMoves, isClosed, qUpdated) = searchPunishmentToQEGTB nextSt qegtb (maxDepth - 1)
-                 in if isCheckmatePosition nextSt
-                    then
-                      let qNew = extractAndBackpropagateQEGTB nextSt bestPunish 1 qUpdated
-                      in (bestPunish : restMoves, True, qNew)
-                    else (bestPunish : restMoves, isClosed, qUpdated)
+-- | 自己対局による定跡生成時のIDS（反復深化探索、最大深さ512まで制限なし）
+-- 詰み（Checkmate）、QEGTB到達、またはモース縮退（評価値収束）まで深さ1から最大512まで探索
+searchPunishmentIDS512 :: State -> DynamicQEGTB -> Int -> ([Move], Bool, DynamicQEGTB)
+searchPunishmentIDS512 st initQ maxDepth =
+  let -- 反復深化ループ: d = 1, 3, 7, 15, 31, 63, 127, 255, 512 (最大深さ512まで制限なし)
+      depthStages = takeWhile (<= maxDepth) [1, 3, 7, 15, 31, 63, 127, 255, maxDepth]
+      
+      runIDS [] curQ bestPv bestClosed = (bestPv, bestClosed, curQ)
+      runIDS (d:ds) curQ bestPv bestClosed
+        | bestClosed = (bestPv, True, curQ) -- 詰み・QEGTB接続が証明されたら即座に完了
+        | otherwise  =
+            let (pv, closed, nextQ) = searchBounded st curQ d [] Map.empty
+            in if closed
+               then (pv, True, nextQ)
+               else runIDS ds nextQ (if null pv then bestPv else pv) False
+
+      -- 深さ制限探索（訪問済み局面 visited で千日手・循環手を完全防止）
+      searchBounded s q 0 accMoves _ =
+        case matchQEGTB s q of
+          Just (dtm, mateM) -> (reverse (mateM : accMoves), True, q)
+          Nothing           -> (reverse accMoves, False, q)
+      searchBounded s q remDepth accMoves visited
+        | isCheckmatePosition s =
+            let dummyMv = DropMove Gold (5, 2)
+                newQ = extractAndBackpropagateQEGTB s dummyMv 0 q
+            in (reverse accMoves, True, newQ)
+        | otherwise =
+            case matchQEGTB s q of
+              Just (dtm, mateM) -> (reverse (mateM : accMoves), True, q)
+              Nothing ->
+                let rawMoves = f5SyzygyFilter s (generateMoves s)
+                    -- 手損手・無駄な香車上がりを排除
+                    filteredMoves = filter (not . isTempoLossMove s) rawMoves
+                    legalMoves = if null filteredMoves then rawMoves else filteredMoves
+                    
+                    -- 千日手・同一局面循環手を厳格に排除（過去に訪れた局面キーへの遷移は完全禁止）
+                    nonLoopMoves = filter (\m ->
+                      let nextKey = positionKey (applyMove m s)
+                      in not (Map.member nextKey visited)
+                      ) legalMoves
+                in case nonLoopMoves of
+                     [] -> (reverse accMoves, False, q) -- 循環または受手なしによる終了
+                     _  ->
+                       let scoredMoves = sortBy (\m1 m2 ->
+                             let s1 = evaluateStateSafe (turn s) (applyMove m1 s)
+                                 s2 = evaluateStateSafe (turn s) (applyMove m2 s)
+                             in compare s2 s1) nonLoopMoves
+                           bestPunish = head scoredMoves
+                           nextSt = applyMove bestPunish s
+                           curKey = positionKey s
+                           nextVisited = Map.insert curKey () visited
+                       in if isCheckmatePosition nextSt
+                          then
+                            let qNew = extractAndBackpropagateQEGTB nextSt bestPunish 1 q
+                            in (reverse (bestPunish : accMoves), True, qNew)
+                          else searchBounded nextSt q (remDepth - 1) (bestPunish : accMoves) nextVisited
+  in runIDS depthStages initQ [] False
+
+
 
 parseMoveUSI :: String -> Move
 parseMoveUSI str
@@ -584,7 +668,9 @@ writeMBookFile path paths qegtb = do
 
 main :: IO ()
 main = do
+  hSetBuffering stdout LineBuffering
   _ <- runBFSQuotientClosure 41
   putStrLn "Invoking shogi-morse-compiler.exe to transpile into CompiledMorseBook.hs..."
   callCommand "shogi-morse-compiler.exe complete_morse.mbook CompiledMorseBook.hs"
   putStrLn "Successfully compiled into type-safe CompiledMorseBook.hs!"
+

@@ -464,7 +464,43 @@ isPushingKakutoPawn st m =
         _                       -> True  -- 角が2二にいる/飛車がいないのに2三歩を突くのは絶対禁止
     _ -> False
 
+-- | 無駄な香車上がりなどの手損手を判定
+-- （穴熊の囲い手順や端の交戦・緊迫がない場合の1段目香車上がりを完全排除）
+isFutileLanceLift :: State -> Move -> Bool
+isFutileLanceLift st (NormalMove from to _) =
+  let bd = board st
+      plr = turn st
+  in case Map.lookup from bd of
+       Just (Piece p Lance) | p == plr ->
+         let (fx, fy) = from
+             (tx, ty) = to
+             isOneStepForward = (fx == tx) && (if plr == Sente then fy - ty == 1 else ty - fy == 1)
+             isFromBackRank = if plr == Sente then fy == 9 else fy == 1
+         in if isFromBackRank && isOneStepForward
+            then
+              -- 穴熊（玉が香車元位置付近にいる/向かっている）かチェック
+              let kingPos = findKing plr bd
+                  isAnagumaPreparation = case kingPos of
+                    Just (kx, ky) ->
+                      if plr == Sente
+                        then (fx == 1 && kx <= 2 && ky >= 8) || (fx == 9 && kx >= 8 && ky >= 8)
+                        else (fx == 1 && kx <= 2 && ky <= 2) || (fx == 9 && kx >= 8 && ky <= 2)
+                    Nothing -> False
+                  
+                  -- 端攻め・端受け（相手の端歩・端駒が迫っている）かチェック
+                  opp = opponent plr
+                  hasOpponentEdgeThreat =
+                    any (\((ox, oy), Piece op _) ->
+                          op == opp && ox == fx &&
+                          (if plr == Sente then oy >= 4 else oy <= 6)
+                        ) (Map.toList bd)
+              in not isAnagumaPreparation && not hasOpponentEdgeThreat
+            else False
+       _ -> False
+isFutileLanceLift _ _ = False
+
 -- | 角頭および桂頭の防衛評価
+
 evalKakutoKeitoDefense :: Player -> State -> Double
 evalKakutoKeitoDefense plr st =
   let bd = board st
@@ -766,8 +802,8 @@ isSennichite key hist =
 lookupBookMove :: [String] -> State -> Maybe Move
 lookupBookMove currentMoves st =
   let legalMoves = f5SyzygyFilter st (generateMoves st)
-      -- 角頭歩突きは定跡であっても絶対に除外
-      safeLegalMoves = filter (not . isPushingKakutoPawn st) legalMoves
+      -- 角頭歩突きおよび無駄な香車上がりなどの手損手は定跡であっても絶対に除外
+      safeLegalMoves = filter (\m -> not (isPushingKakutoPawn st m) && not (isFutileLanceLift st m)) legalMoves
       allPaths = Map.elems Book.runtimePaths
       matchingPaths = filter (\p -> currentMoves `isPrefixOf` p && length p > length currentMoves) allPaths
       candidates = [ parseMove (p !! length currentMoves) | p <- matchingPaths ]
@@ -830,8 +866,8 @@ searchAlphaBeta weights depth alpha beta st =
         let nextSt = applyMove m st
         in isSennichite (positionKey nextSt) (history nextSt)
         ) f5Moves
-      -- ★ 角頭歩突き (8g8f, 2c2d) は探索候補から完全除外
-      nonKakutoMoves = filter (not . isPushingKakutoPawn st) safeMoves
+      -- ★ 角頭歩突き (8g8f, 2c2d) および無駄な香車上がりなどの手損手は探索候補から完全除外
+      nonKakutoMoves = filter (\m -> not (isPushingKakutoPawn st m) && not (isFutileLanceLift st m)) safeMoves
       effectiveMoves = if null nonKakutoMoves then safeMoves else nonKakutoMoves
   in if null f5Moves
      then (-10000.0, Nothing) -- 詰み
@@ -1084,7 +1120,7 @@ searchBestMoveIterativeWithTimeout weights timeLimitMicros state =
                   let nextState = applyMove m state
                   in isSennichite (positionKey nextState) (history nextState)
                 ) f5FilteredMoves
-              nonKakutoMoves = filter (not . isPushingKakutoPawn state) safeMoves
+              nonKakutoMoves = filter (\m -> not (isPushingKakutoPawn state m) && not (isFutileLanceLift state m)) safeMoves
               effectiveMoves = if null nonKakutoMoves then safeMoves else nonKakutoMoves
           if null f5FilteredMoves
             then return (Left "resign", state)
@@ -1139,7 +1175,7 @@ searchBestMoveWithCache weights state =
               let nextState = applyMove m state
               in isSennichite (positionKey nextState) (history nextState)
             ) f5FilteredMoves
-          nonKakutoMoves = filter (not . isPushingKakutoPawn state) safeMoves
+          nonKakutoMoves = filter (\m -> not (isPushingKakutoPawn state m) && not (isFutileLanceLift state m)) safeMoves
           effectiveMoves = if null nonKakutoMoves then safeMoves else nonKakutoMoves
       in if null f5FilteredMoves
          then (Left "resign", state)
