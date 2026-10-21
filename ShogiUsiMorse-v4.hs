@@ -167,8 +167,9 @@ applyMove (NormalMove from to promo) State{..} =
         Nothing -> Piece turn Pawn
       newBoard = Map.insert to newPiece boardWithSourceRemoved
 
-      -- 持ち駒（駒台）の更新
+      -- 持ち駒（駒台）の更新（玉は持ち駒に入らない）
       newHands = case captured of
+        Just (Piece _ King) -> hands
         Just (Piece _ pt) ->
           let rawPt = demote pt
               handMap = fromMaybe emptyHand (Map.lookup turn hands)
@@ -727,11 +728,13 @@ generateMoves st = boardMoves ++ dropMoves
     hasPawnOnColumn col =
       any (\((x, _), Piece p pt) -> x == col && p == plr && pt == Pawn) (Map.toList bd)
 
-    isLegalDrop pt (x, y) = case pt of
-      Pawn   -> not (hasPawnOnColumn x) && not (mustPromote Pawn y)
-      Lance  -> not (mustPromote Lance y)
-      Knight -> not (mustPromote Knight y)
-      _      -> True
+    isLegalDrop pt (x, y) =
+      pt `elem` [Pawn, Lance, Knight, Silver, Gold, Bishop, Rook] &&
+      case pt of
+        Pawn   -> not (hasPawnOnColumn x) && not (mustPromote Pawn y)
+        Lance  -> not (mustPromote Lance y)
+        Knight -> not (mustPromote Knight y)
+        _      -> True
 
     dropMoves =
       [ DropMove pt sq
@@ -879,7 +882,7 @@ searchBestMoveWithCache weights state =
              case Map.lookup (positionKey state) (cache state) of
                Just (_score, mv) | mv `elem` effectiveMoves -> (Right mv, state)
                _ ->
-                 let (bestScore, maybeBestMove) = searchAlphaBeta weights 3 (-99999.0) 99999.0 state
+                 let (bestScore, maybeBestMove) = searchAlphaBeta weights 5 (-99999.0) 99999.0 state
                  in case maybeBestMove of
                       Just bestMove ->
                         let newCache = Map.insert (positionKey state) (bestScore, bestMove) (cache state)
