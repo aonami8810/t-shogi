@@ -859,7 +859,7 @@ searchAlphaBeta weights depth alpha beta st =
               else loop ms curAlpha (if isJust bestMv then bestMv else Just m)
 
 -- | USI の go コマンド引数から思考時間上限（マイクロ秒）を計算
--- 1秒切れ負け（秒読み1秒等）で絶対に切れないよう、通信・I/Oラグ（150ms）を差し引いた最大850ms（850,000μs）に厳格制限
+-- byoyomi (秒読み) の秒数を上限とし、通信・I/Oラグ（150ms）を差し引いて切れ負けを完全防止
 calcTimeLimitMicros :: Player -> [String] -> Int
 calcTimeLimitMicros ply tokens =
   let byo = case elemIndex "byoyomi" tokens of
@@ -874,19 +874,35 @@ calcTimeLimitMicros ply tokens =
       wtime = case elemIndex "wtime" tokens of
         Just idx | idx + 1 < length tokens -> readMaybe (tokens !! (idx + 1))
         _ -> Nothing
-      myTime = case ply of
-        Sente -> btime
-        Gote  -> wtime
+      binc = case elemIndex "binc" tokens of
+        Just idx | idx + 1 < length tokens -> readMaybe (tokens !! (idx + 1))
+        _ -> Nothing
+      winc = case elemIndex "winc" tokens of
+        Just idx | idx + 1 < length tokens -> readMaybe (tokens !! (idx + 1))
+        _ -> Nothing
       
-      -- 基本思考時間（ミリ秒）：最大 850ms、安全マージン 150ms 考慮
-      timeMs = case (byo, movetime, myTime) of
-        (Just b, _, _) -> max 100 (min 850 (b - 150))
-        (_, Just m, _) -> max 100 (min 850 (m - 150))
-        (_, _, Just t) -> max 100 (min 850 (t `div` 15))
-        _              -> 850 -- デフォルト 850ms (0.85秒)
+      (myTime, myInc) = case ply of
+        Sente -> (btime, binc)
+        Gote  -> (wtime, winc)
+      
+      -- 通信・GUIバッファの安全マージン（150ms）
+      safetyMargin = 150
+      
+      -- 思考上限ミリ秒
+      timeMs = case (byo, movetime, myTime, myInc) of
+        -- 1. byoyomi 指定がある場合: byoyomi の秒数を上限とする
+        (Just b, _, _, _) -> max 100 (b - safetyMargin)
+        -- 2. movetime 指定がある場合: movetime を上限とする
+        (_, Just m, _, _) -> max 100 (m - safetyMargin)
+        -- 3. フィッシャールール (inc 指定あり)
+        (_, _, Just t, Just inc) -> max 100 (min (t `div` 15 + inc) (t + inc - safetyMargin))
+        -- 4. 持ち時間制 (残り時間から算出)
+        (_, _, Just t, _) -> max 100 (t `div` 20)
+        -- 5. 指定なし (デフォルト1秒秒読み相当: 850ms)
+        _                 -> 850
   in timeMs * 1000
 
--- | 反復深化探索 (1秒以内厳格保障: 最大 850ms で打ち切り、切れ負けを完全防止)
+-- | 反復深化探索 (byoyomi を上限とし、タイムアウトで打ち切り)
 searchBestMoveIterativeWithTimeout :: MidgameWeights -> Int -> State -> IO (Either String Move, State)
 searchBestMoveIterativeWithTimeout weights timeLimitMicros state =
   -- 1. まず型レベル定跡（V-Path スライド）を照会
@@ -922,18 +938,24 @@ searchBestMoveIterativeWithTimeout weights timeLimitMicros state =
                  let fallbackMove = case effectiveMoves of (m:_) -> m; [] -> error "no effective moves"
                  bestRef <- newIORef (0.0, fallbackMove)
                  
-                 -- タイムアウト付き反復深化探索 (depth 1..7)
+                 -- タイムアウト付き反復深化探索 (byoyomi を上限として depth 1..31 まで探索)
                  _ <- timeout timeLimitMicros $ do
-                   forM_ [1..7] $ \d -> do
-                     let (score, maybeMv) = searchAlphaBeta weights d (-99999.0) 99999.0 state
-                     case maybeMv of
-                       Just mv -> do
-                         -- 遅延評価を解除して正格に評価を確定
-                         _ <- evaluate (score `seq` mv `seq` ())
-                         writeIORef bestRef (score, mv)
-                         putStrLn $ "info depth " ++ show d ++ " score cp " ++ show (round score :: Int) ++ " pv " ++ showMove mv
-                         hFlush stdout
-                       Nothing -> return ()
+                   let runIDS d
+                         | d > 31 = return ()
+                         | otherwise = do
+                             let (score, maybeMv) = searchAlphaBeta weights d (-99999.0) 99999.0 state
+                             case maybeMv of
+                               Just mv -> do
+                                 -- 遅延評価を解除して正格に評価を確定
+                                 _ <- evaluate (score `seq` mv `seq` ())
+                                 writeIORef bestRef (score, mv)
+                                 putStrLn $ "info depth " ++ show d ++ " score cp " ++ show (round score :: Int) ++ " pv " ++ showMove mv
+                                 hFlush stdout
+                                 if abs score >= 9000.0
+                                   then return () -- 詰みを発見した場合は即座に着手
+                                   else runIDS (d + 1)
+                               Nothing -> return ()
+                   runIDS 1
                  
                  -- タイムアウトした場合でも、直前までに探索が完了した最高深さの最善手を取得
                  (bestScore, bestMove) <- readIORef bestRef
