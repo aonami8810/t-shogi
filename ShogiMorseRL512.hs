@@ -5,6 +5,7 @@ module Main where
 import System.IO
 import System.Exit
 import System.Process (callCommand)
+import Control.Monad (when)
 import Data.Char
 import Data.List
 import Data.Maybe
@@ -296,7 +297,7 @@ isSennichite key hist =
     Nothing    -> False
 
 -- ============================================================================
--- 3. モースポテンシャル & ヘッセ行列曲率（Curvature）
+-- 3. モースポテンシャル & 駒得評価関数
 -- ============================================================================
 
 pieceValue :: PieceType -> Double
@@ -343,23 +344,67 @@ evaluateState player st =
       materialAdvantage = evalMaterial player st
   in morseAdvantage + materialAdvantage
 
--- | 局所的モース曲率（Hessianノルム近似：後続局面へのポテンシャル勾配の分散）
-calculateCurvature :: State -> [Move] -> Double
-calculateCurvature st legalMoves
-  | null legalMoves = 0.0
-  | otherwise =
-      let currentScore = evaluateState (turn st) st
-          nextScores = [ evaluateState (turn st) (applyMove m st) | m <- legalMoves ]
-          gradients = [ s - currentScore | s <- nextScores ]
-          avgGrad = sum gradients / fromIntegral (length gradients)
-          variance = sum [ (g - avgGrad) ^ 2 | g <- gradients ] / fromIntegral (length gradients)
-      in sqrt variance
-
 -- ============================================================================
--- 4. 512手 自己対局モース強化学習プロセス (Reinforcement Learning)
+-- 4. 3手先読み ネガマックス α-β 探索エンジン (3-Ply Lookahead)
 -- ============================================================================
 
--- | 局面統計量 (RL Value & Frequency & Curvature)
+-- | ネガマックス α-β 探索 (自手番の視点でのスコアを返す)
+searchAlphaBeta :: Int -> Double -> Double -> State -> (Double, Maybe Move)
+searchAlphaBeta 0 _ _ st =
+  (evaluateState (turn st) st, Nothing)
+searchAlphaBeta depth alpha beta st =
+  let rawMoves = generateMoves st
+      f5Moves = f5SyzygyFilter st rawMoves
+      (_sennichite, safeMoves) = partition (\m -> 
+        let nextSt = applyMove m st
+        in isSennichite (positionKey nextSt) (history nextSt)
+        ) f5Moves
+  in if null f5Moves
+     then (-10000.0, Nothing) -- 詰み（自玉が詰まされている）
+     else if null safeMoves
+       then (0.0, Nothing)     -- 千日手引き分け
+       else
+         -- 枝刈り効率化のため、1手先静的評価で降順ソート (Move Ordering)
+         let orderedMoves = sortBy (\m1 m2 ->
+               let s1 = evaluateState (turn st) (applyMove m1 st)
+                   s2 = evaluateState (turn st) (applyMove m2 st)
+               in compare s2 s1) safeMoves
+             -- 上位候補手を重点探索（高速α-β枝刈り）
+             topMoves = take (if depth >= 2 then 5 else 4) orderedMoves
+         in loop topMoves alpha Nothing
+  where
+    loop [] curAlpha bestMv = (curAlpha, bestMv)
+    loop (m:ms) curAlpha bestMv =
+      let nextSt = applyMove m st
+          (childScore, _) = searchAlphaBeta (depth - 1) (-beta) (-curAlpha) nextSt
+          score = -childScore
+      in if score >= beta
+         then (score, Just m) -- βカット（枝刈り）
+         else if score > curAlpha
+           then loop ms score (Just m)
+           else loop ms curAlpha bestMv
+
+-- | 3手先読みによる各手の評価 (自手 m -> 相手最善応手 -> 自手最善反撃 -> 評価)
+evalMove3Ply :: State -> Move -> Double
+evalMove3Ply st m =
+  let st1 = applyMove m st
+      -- 相手番の視点から2手先（深さ2）を探索
+      (oppScore, _) = searchAlphaBeta 2 (-20000.0) 20000.0 st1
+  in -oppScore -- 自手番の視点に戻す
+
+-- | 3手先読み評価に基づいた深層モース曲率（Hessianノルム：読み筋のばらつき）
+calculateCurvature3Ply :: State -> [(Move, Double)] -> Double
+calculateCurvature3Ply _ [] = 0.0
+calculateCurvature3Ply _ scoredMoves =
+  let scores = map snd scoredMoves
+      avgScore = sum scores / fromIntegral (length scores)
+      variance = sum [ (s - avgScore) ^ 2 | s <- scores ] / fromIntegral (length scores)
+  in sqrt variance
+
+-- ============================================================================
+-- 5. 3手先読み 自己対局強化学習プロセス (RL with 3-Ply Lookahead)
+-- ============================================================================
+
 data NodeStats = NodeStats
   { qValue     :: Double  -- 行動価値/評価 Q(s)
   , visitCount :: Int     -- 訪問回数 N(s)
@@ -368,16 +413,15 @@ data NodeStats = NodeStats
 
 type RLTable = Map.Map PositionKey NodeStats
 
--- | 局面ステップ記録（エピソード履歴）
 data StepRecord = StepRecord
   { stepPly      :: Int
   , stepState    :: State
   , stepMove     :: Move
   , stepCurv     :: Double
   , stepPot      :: Double
+  , step3PlyEval :: Double
   } deriving (Show)
 
--- 擬似乱数 (線形合同法)
 nextRand :: Int -> (Int, Int)
 nextRand seed =
   let a = 1103515245
@@ -386,88 +430,100 @@ nextRand seed =
       newSeed = (a * seed + c) `mod` m
   in (newSeed, newSeed)
 
--- | モース適応型サンプリングによる指し手選択 (Exploration vs Exploitation)
-selectMoveRL :: State -> [Move] -> RLTable -> Double -> Int -> (Move, Int)
-selectMoveRL st legalMoves rlTable temperature seed =
-  let curPlr = turn st
-      scoredMoves = map (\m -> 
+-- | 3手先読みと強化学習Q値を融合した適応指し手選択
+selectMoveRL3Ply :: State -> [Move] -> RLTable -> Double -> Int -> (Move, Double, Double, Int)
+selectMoveRL3Ply st safeMoves rlTable temperature seed =
+  let -- 1. まず静的評価で有望手トップ8に事前スクリーニング
+      sortedBy1Ply = sortBy (\m1 m2 ->
+        let s1 = evaluateState (turn st) (applyMove m1 st)
+            s2 = evaluateState (turn st) (applyMove m2 st)
+        in compare s2 s1) safeMoves
+      topCandidates = take 6 sortedBy1Ply
+
+      -- 2. 上位候補手に対して3手先読み（α-β）を実行
+      scoredMoves3Ply = map (\m -> (m, evalMove3Ply st m)) topCandidates
+      curv = calculateCurvature3Ply st scoredMoves3Ply
+      
+      -- 3. Q値・訪問数・UCBボーナスの合算
+      scoredMoves = map (\(m, score3Ply) -> 
         let nextSt = applyMove m st
             key = positionKey nextSt
-            stats = Map.findWithDefault (NodeStats (evaluateState curPlr nextSt) 0 1.0) key rlTable
-            -- Q値 + 曲率ボーナス / (訪問数+1)
+            stats = Map.findWithDefault (NodeStats score3Ply 0 curv) key rlTable
             q = qValue stats
-            curv = curvature stats
             visits = fromIntegral (visitCount stats)
-            ucbBonus = 100.0 * sqrt (log (visits + 2.0) / (visits + 1.0))
-            score = q + ucbBonus + 0.1 * curv
-        in (m, score)
-        ) legalMoves
-      -- ソフトマックス重み計算 (アニーリング温度適用)
-      maxScore = maximum (map snd scoredMoves)
-      expWeights = map (\(m, s) -> (m, exp ((s - maxScore) / max 1.0 temperature))) scoredMoves
-      totalWeight = sum (map snd expWeights)
+            ucbBonus = 30.0 * sqrt (log (visits + 2.0) / (visits + 1.0))
+            combinedScore = 0.8 * score3Ply + 0.2 * q + ucbBonus + 0.05 * curv
+        in (m, combinedScore, score3Ply)
+        ) scoredMoves3Ply
+      
+      -- 4. ソフトマックスによる確率的重点サンプリング
+      maxScore = maximum (map (\(_, s, _) -> s) scoredMoves)
+      expWeights = map (\(m, s, s3) -> (m, exp ((s - maxScore) / max 1.0 temperature), s3)) scoredMoves
+      totalWeight = sum (map (\(_, w, _) -> w) expWeights)
       (seed1, rInt) = nextRand seed
       randVal = (fromIntegral (rInt `mod` 1000000) / 1000000.0) * totalWeight
-      pickedMove = pickWeighted randVal 0.0 expWeights
-  in (pickedMove, seed1)
+      (pickedMove, picked3Ply) = pickWeighted randVal 0.0 expWeights
+  in (pickedMove, picked3Ply, curv, seed1)
   where
-    pickWeighted _ _ [(m, _)] = m
-    pickWeighted _ _ [] = head legalMoves
-    pickWeighted rv acc ((m, w):rest)
-      | rv <= acc + w = m
+    pickWeighted _ _ [(m, _, s3)] = (m, s3)
+    pickWeighted _ _ [] = let m = head safeMoves in (m, evaluateState (turn st) (applyMove m st))
+    pickWeighted rv acc ((m, w, s3):rest)
+      | rv <= acc + w = (m, s3)
       | otherwise     = pickWeighted rv (acc + w) rest
 
--- | 1手ずつ512手まで局面を伸ばしていく自己対局ステップ実行
-runEpisode512 :: State -> Int -> Int -> RLTable -> Double -> [StepRecord] -> (Double, [StepRecord], Int)
-runEpisode512 st ply maxPly rlTable temp accSteps
-  | ply > maxPly =
-      -- 512手に到達：深層均衡（Draw / Equilibrium）
+-- | 3手先読みで1手ずつ512手まで自己対局を伸ばしていく (リアルタイムストリーミング出力)
+runEpisode3Ply512 :: State -> Int -> Int -> RLTable -> Double -> [StepRecord] -> IO (Double, [StepRecord], Int)
+runEpisode3Ply512 st ply maxPly rlTable temp accSteps
+  | ply > maxPly = do
       let finalPot = evaluateState (turn st) st
-      in (finalPot, reverse accSteps, 0)
-  | otherwise =
+      putStrLn $ printf "    [Ply %3d] Reached 512-Ply Target! (Terminal Eval: %+8.2f)" maxPly finalPot
+      return (finalPot, reverse accSteps, 0)
+  | otherwise = do
       let rawMoves = generateMoves st
           f5Moves = f5SyzygyFilter st rawMoves
-          -- 千日手回避
           (_sennichite, safeMoves) = partition (\m -> 
             let nextSt = applyMove m st
             in isSennichite (positionKey nextSt) (history nextSt)
             ) f5Moves
-      in if null f5Moves
-         then
-           -- 詰み（相手の勝利）
-           let mateScore = -10000.0
-           in (mateScore, reverse accSteps, -1)
-         else if null safeMoves
-           then
-             -- 回避不能な千日手引き分け
-             (0.0, reverse accSteps, 1)
-           else
-             let curCurv = calculateCurvature st safeMoves
-                 curPot  = evaluateState (turn st) st
-                 (bestMove, nextSeed) = selectMoveRL st safeMoves rlTable temp (ply * 7919 + 104729)
-                 nextSt = applyMove bestMove st
-                 rec = StepRecord ply st bestMove curCurv curPot
-             in runEpisode512 nextSt (ply + 1) maxPly rlTable temp (rec : accSteps)
+      if null f5Moves
+        then do
+          putStrLn $ printf "    [Ply %3d] Checkmate / Mate Resolution!" ply
+          return (-10000.0, reverse accSteps, -1)
+        else if null safeMoves
+          then do
+            putStrLn $ printf "    [Ply %3d] Sennichite Repetition Detected (Draw)" ply
+            return (0.0, reverse accSteps, 1)
+          else do
+            let curPot = evaluateState (turn st) st
+                (bestMove, eval3Ply, curCurv, _) = selectMoveRL3Ply st safeMoves rlTable temp (ply * 7919 + 104729)
+                nextSt = applyMove bestMove st
+                rec = StepRecord ply st bestMove curCurv curPot eval3Ply
 
--- | 報酬の逆伝播（TD / バックプロパゲーション）
+            -- 1手ずつリアルタイムに進捗を表示（節目と定跡伸長ポイント）
+            when (ply == 1 || ply `mod` 20 == 0 || ply == maxPly) $
+              putStrLn $ printf "    [Ply %3d/%3d] Move: %-6s | 3-Ply Eval: %+8.2f | Curvature κ(s): %7.2f"
+                         ply maxPly (showMove bestMove) eval3Ply curCurv
+
+            runEpisode3Ply512 nextSt (ply + 1) maxPly rlTable temp (rec : accSteps)
+
+-- | 報酬の逆伝播
 backpropReward :: Double -> [StepRecord] -> RLTable -> RLTable
 backpropReward terminalReward steps rlTable =
   foldl' updateStep rlTable (zip [0..] (reverse steps))
   where
-    gamma = 0.995 -- 512手に対応する長期割引率
+    gamma = 0.995
     updateStep table (idx, StepRecord{..}) =
       let key = positionKey stepState
           reward = terminalReward * (gamma ^ idx)
-          curStats = Map.findWithDefault (NodeStats stepPot 0 stepCurv) key table
+          curStats = Map.findWithDefault (NodeStats step3PlyEval 0 stepCurv) key table
           newVisits = visitCount curStats + 1
-          -- 移動平均更新 (TD学習)
           alpha = 1.0 / fromIntegral (newVisits + 1)
           newQ = (1.0 - alpha) * qValue curStats + alpha * reward
           updatedStats = curStats { qValue = newQ, visitCount = newVisits, curvature = stepCurv }
       in Map.insert key updatedStats table
 
 -- ============================================================================
--- 5. モース収縮アルゴリズム (Morse Contraction / Collapsing)
+-- 6. モース収縮アルゴリズム (Morse Contraction)
 -- ============================================================================
 
 data CriticalNodeType = Saddle | Maxima | Minimum
@@ -490,30 +546,26 @@ data MorseBook = MorseBook
   , bookPaths :: [BookVPath]
   } deriving (Show)
 
--- | 512手の軌道から曲率ピーク（サドル点）を検出し、平坦流を V-Path として収縮統合する
 contractTrajectoryToMorseBook :: [StepRecord] -> Double -> MorseBook
 contractTrajectoryToMorseBook steps finalReward =
   let totalSteps = length steps
-      -- 1. サドル点（臨界ノード）の検出：局所曲率のスパイク、または一定手数ごとのトポロジー節目
       indexedSteps = zip [1..] steps
       criticalPlies = findCriticalPlies indexedSteps
       
-      -- 2. ノードの構築
       startNode = BookNode "Start" Saddle 0.0
-      intermediateNodes = [ BookNode ("Saddle_Ply_" ++ show p ++ "_" ++ showMove (stepMove rec)) Saddle (stepPot rec)
+      intermediateNodes = [ BookNode ("Saddle_Ply_" ++ show p ++ "_" ++ showMove (stepMove rec)) Saddle (step3PlyEval rec)
                           | (p, rec) <- criticalPlies ]
       terminalType = if abs finalReward >= 9000.0 then Minimum else Saddle
       terminalNode = BookNode ("Minimum_Ply_" ++ show totalSteps ++ "_Convergence") terminalType finalReward
       
       allNodes = startNode : intermediateNodes ++ [terminalNode]
       
-      -- 3. ノード間の指し手を集約し、V-Path（必然手順）として収縮
       pathBounds = 0 : map fst criticalPlies ++ [totalSteps]
-      pairs = zip pathBounds (tail pathBounds)
+      pairs = zip pathBounds (if null pathBounds then [] else drop 1 pathBounds)
       allMoves = map (showMove . stepMove) steps
       
       vpaths = [ BookVPath fromId toId chunkMoves
-               | ((pStart, pEnd), (fromNode, toNode)) <- zip pairs (zip allNodes (tail allNodes))
+               | ((pStart, pEnd), (fromNode, toNode)) <- zip pairs (zip allNodes (drop 1 allNodes))
                , let chunkMoves = take (pEnd - pStart) (drop pStart allMoves)
                , not (null chunkMoves)
                , let fromId = bNodeId fromNode
@@ -524,10 +576,9 @@ contractTrajectoryToMorseBook steps finalReward =
     findCriticalPlies :: [(Int, StepRecord)] -> [(Int, StepRecord)]
     findCriticalPlies [] = []
     findCriticalPlies xs =
-      -- 32手ごとのマクロ節目、または曲率が平均より有意に高いサドル点を臨界ノードとして抽出
       let avgCurv = sum [ stepCurv r | (_, r) <- xs ] / fromIntegral (length xs)
-          threshold = max 15.0 (avgCurv * 1.5)
-      in filter (\(p, r) -> p `mod` 32 == 0 || (stepCurv r > threshold && p `mod` 8 == 0)) xs
+          threshold = max 20.0 (avgCurv * 1.3)
+      in filter (\(p, r) -> p `mod` 25 == 0 || (stepCurv r > threshold && p `mod` 10 == 0)) xs
 
 serializeMBook :: MorseBook -> String
 serializeMBook MorseBook{..} =
@@ -536,36 +587,35 @@ serializeMBook MorseBook{..} =
   in unlines (nodeLines ++ pathLines)
 
 -- ============================================================================
--- 6. メイン実行ルーチン (512手 強化学習・モース収縮ドライバ)
+-- 7. メイン実行ルーチン (3手先読み 自己対局強化学習ドライバ)
 -- ============================================================================
 
 main :: IO ()
 main = do
   hSetBuffering stdout LineBuffering
   putStrLn "================================================================================"
-  putStrLn "   Topological Shogi AI - 512-Ply Self-Play Morse Contraction RL Engine"
+  putStrLn "   Topological Shogi AI - 3-Ply Lookahead Self-Play Morse Contraction RL Engine"
   putStrLn "================================================================================"
-  putStrLn "Initializing Reinforcement Learning table and starting 512-ply frontier expansion..."
+  putStrLn "Initializing 3-Ply Minimax (Negamax Alpha-Beta) and Reinforcement Learning table..."
 
   let targetMaxPly = 512
-      numEpisodes = 5
+      numEpisodes = 3
       initialRLTable = Map.empty
 
-  -- 強化学習エピソードループ
+  -- 3手先読み自己対局エピソードループ
   (finalRLTable, bestTrajectory, finalReward) <- runLearningLoop 1 numEpisodes initialRLTable [] 0.0 targetMaxPly
 
   putStrLn "\n================================================================================"
-  putStrLn " [Morse Contraction] Performing Homological Reduction on 512-Ply Trajectory..."
+  putStrLn " [Morse Contraction] Performing Homological Reduction on 3-Ply Trajectory..."
   putStrLn "================================================================================"
   
-  -- モース収縮を実行して完全定跡（Morse Complex）を生成
   let morseBook = contractTrajectoryToMorseBook bestTrajectory finalReward
       totalNodes = length (bookNodes morseBook)
       totalPaths = length (bookPaths morseBook)
       totalPlies = length bestTrajectory
 
-  putStrLn $ printf "Total Plies Extended: %d moves (Target: %d)" totalPlies targetMaxPly
-  putStrLn $ printf "Contracted Critical Nodes: %d nodes" totalNodes
+  putStrLn $ printf "Total Plies Extended with 3-Ply Lookahead: %d moves (Target: %d)" totalPlies targetMaxPly
+  putStrLn $ printf "Contracted Critical Nodes (Saddles/Minima): %d nodes" totalNodes
   putStrLn $ printf "Synthesized Morse V-Paths: %d paths" totalPaths
   let compression = (1.0 - (fromIntegral totalNodes / fromIntegral (max 1 totalPlies))) * 100.0 :: Double
   putStrLn $ printf "Homological Search Space Compression: %.2f%%" compression
@@ -574,47 +624,36 @@ main = do
   let mbookContent = serializeMBook morseBook
       outFile = "complete_morse.mbook"
   writeFile outFile mbookContent
-  putStrLn $ "\n[SUCCESS] Serialized 512-Ply Complete Morse Book to: " ++ outFile
+  putStrLn $ "\n[SUCCESS] Serialized 3-Ply Lookahead Complete Morse Book to: " ++ outFile
 
   -- 型レベルコンパイラによる CompiledMorseBook.hs の生成
   putStrLn "\n--- Invoking ShogiMorseCompiler to generate type-level safe Haskell code ---"
   callCommand ".\\shogi-morse-compiler.exe complete_morse.mbook"
 
-  -- 対局エンジンの再コンパイル（512手完全定跡を静的リンク）
-  putStrLn "\n--- Recompiling ShogiUsiMorse.exe with the 512-Ply Complete Morse Book ---"
+  -- 対局エンジンの再コンパイル（3手先読み完全定跡を静的リンク）
+  putStrLn "\n--- Recompiling ShogiUsiMorse.exe with the 3-Ply Complete Morse Book ---"
   callCommand "ghc -O2 ShogiUsiMorse-v4.hs -o ShogiUsiMorse.exe"
 
   putStrLn "\n================================================================================"
-  putStrLn " [REINFORCEMENT LEARNING COMPLETE] 512-Ply Morse Book Successfully Built & Linked!"
+  putStrLn " [3-PLY RL COMPLETE] 3-Ply Lookahead Complete Morse Book Successfully Built & Linked!"
   putStrLn "================================================================================"
 
 runLearningLoop :: Int -> Int -> RLTable -> [StepRecord] -> Double -> Int -> IO (RLTable, [StepRecord], Double)
 runLearningLoop ep maxEp table bestTraj bestRew maxPly
   | ep > maxEp = return (table, bestTraj, bestRew)
   | otherwise = do
-      let temp = 10.0 * (0.8 ^ (ep - 1)) -- 探索温度のアニーリング
-      putStrLn $ printf "\n>>> [Episode %d/%d] Expanding 512-ply frontier (Temperature: %.2f)..." ep maxEp temp
+      let temp = 6.0 * (0.7 ^ (ep - 1))
+      putStrLn $ printf "\n>>> [Episode %d/%d] 3-Ply Lookahead Frontier Extension (Temperature: %.2f)..." ep maxEp temp
       
-      let (reward, steps, status) = runEpisode512 initState 1 maxPly table temp []
-          plyReached = length steps
+      (reward, steps, status) <- runEpisode3Ply512 initState 1 maxPly table temp []
+      let plyReached = length steps
           statusStr = case status of
             (-1) -> "Checkmate / Mate Resolution"
             1    -> "Sennichite (Repetition Draw Avoided)"
             _    -> "Max Depth (512 Plies) Frontier Reached"
-      
-      -- 1手ごとのサマリー進捗表示 (16手ごと、および節目)
-      putStrLn "    --- Real-time Ply-by-Ply Extension Log ---"
-      mapM_ (\rec -> 
-        let p = stepPly rec
-        in if p == 1 || p == 10 || p == 50 || p == 100 || p == 200 || p == 300 || p == 400 || p == 512 || p == plyReached
-           then putStrLn $ printf "    [Ply %3d] Move: %-6s | Potential V(s): %+8.2f | Curvature κ(s): %7.2f"
-                          p (showMove (stepMove rec)) (stepPot rec) (stepCurv rec)
-           else return ()
-        ) steps
 
       putStrLn $ printf "    ===> Episode %d Outcome: %s at Ply %d (Reward: %+.2f)" ep statusStr plyReached reward
       
-      -- 報酬バックプロパゲーション
       let newTable = backpropReward reward steps table
           (newBestTraj, newBestRew) = 
             if plyReached >= length bestTraj 

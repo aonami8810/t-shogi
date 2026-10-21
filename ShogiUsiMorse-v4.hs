@@ -517,8 +517,43 @@ lookupBookMove currentMoves st =
   in listToMaybe validBookMoves
 
 -- ============================================================================
--- 8. 最善手選択 (型レベル定跡 ＆ Garside置換表 ＆ F5フィルター ＆ 千日手回避)
+-- 8. 最善手選択 (型レベル定跡 ＆ 3手先読みα-β探索 ＆ Garside置換表 ＆ F5フィルター ＆ 千日手回避)
 -- ============================================================================
+
+-- | ネガマックス α-β 探索 (自手番の視点でのスコアと最善手を返す: 3-Ply Lookahead)
+searchAlphaBeta :: Int -> Double -> Double -> State -> (Double, Maybe Move)
+searchAlphaBeta 0 _ _ st =
+  (evaluateState (turn st) st, Nothing)
+searchAlphaBeta depth alpha beta st =
+  let rawMoves = generateMoves st
+      f5Moves = f5SyzygyFilter st rawMoves
+      (_sennichite, safeMoves) = partition (\m -> 
+        let nextSt = applyMove m st
+        in isSennichite (positionKey nextSt) (history nextSt)
+        ) f5Moves
+  in if null f5Moves
+     then (-10000.0, Nothing) -- 詰み
+     else if null safeMoves
+       then (0.0, Nothing)     -- 千日手引き分け
+       else
+         -- 枝刈り効率化のため、1手先静的評価で降順ソート (Move Ordering)
+         let orderedMoves = sortBy (\m1 m2 ->
+               let s1 = evaluateState (turn st) (applyMove m1 st)
+                   s2 = evaluateState (turn st) (applyMove m2 st)
+               in compare s2 s1) safeMoves
+             topMoves = take (if depth >= 2 then 6 else 4) orderedMoves
+         in loop topMoves alpha Nothing
+  where
+    loop [] curAlpha bestMv = (curAlpha, bestMv)
+    loop (m:ms) curAlpha bestMv =
+      let nextSt = applyMove m st
+          (childScore, _) = searchAlphaBeta (depth - 1) (-beta) (-curAlpha) nextSt
+          score = -childScore
+      in if score >= beta
+         then (score, Just m)
+         else if score > curAlpha
+              then loop ms score (Just m)
+              else loop ms curAlpha (if isJust bestMv then bestMv else Just m)
 
 searchBestMoveWithCache :: State -> (Either String Move, State)
 searchBestMoveWithCache state =
@@ -528,7 +563,7 @@ searchBestMoveWithCache state =
       -- ★ 定跡ヒット：探索なしでノータイム指し
       (Right bookMove, state)
     Nothing ->
-      -- 2. 定跡外または定跡完了後は、通常のモースポテンシャル探索（Garsideキャッシュ + F5フィルター）
+      -- 2. 定跡外または定跡完了後は、3手先読みα-β探索（Garsideキャッシュ + F5フィルター）
       let moves = generateMoves state
           f5FilteredMoves = f5SyzygyFilter state moves
           
@@ -545,13 +580,16 @@ searchBestMoveWithCache state =
              case Map.lookup (positionKey state) (cache state) of
                Just (_score, mv) | mv `elem` safeMoves -> (Right mv, state)
                _ ->
-                 let scoredMoves = [ (evaluateState (turn state) (applyMove m state), m) | m <- safeMoves ]
-                     sorted = sortBy (\(s1, _) (s2, _) -> compare s2 s1) scoredMoves
-                 in case sorted of
-                      ((bestScore, bestMove) : _) ->
+                 let (bestScore, maybeBestMove) = searchAlphaBeta 3 (-99999.0) 99999.0 state
+                 in case maybeBestMove of
+                      Just bestMove ->
                         let newCache = Map.insert (positionKey state) (bestScore, bestMove) (cache state)
                         in (Right bestMove, state { cache = newCache })
-                      [] -> (Left "resign", state)
+                      Nothing ->
+                        -- 万が一見つからない場合は安全な手から選択
+                        case safeMoves of
+                          (m:_) -> (Right m, state)
+                          []    -> (Left "resign", state)
 
 -- ============================================================================
 -- 9. USIメインループ
