@@ -13,7 +13,7 @@ import Data.Proxy
 import qualified Data.Map as Map
 
 -- ============================================================================
--- 1. Žû‘©‚µ‚½—ÕŠEƒm[ƒh‚Ì’è‹`iType-Level Symbolsj
+-- 1. åŽæŸã—ãŸè‡¨ç•ŒãƒŽãƒ¼ãƒ‰ã®å®šç¾©ï¼ˆType-Level Symbolsï¼‰
 -- ============================================================================
 
 -- | Node ID: Saddle_Aigakari_Hikibisha (Type: Saddle, Potential: 30.0)
@@ -35,8 +35,8 @@ import qualified Data.Map as Map
 -- | Node ID: Start (Type: Saddle, Potential: 0.0)
 
 -- ============================================================================
--- 2. Œù”z—¬iV-Pathj‚ÌŒ^ƒŒƒxƒ‹“ñ€‘JˆÚŠÖŒW‚Ì’è‹`iType Familyj
---    ƒAƒNƒeƒBƒuEƒ‰[ƒjƒ“ƒO‚ÅŽû‘©‚ªŠm”F‚³‚ê‚½ƒpƒX‚Ì‚Ý‚ª 'True ‚Æ”»’è‚³‚ê‚Ü‚·B
+-- 2. å‹¾é…æµï¼ˆV-Pathï¼‰ã®åž‹ãƒ¬ãƒ™ãƒ«äºŒé …é·ç§»é–¢ä¿‚ã®å®šç¾©ï¼ˆType Familyï¼‰
+--    ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãƒ»ãƒ©ãƒ¼ãƒ‹ãƒ³ã‚°ã§åŽæŸãŒç¢ºèªã•ã‚ŒãŸãƒ‘ã‚¹ã®ã¿ãŒ 'True ã¨åˆ¤å®šã•ã‚Œã¾ã™ã€‚
 -- ============================================================================
 type family ValidTransition (from :: Symbol) (to :: Symbol) :: Bool where
   ValidTransition "Start" "Saddle_DirectGold_KakutoDefense" = 'True
@@ -58,8 +58,8 @@ type family ValidTransition (from :: Symbol) (to :: Symbol) :: Bool where
   ValidTransition from to = 'False
 
 -- ============================================================================
--- 3. Ã“I‚ÈŒ^ˆÀ‘S Morse ChainiŒù”z—¬ƒ`ƒF[ƒ“FGADTj
---    ƒRƒ“ƒpƒCƒ‹ŽžˆÀ‘S‚ª100%•ÛØ‚³‚ê‚½ˆêˆÓ‚È’èÕƒpƒX‚Ì\’zŽq‚Å‚·B
+-- 3. é™çš„ãªåž‹å®‰å…¨ Morse Chainï¼ˆå‹¾é…æµãƒã‚§ãƒ¼ãƒ³ï¼šGADTï¼‰
+--    ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«æ™‚å®‰å…¨ãŒ100%ä¿è¨¼ã•ã‚ŒãŸä¸€æ„ãªå®šè·¡ãƒ‘ã‚¹ã®æ§‹ç¯‰å­ã§ã™ã€‚
 -- ============================================================================
 data MorseChain (nodes :: [Symbol]) where
   Nil     :: MorseChain '[]
@@ -72,7 +72,7 @@ data MorseChain (nodes :: [Symbol]) where
                -> MorseChain (to : from : rest)
 
 -- ============================================================================
--- 4. ŽÀsŽžiRuntimej‚‘¬“WŠJ—p‚ÌV-Path’è‹`ƒ}ƒbƒv
+-- 4. å®Ÿè¡Œæ™‚ï¼ˆRuntimeï¼‰é«˜é€Ÿå±•é–‹ç”¨ã®V-Pathå®šç¾©ãƒžãƒƒãƒ—
 -- ============================================================================
 vpathLookup :: String -> String -> Maybe [String]
 vpathLookup from to = Map.lookup (from, to) runtimePaths

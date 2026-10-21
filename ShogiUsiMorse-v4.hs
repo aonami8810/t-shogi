@@ -4,12 +4,15 @@ module Main where
 
 import System.IO
 import System.Exit
+import System.Timeout (timeout)
 import Data.Char
 import Data.List
 import Data.Maybe
+import Data.IORef (newIORef, readIORef, writeIORef)
+import Control.Monad (forM_)
 import qualified Data.Map as Map
 import qualified CompiledMorseBook as Book
-import Control.Exception (catch, SomeException)
+import Control.Exception (catch, SomeException, evaluate)
 import Text.Read (readMaybe)
 
 -- ============================================================================
@@ -855,18 +858,97 @@ searchAlphaBeta weights depth alpha beta st =
               then loop ms score (Just m)
               else loop ms curAlpha (if isJust bestMv then bestMv else Just m)
 
-searchBestMoveWithCache :: MidgameWeights -> State -> (Either String Move, State)
-searchBestMoveWithCache weights state =
+-- | USI の go コマンド引数から思考時間上限（マイクロ秒）を計算
+-- 1秒切れ負け（秒読み1秒等）で絶対に切れないよう、通信・I/Oラグ（150ms）を差し引いた最大850ms（850,000μs）に厳格制限
+calcTimeLimitMicros :: Player -> [String] -> Int
+calcTimeLimitMicros ply tokens =
+  let byo = case elemIndex "byoyomi" tokens of
+        Just idx | idx + 1 < length tokens -> readMaybe (tokens !! (idx + 1))
+        _ -> Nothing
+      movetime = case elemIndex "movetime" tokens of
+        Just idx | idx + 1 < length tokens -> readMaybe (tokens !! (idx + 1))
+        _ -> Nothing
+      btime = case elemIndex "btime" tokens of
+        Just idx | idx + 1 < length tokens -> readMaybe (tokens !! (idx + 1))
+        _ -> Nothing
+      wtime = case elemIndex "wtime" tokens of
+        Just idx | idx + 1 < length tokens -> readMaybe (tokens !! (idx + 1))
+        _ -> Nothing
+      myTime = case ply of
+        Sente -> btime
+        Gote  -> wtime
+      
+      -- 基本思考時間（ミリ秒）：最大 850ms、安全マージン 150ms 考慮
+      timeMs = case (byo, movetime, myTime) of
+        (Just b, _, _) -> max 100 (min 850 (b - 150))
+        (_, Just m, _) -> max 100 (min 850 (m - 150))
+        (_, _, Just t) -> max 100 (min 850 (t `div` 15))
+        _              -> 850 -- デフォルト 850ms (0.85秒)
+  in timeMs * 1000
+
+-- | 反復深化探索 (1秒以内厳格保障: 最大 850ms で打ち切り、切れ負けを完全防止)
+searchBestMoveIterativeWithTimeout :: MidgameWeights -> Int -> State -> IO (Either String Move, State)
+searchBestMoveIterativeWithTimeout weights timeLimitMicros state =
   -- 1. まず型レベル定跡（V-Path スライド）を照会
   case lookupBookMove (moveHistory state) state of
-    Just bookMove ->
-      -- ★ 定跡ヒット：探索なしでノータイム指し
-      (Right bookMove, state)
-    Nothing ->
-      -- 2. 定跡外または定跡完了後は、中盤強化学習先読みα-β探索（Garsideキャッシュ + F5フィルター + タダ捨て防止 + 静止探索）
+    Just bookMove -> do
+      putStrLn $ "info string book hit pv " ++ showMove bookMove
+      hFlush stdout
+      return (Right bookMove, state)
+    Nothing -> do
+      -- 2. 定跡外または定跡完了後は、反復深化α-β探索（Garsideキャッシュ + F5フィルター + タダ捨て防止 + 静止探索）
       let moves = generateMoves state
           f5FilteredMoves = f5SyzygyFilter state moves
           
+          (_sennichiteMoves, safeMoves) = 
+            partition (\m -> 
+              let nextState = applyMove m state
+              in isSennichite (positionKey nextState) (history nextState)
+            ) f5FilteredMoves
+          nonKakutoMoves = filter (not . isPushingKakutoPawn state) safeMoves
+          effectiveMoves = if null nonKakutoMoves then safeMoves else nonKakutoMoves
+      if null f5FilteredMoves
+         then return (Left "resign", state)
+         else if null effectiveMoves
+           then return (Left "draw", state)
+           else
+             case Map.lookup (positionKey state) (cache state) of
+               Just (_score, mv) | mv `elem` effectiveMoves -> do
+                 putStrLn $ "info string hash hit pv " ++ showMove mv
+                 hFlush stdout
+                 return (Right mv, state)
+               _ -> do
+                 -- 初期フォールバックとして合法かつ安全な最善手候補を設定
+                 let fallbackMove = case effectiveMoves of (m:_) -> m; [] -> error "no effective moves"
+                 bestRef <- newIORef (0.0, fallbackMove)
+                 
+                 -- タイムアウト付き反復深化探索 (depth 1..7)
+                 _ <- timeout timeLimitMicros $ do
+                   forM_ [1..7] $ \d -> do
+                     let (score, maybeMv) = searchAlphaBeta weights d (-99999.0) 99999.0 state
+                     case maybeMv of
+                       Just mv -> do
+                         -- 遅延評価を解除して正格に評価を確定
+                         _ <- evaluate (score `seq` mv `seq` ())
+                         writeIORef bestRef (score, mv)
+                         putStrLn $ "info depth " ++ show d ++ " score cp " ++ show (round score :: Int) ++ " pv " ++ showMove mv
+                         hFlush stdout
+                       Nothing -> return ()
+                 
+                 -- タイムアウトした場合でも、直前までに探索が完了した最高深さの最善手を取得
+                 (bestScore, bestMove) <- readIORef bestRef
+                 let newCache = Map.insert (positionKey state) (bestScore, bestMove) (cache state)
+                 return (Right bestMove, state { cache = newCache })
+
+-- 後方互換用：純粋探索
+searchBestMoveWithCache :: MidgameWeights -> State -> (Either String Move, State)
+searchBestMoveWithCache weights state =
+  case lookupBookMove (moveHistory state) state of
+    Just bookMove ->
+      (Right bookMove, state)
+    Nothing ->
+      let moves = generateMoves state
+          f5FilteredMoves = f5SyzygyFilter state moves
           (_sennichiteMoves, safeMoves) = 
             partition (\m -> 
               let nextState = applyMove m state
@@ -914,10 +996,12 @@ usiLoop weights currentState = do
         putStrLn "id name ShogiMorseEngine_Haskell_with_F5_Garside_and_Sennichite"
         putStrLn "id author Shogi_Topology_Project"
         putStrLn "usiok"
+        hFlush stdout
         usiLoop weights currentState
       
       "isready" -> do
         putStrLn "readyok"
+        hFlush stdout
         usiLoop weights currentState
       
       "usinewgame" -> do
@@ -939,16 +1023,20 @@ usiLoop weights currentState = do
         usiLoop weights finalState { cache = cache currentState, moveHistory = movesTokens }
       
       "go" -> do
-        let (res, nextState) = searchBestMoveWithCache weights currentState
+        let timeLimitMicros = calcTimeLimitMicros (turn currentState) (drop 1 tokens)
+        (res, nextState) <- searchBestMoveIterativeWithTimeout weights timeLimitMicros currentState
         case res of
           Left "draw" -> do
             putStrLn "bestmove draw"
+            hFlush stdout
             usiLoop weights nextState
           Left _ -> do
             putStrLn "bestmove resign"
+            hFlush stdout
             usiLoop weights nextState
           Right best -> do
             putStrLn $ "bestmove " ++ showMove best
+            hFlush stdout
             usiLoop weights nextState
       
       "quit" -> do
