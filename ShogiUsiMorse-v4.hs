@@ -773,16 +773,18 @@ lookupBookMove currentMoves st =
       candidates = [ parseMove (p !! length currentMoves) | p <- matchingPaths ]
       validBookMoves = filter (`elem` safeLegalMoves) candidates
       
-      -- 初手（currentMoves == []）の場合、7六歩 (7g7f) または 2六歩 (2g2f) を最優先
+      -- 初手（currentMoves == [] かつ初期局面）の場合、7六歩 (7g7f) または 2六歩 (2g2f) を最優先
       sortedMoves =
         if null currentMoves
-        then sortBy (\m1 m2 ->
-               let score m = case m of
-                     NormalMove (7, 7) (7, 6) False -> 2 :: Int
-                     NormalMove (2, 7) (2, 6) False -> 1 :: Int
-                     _                              -> 0 :: Int
-               in compare (score m2) (score m1)
-             ) validBookMoves
+        then if board st == initBoard
+             then sortBy (\m1 m2 ->
+                    let score m = case m of
+                          NormalMove (7, 7) (7, 6) False -> 2 :: Int
+                          NormalMove (2, 7) (2, 6) False -> 1 :: Int
+                          _                              -> 0 :: Int
+                    in compare (score m2) (score m1)
+                  ) validBookMoves
+             else []
         else validBookMoves
   in listToMaybe sortedMoves
 
@@ -858,6 +860,161 @@ searchAlphaBeta weights depth alpha beta st =
               then loop ms score (Just m)
               else loop ms curAlpha (if isJust bestMv then bestMv else Just m)
 
+-- ============================================================================
+-- 8.5 詰み関与駒だけの商空間によるエンドゲームテーブル (Quotient Endgame Tablebase: QEGTB)
+-- ============================================================================
+
+-- | 詰み関与駒の商空間局所パターン
+-- 81マス全体から詰みの成否に関与する極小部分空間（玉近傍・王手射線・持ち駒）のみを同値類として縮約
+data QuotientPattern = QuotientPattern
+  { qpName          :: !String
+  , qpTargetKingRank:: !(Square -> Bool)                       -- 受手玉の座標条件
+  , qpRequiredHand  :: ![(PieceType, Int)]                     -- 詰みに必要な最小限の持ち駒
+  , qpSupportCheck  :: !(Square -> Board -> Player -> Bool)    -- 王手駒に紐（支え）が付いているかの述語
+  , qpCandidateMove :: !(Square -> Player -> Board -> Maybe Move) -- 最善王手生成関数
+  , qpDTM           :: !Int                                    -- 詰み手数 (Distance to Mate: 1, 3, 5...)
+  }
+
+-- | バックプロパゲーションによって抽出された商空間エンドゲームテーブルベース
+endgameTablebase :: [QuotientPattern]
+endgameTablebase =
+  [ -- 1. 頭金イデアル (Atama-Kin Family: DTM = 1)
+    -- 玉の頭（前1マス）に金を打つ。背後が盤外（1段目/9段目）または壁で逃げ場なし
+    QuotientPattern
+      { qpName = "AtamaKin_Drop_DTM1"
+      , qpTargetKingRank = \(_, ky) -> ky == 1 || ky == 9 || ky == 2 || ky == 8
+      , qpRequiredHand = [(Gold, 1)]
+      , qpSupportCheck = \(kx, ky) bd att ->
+          let headSq = if att == Sente then (kx, ky + 1) else (kx, ky - 1)
+          in not (isOutOfBounds headSq) && isSquareUnderAttack att headSq bd
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let headSq = if att == Sente then (kx, ky + 1) else (kx, ky - 1)
+          in if not (isOutOfBounds headSq) && not (Map.member headSq bd)
+             then Just (DropMove Gold headSq)
+             else Nothing
+      , qpDTM = 1
+      }
+    -- 2. 盤上の龍・馬・金による玉頭突入詰み (Promoted Piece Head Attack: DTM = 1)
+  , QuotientPattern
+      { qpName = "Board_Head_Attack_DTM1"
+      , qpTargetKingRank = \(_, ky) -> ky == 1 || ky == 9 || ky == 2 || ky == 8
+      , qpRequiredHand = []
+      , qpSupportCheck = \(kx, ky) bd att ->
+          let headSq = if att == Sente then (kx, ky + 1) else (kx, ky - 1)
+          in not (isOutOfBounds headSq) && isSquareUnderAttack att headSq bd
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let headSq = if att == Sente then (kx, ky + 1) else (kx, ky - 1)
+              attackers = [ sq | (sq, p@(Piece pPlr pt)) <- Map.toList bd
+                               , pPlr == att
+                               , pt `elem` [PRook, PBishop, Gold, PPawn, PSilver, PKnight, PLance]
+                               , canPieceReachTarget sq p headSq bd
+                          ]
+          in case attackers of
+               (fromSq:_) -> Just (NormalMove fromSq headSq False)
+               []         -> Nothing
+      , qpDTM = 1
+      }
+    -- 3. 吊るし桂イデアル (Tsurushi-Kei: DTM = 1)
+  , QuotientPattern
+      { qpName = "TsurushiKei_DTM1"
+      , qpTargetKingRank = \(_, ky) -> ky <= 3 || ky >= 7
+      , qpRequiredHand = [(Knight, 1)]
+      , qpSupportCheck = \_ _ _ -> True
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 2 else -2
+              dropSq1 = (kx - 1, ky + dirY)
+              dropSq2 = (kx + 1, ky + dirY)
+              validSq sq = not (isOutOfBounds sq) && not (Map.member sq bd)
+          in case filter validSq [dropSq1, dropSq2] of
+               (sq:_) -> Just (DropMove Knight sq)
+               []     -> Nothing
+      , qpDTM = 1
+      }
+    -- 4. 腹金・尻金イデアル (HaraKin: DTM = 1)
+  , QuotientPattern
+      { qpName = "HaraKin_DTM1"
+      , qpTargetKingRank = \_ -> True
+      , qpRequiredHand = [(Gold, 1)]
+      , qpSupportCheck = \(kx, ky) bd att ->
+          isSquareUnderAttack att (kx - 1, ky) bd || isSquareUnderAttack att (kx + 1, ky) bd
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let leftSq = (kx - 1, ky)
+              rightSq = (kx + 1, ky)
+              validDrop sq = not (isOutOfBounds sq) && not (Map.member sq bd) && isSquareUnderAttack att sq bd
+          in case filter validDrop [leftSq, rightSq] of
+               (sq:_) -> Just (DropMove Gold sq)
+               []     -> Nothing
+      , qpDTM = 1
+      }
+    -- 5. 一間竜イデアル (Ikken-Ryu: DTM = 3 - バックプロパゲーション)
+  , QuotientPattern
+      { qpName = "IkkenRyu_DTM3"
+      , qpTargetKingRank = \(_, ky) -> ky <= 3 || ky >= 7
+      , qpRequiredHand = [(Silver, 1), (Gold, 1)]
+      , qpSupportCheck = \_ _ _ -> True
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let rRookSq = listToMaybe [ sq | (sq@(rx, ry), Piece p pt) <- Map.toList bd
+                                         , p == att, pt == PRook, rx == kx, abs (ry - ky) == 2 ]
+          in case rRookSq of
+               Just _ ->
+                 let dirY = if att == Sente then 1 else -1
+                     midSq = (kx, ky + dirY)
+                 in if not (Map.member midSq bd) && not (isOutOfBounds midSq)
+                    then Just (DropMove Silver midSq)
+                    else Nothing
+               Nothing -> Nothing
+      , qpDTM = 3
+      }
+    -- 6. 送りの手筋イデアル (Okuri: DTM = 3 - バックプロパゲーション)
+  , QuotientPattern
+      { qpName = "Okuri_DTM3"
+      , qpTargetKingRank = \(_, ky) -> ky == 2 || ky == 8
+      , qpRequiredHand = [(Gold, 1)]
+      , qpSupportCheck = \_ _ _ -> True
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let edgeY = if att == Sente then 1 else 9
+              targetSq = (kx, edgeY)
+          in if not (Map.member targetSq bd) && not (isOutOfBounds targetSq) && isSquareUnderAttack att targetSq bd
+             then Just (DropMove Silver targetSq)
+             else Nothing
+      , qpDTM = 3
+      }
+  ]
+
+-- | 商空間エンドゲームテーブル (QEGTB) 照合
+lookupQuotientTablebase :: State -> Maybe (Int, Move)
+lookupQuotientTablebase st =
+  let att = turn st
+      def = opponent att
+      curBd = board st
+      curHands = hands st
+      maybeDefKingSq = findKing def curBd
+  in case maybeDefKingSq of
+       Nothing -> Nothing
+       Just kSq ->
+         let myHands = fromMaybe emptyHand (Map.lookup att curHands)
+             hasRequiredHand reqs = all (\(pt, cnt) -> Map.findWithDefault 0 pt myHands >= cnt) reqs
+
+             matchPattern QuotientPattern{..} =
+               if not (qpTargetKingRank kSq)
+               then Nothing
+               else if not (hasRequiredHand qpRequiredHand)
+               then Nothing
+               else if not (qpSupportCheck kSq curBd att)
+               then Nothing
+               else
+                 case qpCandidateMove kSq att curBd of
+                   Just mv ->
+                     -- 着手後の局面で実際に相手玉が王手になっているか安全検証
+                     let nextSt = applyMove mv st
+                     in if isKingUnderAttack def (board nextSt)
+                        then Just (qpDTM, mv)
+                        else Nothing
+                   Nothing -> Nothing
+
+             matches = [ res | pat <- endgameTablebase, Just res <- [matchPattern pat] ]
+         in listToMaybe matches
+
 -- | USI の go コマンド引数から思考時間上限（マイクロ秒）を計算
 -- byoyomi (秒読み) の秒数を上限とし、通信・I/Oラグ（150ms）を差し引いて切れ負けを完全防止
 calcTimeLimitMicros :: Player -> [String] -> Int
@@ -905,62 +1062,68 @@ calcTimeLimitMicros ply tokens =
 -- | 反復深化探索 (byoyomi を上限とし、タイムアウトで打ち切り)
 searchBestMoveIterativeWithTimeout :: MidgameWeights -> Int -> State -> IO (Either String Move, State)
 searchBestMoveIterativeWithTimeout weights timeLimitMicros state =
-  -- 1. まず型レベル定跡（V-Path スライド）を照会
-  case lookupBookMove (moveHistory state) state of
-    Just bookMove -> do
-      putStrLn $ "info string book hit pv " ++ showMove bookMove
+  -- 1. まず詰み関与駒だけの商空間エンドゲームテーブル (QEGTB) を最優先照会
+  case lookupQuotientTablebase state of
+    Just (dtm, mateMove) -> do
+      putStrLn $ "info string quotient egtb hit dtm " ++ show dtm ++ " score mate " ++ show dtm ++ " pv " ++ showMove mateMove
       hFlush stdout
-      return (Right bookMove, state)
-    Nothing -> do
-      -- 2. 定跡外または定跡完了後は、反復深化α-β探索（Garsideキャッシュ + F5フィルター + タダ捨て防止 + 静止探索）
-      let moves = generateMoves state
-          f5FilteredMoves = f5SyzygyFilter state moves
-          
-          (_sennichiteMoves, safeMoves) = 
-            partition (\m -> 
-              let nextState = applyMove m state
-              in isSennichite (positionKey nextState) (history nextState)
-            ) f5FilteredMoves
-          nonKakutoMoves = filter (not . isPushingKakutoPawn state) safeMoves
-          effectiveMoves = if null nonKakutoMoves then safeMoves else nonKakutoMoves
-      if null f5FilteredMoves
-         then return (Left "resign", state)
-         else if null effectiveMoves
-           then return (Left "draw", state)
-           else
-             case Map.lookup (positionKey state) (cache state) of
-               Just (_score, mv) | mv `elem` effectiveMoves -> do
-                 putStrLn $ "info string hash hit pv " ++ showMove mv
-                 hFlush stdout
-                 return (Right mv, state)
-               _ -> do
-                 -- 初期フォールバックとして合法かつ安全な最善手候補を設定
-                 let fallbackMove = case effectiveMoves of (m:_) -> m; [] -> error "no effective moves"
-                 bestRef <- newIORef (0.0, fallbackMove)
+      return (Right mateMove, state)
+    Nothing ->
+      -- 2. 型レベル定跡（V-Path スライド）を照会
+      case lookupBookMove (moveHistory state) state of
+        Just bookMove -> do
+          putStrLn $ "info string book hit pv " ++ showMove bookMove
+          hFlush stdout
+          return (Right bookMove, state)
+        Nothing -> do
+          -- 2. 定跡外または定跡完了後は、反復深化α-β探索（Garsideキャッシュ + F5フィルター + タダ捨て防止 + 静止探索）
+          let moves = generateMoves state
+              f5FilteredMoves = f5SyzygyFilter state moves
+              (_sennichiteMoves, safeMoves) = 
+                partition (\m -> 
+                  let nextState = applyMove m state
+                  in isSennichite (positionKey nextState) (history nextState)
+                ) f5FilteredMoves
+              nonKakutoMoves = filter (not . isPushingKakutoPawn state) safeMoves
+              effectiveMoves = if null nonKakutoMoves then safeMoves else nonKakutoMoves
+          if null f5FilteredMoves
+            then return (Left "resign", state)
+            else if null effectiveMoves
+              then return (Left "draw", state)
+              else
+                case Map.lookup (positionKey state) (cache state) of
+                  Just (_score, mv) | mv `elem` effectiveMoves -> do
+                    putStrLn $ "info string hash hit pv " ++ showMove mv
+                    hFlush stdout
+                    return (Right mv, state)
+                  _ -> do
+                     -- 初期フォールバックとして合法かつ安全な最善手候補を設定
+                     let fallbackMove = case effectiveMoves of (m:_) -> m; [] -> error "no effective moves"
+                     bestRef <- newIORef (0.0, fallbackMove)
                  
-                 -- タイムアウト付き反復深化探索 (byoyomi を上限として depth 1..31 まで探索)
-                 _ <- timeout timeLimitMicros $ do
-                   let runIDS d
-                         | d > 31 = return ()
-                         | otherwise = do
-                             let (score, maybeMv) = searchAlphaBeta weights d (-99999.0) 99999.0 state
-                             case maybeMv of
-                               Just mv -> do
-                                 -- 遅延評価を解除して正格に評価を確定
-                                 _ <- evaluate (score `seq` mv `seq` ())
-                                 writeIORef bestRef (score, mv)
-                                 putStrLn $ "info depth " ++ show d ++ " score cp " ++ show (round score :: Int) ++ " pv " ++ showMove mv
-                                 hFlush stdout
-                                 if abs score >= 9000.0
-                                   then return () -- 詰みを発見した場合は即座に着手
-                                   else runIDS (d + 1)
-                               Nothing -> return ()
-                   runIDS 1
+                     -- タイムアウト付き反復深化探索 (byoyomi を上限として depth 1..31 まで探索)
+                     _ <- timeout timeLimitMicros $ do
+                       let runIDS d
+                             | d > 31 = return ()
+                             | otherwise = do
+                                 let (score, maybeMv) = searchAlphaBeta weights d (-99999.0) 99999.0 state
+                                 case maybeMv of
+                                   Just mv -> do
+                                     -- 遅延評価を解除して正格に評価を確定
+                                     _ <- evaluate (score `seq` mv `seq` ())
+                                     writeIORef bestRef (score, mv)
+                                     putStrLn $ "info depth " ++ show d ++ " score cp " ++ show (round score :: Int) ++ " pv " ++ showMove mv
+                                     hFlush stdout
+                                     if abs score >= 9000.0
+                                       then return () -- 詰みを発見した場合は即座に着手
+                                       else runIDS (d + 1)
+                                   Nothing -> return ()
+                       runIDS 1
                  
-                 -- タイムアウトした場合でも、直前までに探索が完了した最高深さの最善手を取得
-                 (bestScore, bestMove) <- readIORef bestRef
-                 let newCache = Map.insert (positionKey state) (bestScore, bestMove) (cache state)
-                 return (Right bestMove, state { cache = newCache })
+                     -- タイムアウトした場合でも、直前までに探索が完了した最高深さの最善手を取得
+                     (bestScore, bestMove) <- readIORef bestRef
+                     let newCache = Map.insert (positionKey state) (bestScore, bestMove) (cache state)
+                     return (Right bestMove, state { cache = newCache })
 
 -- 後方互換用：純粋探索
 searchBestMoveWithCache :: MidgameWeights -> State -> (Either String Move, State)
