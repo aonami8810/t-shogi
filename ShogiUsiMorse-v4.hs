@@ -267,38 +267,6 @@ parseSfenHands str = foldl' addHand (Map.fromList [(Sente, emptyHand), (Gote, em
 -- 3. F5フィルター（シジジー事前予測による自殺手・王手放置・打ち歩詰めの完全排除）
 -- ============================================================================
 
--- | 盤面の任意の位置 (targetSq) が、attackerPlayer から王手（攻撃）されているか判定する
-isSquareUnderAttack :: Player -> Square -> Board -> Bool
-isSquareUnderAttack attackerPlayer targetSq bd =
-  any (\(sq, Piece _ pt) -> canPieceReach sq pt) attackerPieces
-  where
-    attackerPieces = [ (sq, p) | (sq, p@(Piece plr _)) <- Map.toList bd, plr == attackerPlayer ]
-    
-    canPieceReach :: Square -> PieceType -> Bool
-    canPieceReach (x, y) pt =
-      let dx = fst targetSq - x
-          dy = snd targetSq - y
-          absDx = abs dx
-          absDy = abs dy
-          dirY = if attackerPlayer == Sente then -1 else 1
-          isNotSelf = absDx /= 0 || absDy /= 0
-          goldMoves = (absDx <= 1 && absDy <= 1 && isNotSelf) && not (dy == -dirY && absDx == 1)
-      in case pt of
-        Pawn    -> dx == 0 && dy == dirY
-        King    -> absDx <= 1 && absDy <= 1 && isNotSelf
-        Gold    -> goldMoves
-        PPawn   -> goldMoves
-        PLance  -> goldMoves
-        PKnight -> goldMoves
-        PSilver -> goldMoves
-        Silver  -> ((dy == dirY && absDx <= 1) || (dy == -dirY && absDx == 1)) && isNotSelf
-        Rook    -> (dx == 0 || dy == 0) && isNotSelf && isPathClear (x, y) targetSq bd
-        PRook   -> ((dx == 0 || dy == 0) && isNotSelf && isPathClear (x, y) targetSq bd) || (absDx <= 1 && absDy <= 1 && isNotSelf)
-        Bishop  -> (absDx == absDy) && isNotSelf && isPathClear (x, y) targetSq bd
-        PBishop -> ((absDx == absDy) && isNotSelf && isPathClear (x, y) targetSq bd) || (absDx <= 1 && absDy <= 1 && isNotSelf)
-        Lance   -> dx == 0 && (dy * dirY > 0) && isPathClear (x, y) targetSq bd
-        Knight  -> absDx == 1 && dy == 2 * dirY
-
 -- | スライド駒の射線上に障害駒がないか確認（トポロジー的遮断判定）
 isPathClear :: Square -> Square -> Board -> Bool
 isPathClear (x1, y1) (x2, y2) bd =
@@ -306,6 +274,54 @@ isPathClear (x1, y1) (x2, y2) bd =
       dy = signum (y2 - y1)
       path = takeWhile (/= (x2, y2)) $ drop 1 $ iterate (\(cx, cy) -> (cx + dx, cy + dy)) (x1, y1)
   in all (\sq -> not (Map.member sq bd)) path
+
+-- | 駒の利き判定（ある駒が任意のマス targetSq に利いているか）
+canPieceReachTarget :: Square -> Piece -> Square -> Board -> Bool
+canPieceReachTarget (x, y) (Piece plr pt) targetSq bd =
+  let dx = fst targetSq - x
+      dy = snd targetSq - y
+      absDx = abs dx
+      absDy = abs dy
+      dirY = if plr == Sente then -1 else 1
+      isNotSelf = absDx /= 0 || absDy /= 0
+      goldMoves = (absDx <= 1 && absDy <= 1 && isNotSelf) && not (dy == -dirY && absDx == 1)
+  in case pt of
+    Pawn    -> dx == 0 && dy == dirY
+    King    -> absDx <= 1 && absDy <= 1 && isNotSelf
+    Gold    -> goldMoves
+    PPawn   -> goldMoves
+    PLance  -> goldMoves
+    PKnight -> goldMoves
+    PSilver -> goldMoves
+    Silver  -> ((dy == dirY && absDx <= 1) || (dy == -dirY && absDx == 1)) && isNotSelf
+    Rook    -> (dx == 0 || dy == 0) && isNotSelf && isPathClear (x, y) targetSq bd
+    PRook   -> ((dx == 0 || dy == 0) && isNotSelf && isPathClear (x, y) targetSq bd) || (absDx <= 1 && absDy <= 1 && isNotSelf)
+    Bishop  -> (absDx == absDy) && isNotSelf && isPathClear (x, y) targetSq bd
+    PBishop -> ((absDx == absDy) && isNotSelf && isPathClear (x, y) targetSq bd) || (absDx <= 1 && absDy <= 1 && isNotSelf)
+    Lance   -> dx == 0 && (dy * dirY > 0) && isPathClear (x, y) targetSq bd
+    Knight  -> absDx == 1 && dy == 2 * dirY
+
+-- | 盤面の任意の位置 (targetSq) に利いているプレイヤー plr の駒一覧
+getPiecesCovering :: Player -> Square -> Board -> [(Square, Piece)]
+getPiecesCovering plr targetSq bd =
+  [ (sq, p) | (sq, p@(Piece pPlr _)) <- Map.toList bd, pPlr == plr, canPieceReachTarget sq p targetSq bd ]
+
+-- | targetSq にプレイヤー plr の駒の利きが利いているか
+isCoveredBy :: Player -> Square -> Board -> Bool
+isCoveredBy plr targetSq bd = not (null (getPiecesCovering plr targetSq bd))
+
+-- | 盤面の任意の位置 (targetSq) が、attackerPlayer から王手（攻撃）されているか判定する
+isSquareUnderAttack :: Player -> Square -> Board -> Bool
+isSquareUnderAttack attackerPlayer targetSq bd = isCoveredBy attackerPlayer targetSq bd
+
+-- | ある駒に味方の紐が付いているか（守られているか）
+isPieceProtected :: Square -> Piece -> Board -> Bool
+isPieceProtected sq (Piece plr _) bd =
+  let friendlyDefenders = [ fromSq | (fromSq, p@(Piece pPlr _)) <- Map.toList bd
+                                   , pPlr == plr
+                                   , fromSq /= sq
+                                   , canPieceReachTarget fromSq p sq bd ]
+  in not (null friendlyDefenders)
 
 -- | 手番側の玉が現在、王手に晒されているかを判定する
 isKingUnderAttack :: Player -> Board -> Bool
@@ -386,7 +402,85 @@ evalMorsePotential player bd =
     dist (x1, y1) (x2, y2) = abs (x1 - x2) + abs (y1 - y2)
     outOfBounds (x, y) = x < 1 || x > 9 || y < 1 || y > 9
 
--- 局面の総合評価：(敵玉のモースポテンシャル - 自玉のモースポテンシャル) + (駒得マテリアル差)
+-- | 角頭の歩突き（先手8七歩 8g8f、後手2三歩 2c2d）の絶対禁止判定
+-- 飛車が8筋/2筋にいない状態で角頭の歩を突く悪手を完全に検知・排除
+isPushingKakutoPawn :: State -> Move -> Bool
+isPushingKakutoPawn st m =
+  let plr = turn st
+      bd = board st
+  in case m of
+    NormalMove (8, 7) (8, 6) _ | plr == Sente ->
+      case Map.lookup (8, 8) bd of
+        Just (Piece Sente Rook)  -> False -- 8八飛（向かい飛車）なら許容
+        Just (Piece Sente PRook) -> False
+        _                        -> True  -- 角が8八にいる/飛車がいないのに8七歩を突くのは絶対禁止
+    NormalMove (2, 3) (2, 4) _ | plr == Gote ->
+      case Map.lookup (2, 2) bd of
+        Just (Piece Gote Rook)  -> False -- 2二飛なら許容
+        Just (Piece Gote PRook) -> False
+        _                       -> True  -- 角が2二にいる/飛車がいないのに2三歩を突くのは絶対禁止
+    _ -> False
+
+-- | 角頭および桂頭の防衛評価
+evalKakutoKeitoDefense :: Player -> State -> Double
+evalKakutoKeitoDefense plr st =
+  let bd = board st
+      opp = opponent plr
+      
+      -- 先手視点の角頭(8,7)・桂頭守備評価
+      senteDefenseScore =
+        let enemyRookPawnAdvanced =
+              case Map.lookup (8, 4) bd of
+                Just (Piece Gote Pawn) -> True
+                _ -> case Map.lookup (8, 5) bd of
+                       Just (Piece Gote Pawn) -> True
+                       _ -> False
+            kakutoCovered = isCoveredBy Sente (8, 7) bd -- 7八金や7七角、7七銀の利きがあるか
+        in if enemyRookPawnAdvanced
+           then if kakutoCovered
+                then 150.0   -- 7八金などで角頭を堅固に防衛中
+                else -1200.0 -- 相手の飛車先が迫っているのに角頭が無防備（即敗北ペナルティ）
+           else if kakutoCovered
+                then 50.0    -- 早期の7八金角頭ガードボーナス
+                else 0.0
+
+      -- 後手視点の角頭(2,3)・桂頭守備評価
+      goteDefenseScore =
+        let enemyRookPawnAdvanced =
+              case Map.lookup (2, 6) bd of
+                Just (Piece Sente Pawn) -> True
+                _ -> case Map.lookup (2, 5) bd of
+                       Just (Piece Sente Pawn) -> True
+                       _ -> False
+            kakutoCovered = isCoveredBy Gote (2, 3) bd -- 3二金や3三角、3三銀の利きがあるか
+        in if enemyRookPawnAdvanced
+           then if kakutoCovered
+                then 150.0
+                else -1200.0
+           else if kakutoCovered
+                then 50.0
+                else 0.0
+
+      myScore = if plr == Sente then senteDefenseScore else goteDefenseScore
+      oppScore = if opp == Sente then senteDefenseScore else goteDefenseScore
+  in myScore - oppScore
+
+-- | 歩以外の放れ駒（味方の紐が付いていない駒）のペナルティ
+evalLoosePieces :: Player -> State -> Double
+evalLoosePieces plr st =
+  let bd = board st
+      opp = opponent plr
+      countLoose player =
+        length [ sq | (sq, p@(Piece pPlr pt)) <- Map.toList bd
+                    , pPlr == player
+                    , pt `notElem` [Pawn, King] -- 玉と歩以外（金銀桂香飛角）
+                    , not (isPieceProtected sq p bd)
+               ]
+      myLoose = countLoose plr
+      oppLoose = countLoose opp
+  in (fromIntegral oppLoose - fromIntegral myLoose) * 40.0
+
+-- 局面の総合評価：(敵玉のモースポテンシャル - 自玉のモースポテンシャル) + (駒得マテリアル差) + 角頭桂頭防衛 + 放れ駒ペナルティ
 evaluateState :: Player -> State -> Double
 evaluateState player st =
   let bd = board st
@@ -394,7 +488,9 @@ evaluateState player st =
       enemyDanger = evalMorsePotential (opponent player) bd
       morseAdvantage = (enemyDanger - myDanger) * 10.0
       materialAdvantage = evalMaterial player st
-  in morseAdvantage + materialAdvantage
+      kakutoKeitoAdvantage = evalKakutoKeitoDefense player st
+      looseAdvantage = evalLoosePieces player st
+  in morseAdvantage + materialAdvantage + kakutoKeitoAdvantage + looseAdvantage
 
 -- ============================================================================
 -- 5. 合法手生成
@@ -510,11 +606,25 @@ isSennichite key hist =
 lookupBookMove :: [String] -> State -> Maybe Move
 lookupBookMove currentMoves st =
   let legalMoves = f5SyzygyFilter st (generateMoves st)
+      -- 角頭歩突きは定跡であっても絶対に除外
+      safeLegalMoves = filter (not . isPushingKakutoPawn st) legalMoves
       allPaths = Map.elems Book.runtimePaths
       matchingPaths = filter (\p -> currentMoves `isPrefixOf` p && length p > length currentMoves) allPaths
       candidates = [ parseMove (p !! length currentMoves) | p <- matchingPaths ]
-      validBookMoves = filter (`elem` legalMoves) candidates
-  in listToMaybe validBookMoves
+      validBookMoves = filter (`elem` safeLegalMoves) candidates
+      
+      -- 初手（currentMoves == []）の場合、7六歩 (7g7f) または 2六歩 (2g2f) を最優先
+      sortedMoves =
+        if null currentMoves
+        then sortBy (\m1 m2 ->
+               let score m = case m of
+                     NormalMove (7, 7) (7, 6) False -> 2 :: Int
+                     NormalMove (2, 7) (2, 6) False -> 1 :: Int
+                     _                              -> 0 :: Int
+               in compare (score m2) (score m1)
+             ) validBookMoves
+        else validBookMoves
+  in listToMaybe sortedMoves
 
 -- ============================================================================
 -- 8. 最善手選択 (型レベル定跡 ＆ 3手先読みα-β探索 ＆ Garside置換表 ＆ F5フィルター ＆ 千日手回避)
@@ -531,16 +641,19 @@ searchAlphaBeta depth alpha beta st =
         let nextSt = applyMove m st
         in isSennichite (positionKey nextSt) (history nextSt)
         ) f5Moves
+      -- ★ 角頭歩突き (8g8f, 2c2d) は探索候補から完全除外
+      nonKakutoMoves = filter (not . isPushingKakutoPawn st) safeMoves
+      effectiveMoves = if null nonKakutoMoves then safeMoves else nonKakutoMoves
   in if null f5Moves
      then (-10000.0, Nothing) -- 詰み
-     else if null safeMoves
+     else if null effectiveMoves
        then (0.0, Nothing)     -- 千日手引き分け
        else
          -- 枝刈り効率化のため、1手先静的評価で降順ソート (Move Ordering)
          let orderedMoves = sortBy (\m1 m2 ->
                let s1 = evaluateState (turn st) (applyMove m1 st)
                    s2 = evaluateState (turn st) (applyMove m2 st)
-               in compare s2 s1) safeMoves
+               in compare s2 s1) effectiveMoves
              topMoves = take (if depth >= 2 then 6 else 4) orderedMoves
          in loop topMoves alpha Nothing
   where
@@ -563,7 +676,7 @@ searchBestMoveWithCache state =
       -- ★ 定跡ヒット：探索なしでノータイム指し
       (Right bookMove, state)
     Nothing ->
-      -- 2. 定跡外または定跡完了後は、3手先読みα-β探索（Garsideキャッシュ + F5フィルター）
+      -- 2. 定跡外または定跡完了後は、3手先読みα-β探索（Garsideキャッシュ + F5フィルター + 角頭防衛）
       let moves = generateMoves state
           f5FilteredMoves = f5SyzygyFilter state moves
           
@@ -572,13 +685,15 @@ searchBestMoveWithCache state =
               let nextState = applyMove m state
               in isSennichite (positionKey nextState) (history nextState)
             ) f5FilteredMoves
+          nonKakutoMoves = filter (not . isPushingKakutoPawn state) safeMoves
+          effectiveMoves = if null nonKakutoMoves then safeMoves else nonKakutoMoves
       in if null f5FilteredMoves
          then (Left "resign", state)
-         else if null safeMoves
+         else if null effectiveMoves
            then (Left "draw", state)
            else
              case Map.lookup (positionKey state) (cache state) of
-               Just (_score, mv) | mv `elem` safeMoves -> (Right mv, state)
+               Just (_score, mv) | mv `elem` effectiveMoves -> (Right mv, state)
                _ ->
                  let (bestScore, maybeBestMove) = searchAlphaBeta 3 (-99999.0) 99999.0 state
                  in case maybeBestMove of
@@ -587,7 +702,7 @@ searchBestMoveWithCache state =
                         in (Right bestMove, state { cache = newCache })
                       Nothing ->
                         -- 万が一見つからない場合は安全な手から選択
-                        case safeMoves of
+                        case effectiveMoves of
                           (m:_) -> (Right m, state)
                           []    -> (Left "resign", state)
 

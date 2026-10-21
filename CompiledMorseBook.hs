@@ -16,46 +16,22 @@ import qualified Data.Map as Map
 -- 1. 収束した臨界ノードの定義（Type-Level Symbols）
 -- ============================================================================
 
--- | Node ID: Minimum_Ply_512_GuardedOpening_Convergence (Type: Saddle, Potential: 7356.686382985772)
--- | Node ID: Saddle_Ply_100_3e2d (Type: Saddle, Potential: -5190.894814764079)
--- | Node ID: Saddle_Ply_120_1c1b (Type: Saddle, Potential: -5231.617369597097)
--- | Node ID: Saddle_Ply_136_1a1b (Type: Saddle, Potential: -4008.0489337898007)
--- | Node ID: Saddle_Ply_140_2d3c (Type: Saddle, Potential: -4802.336635994236)
--- | Node ID: Saddle_Ply_160_1b1a (Type: Saddle, Potential: -5927.449834177516)
--- | Node ID: Saddle_Ply_180_1b1a (Type: Saddle, Potential: -5569.364750943918)
--- | Node ID: Saddle_Ply_200_6a5b (Type: Saddle, Potential: -6895.81048795415)
--- | Node ID: Saddle_Ply_20_4c4d (Type: Saddle, Potential: 0.0)
--- | Node ID: Saddle_Ply_220_5b4b (Type: Saddle, Potential: -8796.53378827958)
--- | Node ID: Saddle_Ply_240_1a2a (Type: Saddle, Potential: -11413.315762178048)
--- | Node ID: Saddle_Ply_260_1d1c (Type: Saddle, Potential: -11398.881465046135)
--- | Node ID: Saddle_Ply_280_2c1d (Type: Saddle, Potential: -11908.252259886769)
--- | Node ID: Saddle_Ply_288_2c2d (Type: Saddle, Potential: -11118.754783906183)
--- | Node ID: Saddle_Ply_296_2e3e (Type: Saddle, Potential: -11249.860574937464)
--- | Node ID: Saddle_Ply_300_2d2c (Type: Saddle, Potential: -11110.31209129269)
--- | Node ID: Saddle_Ply_304_2d2c (Type: Saddle, Potential: -11110.31209129269)
--- | Node ID: Saddle_Ply_320_1c1b (Type: Saddle, Potential: -13715.903831567626)
--- | Node ID: Saddle_Ply_340_1b1a (Type: Saddle, Potential: -15007.814259220162)
--- | Node ID: Saddle_Ply_360_1b1a (Type: Saddle, Potential: -14996.3368965408)
--- | Node ID: Saddle_Ply_380_1b1a (Type: Saddle, Potential: -14999.397233873438)
--- | Node ID: Saddle_Ply_400_1b1a (Type: Saddle, Potential: -15663.460960495464)
--- | Node ID: Saddle_Ply_40_4a3b (Type: Saddle, Potential: 0.0)
--- | Node ID: Saddle_Ply_420_1b1a (Type: Saddle, Potential: -15669.11830540064)
--- | Node ID: Saddle_Ply_432_1b1a (Type: Saddle, Potential: -14670.35335439683)
--- | Node ID: Saddle_Ply_440_1b1a (Type: Saddle, Potential: -14674.417081018853)
--- | Node ID: Saddle_Ply_448_1b1a (Type: Saddle, Potential: -14667.293017064188)
--- | Node ID: Saddle_Ply_460_1b1a (Type: Saddle, Potential: -14680.074425924031)
--- | Node ID: Saddle_Ply_472_1a1b (Type: Saddle, Potential: -15357.36927598279)
--- | Node ID: Saddle_Ply_480_1a1b (Type: Saddle, Potential: -15363.026620887964)
--- | Node ID: Saddle_Ply_488_1a1b (Type: Saddle, Potential: -15353.30554936076)
--- | Node ID: Saddle_Ply_48_4e4f (Type: Saddle, Potential: -2301.0111931692754)
--- | Node ID: Saddle_Ply_496_1a1b (Type: Saddle, Potential: -15371.44364623469)
--- | Node ID: Saddle_Ply_500_1a1b (Type: Saddle, Potential: -15371.44364623469)
--- | Node ID: Saddle_Ply_504_1b1a (Type: Saddle, Potential: -15334.710042568699)
--- | Node ID: Saddle_Ply_512_1b1a (Type: Saddle, Potential: -15334.710042568699)
--- | Node ID: Saddle_Ply_56_1a1b (Type: Saddle, Potential: -3989.545680197227)
--- | Node ID: Saddle_Ply_60_1e4b (Type: Saddle, Potential: -3979.360596600378)
--- | Node ID: Saddle_Ply_80_4b3c (Type: Saddle, Potential: -3238.9856803490134)
--- | Node ID: Saddle_Ply_88_4c3c (Type: Saddle, Potential: -4084.589875318836)
+-- | Node ID: Saddle_Aigakari_Hikibisha (Type: Saddle, Potential: 30.0)
+-- | Node ID: Saddle_Aigakari_Standard (Type: Saddle, Potential: 25.0)
+-- | Node ID: Saddle_DirectGold_KakutoDefense (Type: Saddle, Potential: 35.0)
+-- | Node ID: Saddle_EdgePawn_Solid (Type: Saddle, Potential: 15.0)
+-- | Node ID: Saddle_Gote_34Pawn_Yagura (Type: Saddle, Potential: 25.0)
+-- | Node ID: Saddle_Gote_84Pawn_Ibisha (Type: Saddle, Potential: 20.0)
+-- | Node ID: Saddle_Kakugawari_Hayaguri (Type: Saddle, Potential: 40.0)
+-- | Node ID: Saddle_Kakugawari_Koshikake (Type: Saddle, Potential: 35.0)
+-- | Node ID: Saddle_Nakabisha_Gokigen (Type: Saddle, Potential: 65.0)
+-- | Node ID: Saddle_Nakabisha_LeftKing (Type: Saddle, Potential: 55.0)
+-- | Node ID: Saddle_Sankenbisha_Ishida (Type: Saddle, Potential: 50.0)
+-- | Node ID: Saddle_Shikenbisha_Exchange (Type: Saddle, Potential: 55.0)
+-- | Node ID: Saddle_Shikenbisha_Mino (Type: Saddle, Potential: 60.0)
+-- | Node ID: Saddle_Yagura_Fortress (Type: Saddle, Potential: 50.0)
+-- | Node ID: Saddle_Yagura_Kato (Type: Saddle, Potential: 45.0)
+-- | Node ID: Saddle_Yokofudori_34Rook (Type: Saddle, Potential: 70.0)
 -- | Node ID: Start (Type: Saddle, Potential: 0.0)
 
 -- ============================================================================
@@ -63,45 +39,22 @@ import qualified Data.Map as Map
 --    アクティブ・ラーニングで収束が確認されたパスのみが 'True と判定されます。
 -- ============================================================================
 type family ValidTransition (from :: Symbol) (to :: Symbol) :: Bool where
-  ValidTransition "Saddle_Ply_504_1b1a" "Saddle_Ply_512_1b1a" = 'True
-  ValidTransition "Saddle_Ply_500_1a1b" "Saddle_Ply_504_1b1a" = 'True
-  ValidTransition "Saddle_Ply_496_1a1b" "Saddle_Ply_500_1a1b" = 'True
-  ValidTransition "Saddle_Ply_488_1a1b" "Saddle_Ply_496_1a1b" = 'True
-  ValidTransition "Saddle_Ply_480_1a1b" "Saddle_Ply_488_1a1b" = 'True
-  ValidTransition "Saddle_Ply_472_1a1b" "Saddle_Ply_480_1a1b" = 'True
-  ValidTransition "Saddle_Ply_460_1b1a" "Saddle_Ply_472_1a1b" = 'True
-  ValidTransition "Saddle_Ply_448_1b1a" "Saddle_Ply_460_1b1a" = 'True
-  ValidTransition "Saddle_Ply_440_1b1a" "Saddle_Ply_448_1b1a" = 'True
-  ValidTransition "Saddle_Ply_432_1b1a" "Saddle_Ply_440_1b1a" = 'True
-  ValidTransition "Saddle_Ply_420_1b1a" "Saddle_Ply_432_1b1a" = 'True
-  ValidTransition "Saddle_Ply_400_1b1a" "Saddle_Ply_420_1b1a" = 'True
-  ValidTransition "Saddle_Ply_380_1b1a" "Saddle_Ply_400_1b1a" = 'True
-  ValidTransition "Saddle_Ply_360_1b1a" "Saddle_Ply_380_1b1a" = 'True
-  ValidTransition "Saddle_Ply_340_1b1a" "Saddle_Ply_360_1b1a" = 'True
-  ValidTransition "Saddle_Ply_320_1c1b" "Saddle_Ply_340_1b1a" = 'True
-  ValidTransition "Saddle_Ply_304_2d2c" "Saddle_Ply_320_1c1b" = 'True
-  ValidTransition "Saddle_Ply_300_2d2c" "Saddle_Ply_304_2d2c" = 'True
-  ValidTransition "Saddle_Ply_296_2e3e" "Saddle_Ply_300_2d2c" = 'True
-  ValidTransition "Saddle_Ply_288_2c2d" "Saddle_Ply_296_2e3e" = 'True
-  ValidTransition "Saddle_Ply_280_2c1d" "Saddle_Ply_288_2c2d" = 'True
-  ValidTransition "Saddle_Ply_260_1d1c" "Saddle_Ply_280_2c1d" = 'True
-  ValidTransition "Saddle_Ply_240_1a2a" "Saddle_Ply_260_1d1c" = 'True
-  ValidTransition "Saddle_Ply_220_5b4b" "Saddle_Ply_240_1a2a" = 'True
-  ValidTransition "Saddle_Ply_200_6a5b" "Saddle_Ply_220_5b4b" = 'True
-  ValidTransition "Saddle_Ply_180_1b1a" "Saddle_Ply_200_6a5b" = 'True
-  ValidTransition "Saddle_Ply_160_1b1a" "Saddle_Ply_180_1b1a" = 'True
-  ValidTransition "Saddle_Ply_140_2d3c" "Saddle_Ply_160_1b1a" = 'True
-  ValidTransition "Saddle_Ply_136_1a1b" "Saddle_Ply_140_2d3c" = 'True
-  ValidTransition "Saddle_Ply_120_1c1b" "Saddle_Ply_136_1a1b" = 'True
-  ValidTransition "Saddle_Ply_100_3e2d" "Saddle_Ply_120_1c1b" = 'True
-  ValidTransition "Saddle_Ply_88_4c3c" "Saddle_Ply_100_3e2d" = 'True
-  ValidTransition "Saddle_Ply_80_4b3c" "Saddle_Ply_88_4c3c" = 'True
-  ValidTransition "Saddle_Ply_60_1e4b" "Saddle_Ply_80_4b3c" = 'True
-  ValidTransition "Saddle_Ply_56_1a1b" "Saddle_Ply_60_1e4b" = 'True
-  ValidTransition "Saddle_Ply_48_4e4f" "Saddle_Ply_56_1a1b" = 'True
-  ValidTransition "Saddle_Ply_40_4a3b" "Saddle_Ply_48_4e4f" = 'True
-  ValidTransition "Saddle_Ply_20_4c4d" "Saddle_Ply_40_4a3b" = 'True
-  ValidTransition "Start" "Saddle_Ply_20_4c4d" = 'True
+  ValidTransition "Start" "Saddle_DirectGold_KakutoDefense" = 'True
+  ValidTransition "Start" "Saddle_EdgePawn_Solid" = 'True
+  ValidTransition "Start" "Saddle_Gote_34Pawn_Yagura" = 'True
+  ValidTransition "Start" "Saddle_Gote_84Pawn_Ibisha" = 'True
+  ValidTransition "Start" "Saddle_Yokofudori_34Rook" = 'True
+  ValidTransition "Start" "Saddle_Nakabisha_LeftKing" = 'True
+  ValidTransition "Start" "Saddle_Nakabisha_Gokigen" = 'True
+  ValidTransition "Start" "Saddle_Sankenbisha_Ishida" = 'True
+  ValidTransition "Start" "Saddle_Shikenbisha_Exchange" = 'True
+  ValidTransition "Start" "Saddle_Shikenbisha_Mino" = 'True
+  ValidTransition "Start" "Saddle_Yagura_Kato" = 'True
+  ValidTransition "Start" "Saddle_Yagura_Fortress" = 'True
+  ValidTransition "Start" "Saddle_Kakugawari_Koshikake" = 'True
+  ValidTransition "Start" "Saddle_Kakugawari_Hayaguri" = 'True
+  ValidTransition "Start" "Saddle_Aigakari_Hikibisha" = 'True
+  ValidTransition "Start" "Saddle_Aigakari_Standard" = 'True
   ValidTransition from to = 'False
 
 -- ============================================================================
@@ -127,43 +80,20 @@ vpathLookup from to = Map.lookup (from, to) runtimePaths
 runtimePaths :: Map.Map (String, String) [String]
 runtimePaths = Map.fromList
   [
-    (("Saddle_Ply_504_1b1a", "Saddle_Ply_512_1b1a"), ["4e4f","1a1b","4f4e","1b1a","4e4f","1a1b","4f4e","1b1a"]),
-    (("Saddle_Ply_500_1a1b", "Saddle_Ply_504_1b1a"), ["4c4d","8c8d","4d4e","1b1a"]),
-    (("Saddle_Ply_496_1a1b", "Saddle_Ply_500_1a1b"), ["4c4d","1b1a","4d4c","1a1b"]),
-    (("Saddle_Ply_488_1a1b", "Saddle_Ply_496_1a1b"), ["4f4e","1b1a","4e4f","1a1b","4f4d","1b1a","4d4c","1a1b"]),
-    (("Saddle_Ply_480_1a1b", "Saddle_Ply_488_1a1b"), ["4d4e","1b1a","4e4f","1a1b","4f4e","1b1a","4e4f","1a1b"]),
-    (("Saddle_Ply_472_1a1b", "Saddle_Ply_480_1a1b"), ["4e4f","1b1a","4f4e","1a1b","4e4f","1b1a","4f4d","1a1b"]),
-    (("Saddle_Ply_460_1b1a", "Saddle_Ply_472_1a1b"), ["4c4b","P*2b","4b4c","8b8c","4c4d","2b2c","4d4e","1a1b","4e4f","1b1a","4f4e","1a1b"]),
-    (("Saddle_Ply_448_1b1a", "Saddle_Ply_460_1b1a"), ["4f4e","1a1b","4e4f","1b1a","4f4d","1a1b","4d4c","1b1a","4c4d","1a1b","4d4c","1b1a"]),
-    (("Saddle_Ply_440_1b1a", "Saddle_Ply_448_1b1a"), ["4d4e","1a1b","4e4f","1b1a","4f4e","1a1b","4e4f","1b1a"]),
-    (("Saddle_Ply_432_1b1a", "Saddle_Ply_440_1b1a"), ["4e4f","1a1b","4f4e","1b1a","4e4f","1a1b","4f4d","1b1a"]),
-    (("Saddle_Ply_420_1b1a", "Saddle_Ply_432_1b1a"), ["4c4b","5e5f","4b4c","N*2a","4c4d","1a1b","4d4e","1b1a","4e4f","1a1b","4f4e","1b1a"]),
-    (("Saddle_Ply_400_1b1a", "Saddle_Ply_420_1b1a"), ["4d4e","1a1b","4e4f","1b1a","4f4e","1a1b","4e4f","1b1a","4f4e","1a1b","4e4f","1b1a","4f4d","1a1b","4d4c","1b1a","4c4d","1a1b","4d4c","1b1a"]),
-    (("Saddle_Ply_380_1b1a", "Saddle_Ply_400_1b1a"), ["4e4d","1a1b","4d4c+","1b1a","4c4d","1a1b","4d4e","1b1a","4e4f","1a1b","4f4e","1b1a","4e4f","1a1b","4f4e","1b1a","4e4f","1a1b","4f4d","1b1a"]),
-    (("Saddle_Ply_360_1b1a", "Saddle_Ply_380_1b1a"), ["4f4e","1a1b","4e4f","1b1a","4f4e","1a1b","4e4d","1b1a","4d4f","1a1b","4f4e","1b1a","4e4f","1a1b","4f4e","1b1a","4e4f","1a1b","4f4e","1b1a"]),
-    (("Saddle_Ply_340_1b1a", "Saddle_Ply_360_1b1a"), ["4b4a","1a1b","4e4f","1b1a","4a4b","1a1b","4b4a","1b1a","4a4b","1a1b","4b4a","1b1a","4a4b","1a1b","4b5b","1b1a","4f4e","1a1b","4e4f","1b1a"]),
-    (("Saddle_Ply_320_1c1b", "Saddle_Ply_340_1b1a"), ["4b4a","P*4b","4a4b","1b1a","4b4a","P*4b","4a4b","1a1b","4b4a","P*4b","4a4b","1b1a","4b4a","1a1b","4a4b","1b1a","4b4a","1a1b","4a4b","1b1a"]),
-    (("Saddle_Ply_304_2d2c", "Saddle_Ply_320_1c1b"), ["4b4a","2c2d","4a4b","2d2e","4b4a","2e3e","4a4b","3d4e","4b4a","3e2d","4f4g","2d1c","4g4e","P*4b","4a4b","1c1b"]),
-    (("Saddle_Ply_300_2d2c", "Saddle_Ply_304_2d2c"), ["4b4a","2c2d","4a4b","2d2c"]),
-    (("Saddle_Ply_296_2e3e", "Saddle_Ply_300_2d2c"), ["4b4a","3e2d","4a4b","2d2c"]),
-    (("Saddle_Ply_288_2c2d", "Saddle_Ply_296_2e3e"), ["4b4a","2d2e","4a4b","2e2d","4b4a","2d2e","4a4b","2e3e"]),
-    (("Saddle_Ply_280_2c1d", "Saddle_Ply_288_2c2d"), ["4b4a","1d2c","4a4b","2c2d","4b4a","2d2c","4a4b","2c2d"]),
-    (("Saddle_Ply_260_1d1c", "Saddle_Ply_280_2c1d"), ["4b4a","1c1d","4a4b","1d1c","4b4a","1c1d","4a4b","1d2c","4b4a","2c1c","4a4b","1c1d","4b4a","1d1c","4a4b","1c1d","4b4a","1d2c","4a4b","2c1d"]),
-    (("Saddle_Ply_240_1a2a", "Saddle_Ply_260_1d1c"), ["4b4a","2a1b","4a4b","1b1a","4b4a","1a1b","4a4b","1b1a","4b4a","1a1b","4a4b","1b1a","4b4a","1a2b","4a4b","2b1c","4b4a","1c1d","4a4b","1d1c"]),
-    (("Saddle_Ply_220_5b4b", "Saddle_Ply_240_1a2a"), ["4e4f","2e3d","4a4b","2a2b","4b4a","2b1c","4a4b","1c1b","4b4a","1b1a","4a4b","1a1b","4b4a","1b1a","4a4b","1a1b","4b4a","1b1a","4a4b","1a2a"]),
-    (("Saddle_Ply_200_6a5b", "Saddle_Ply_220_5b4b"), ["3f3e","3c5a","3e3d","1b1a","4a4b","1a1b","3a4a","1b1a","4a5a","1a1b","4b4a","1b1a","3g2e","1a1b","1d1c","1b2a","3d3c+","2d2e","3c4b","5b4b"]),
-    (("Saddle_Ply_180_1b1a", "Saddle_Ply_200_6a5b"), ["2i2h","1a1b","2h2i","1b1a","2i2h","1a1b","2h2g","1b1a","2g2e","1a1b","2e2g","1b1a","2g2e","1a1b","2e2g","1b1a","2g2e","1a1b","2e4e","6a5b"]),
-    (("Saddle_Ply_160_1b1a", "Saddle_Ply_180_1b1a"), ["3i2i","1a1b","2i2h","1b1a","2h2i","1a1b","2i2h","1b1a","2h2i","1a1b","2i2h","1b1a","2h2g","1a1b","2g2i","1b1a","2i2h","1a1b","2h2i","1b1a"]),
-    (("Saddle_Ply_140_2d3c", "Saddle_Ply_160_1b1a"), ["3b3a","1a1b","1f1e","1b1a","1e1d","3c2d","3a3b","4b3c","3b3a","1a1b","3h3i","1b1a","3i3h","1a1b","3h3i","1b1a","3i3h","1a1b","3h3i","1b1a"]),
-    (("Saddle_Ply_136_1a1b", "Saddle_Ply_140_2d3c"), ["3b3a","1b1a","3a3b","2d3c"]),
-    (("Saddle_Ply_120_1c1b", "Saddle_Ply_136_1a1b"), ["2f2h","1b1c","2h3h","1c1b","2i3g","1b1c","3a4a","1c1b","3b3a","1b1a","3a3b","1a1b","3b3a","1b1a","3a3b","1a1b"]),
-    (("Saddle_Ply_100_3e2d", "Saddle_Ply_120_1c1b"), ["2b2a","2d3e","2a2b","3e2d","2b3b","3c2c","2g2h","2c1b","2h2f","1b1c","1g1f","1c1b","2f2h","1b1c","2h2f","1c1b","2f2h","1b1c","2h2f","1c1b"]),
-    (("Saddle_Ply_88_4c3c", "Saddle_Ply_100_3e2d"), ["2a2b","3b2c","2b2a","2c2d","2h2g","2d3e","2a2b","3e2d","2b2a","2d3e","2a2b","3e2d"]),
-    (("Saddle_Ply_80_4b3c", "Saddle_Ply_88_4c3c"), ["2a2b","3c4b","2b2a","4b3c","2a2b","3c4b","2b2a","4c3c"]),
-    (("Saddle_Ply_60_1e4b", "Saddle_Ply_80_4b3c"), ["P*1g","1d1e","2b2a","4b3c","2a2b","3c4b","2b2a","4b3c","2a2b","3c4b","2b2a","4b3c","2a2b","5a4b","2b2a","4b4c","2a2b","3c4b","2b2a","4b3c"]),
-    (("Saddle_Ply_56_1a1b", "Saddle_Ply_60_1e4b"), ["2b3a","1b1d","2c2b","1e4b"]),
-    (("Saddle_Ply_48_4e4f", "Saddle_Ply_56_1a1b"), ["2d2c+","3c4e","1d1c+","2b3c","1c2b","3c1e","3i4h","1a1b"]),
-    (("Saddle_Ply_40_4a3b", "Saddle_Ply_48_4e4f"), ["4g4f","1c1d","2e2d","3a3b","1g1f","2a3c","1f1d","4e4f"]),
-    (("Saddle_Ply_20_4c4d", "Saddle_Ply_40_4a3b"), ["1i1h","6e6f","2f2e","3c3d","1g1f","8d8e","2g2f","8c8d","3g3f","5c5d","6g6f","7c7d","7g7f","6d6e","5g5f","9a9b","4f4e","6c6d","6i5h","4a3b"]),
-    (("Start", "Saddle_Ply_20_4c4d"), ["P*2e","P*5e","5g5f","3c2d","2e2d","3b3c","P*5g","P*1c","1c1b","5e5f","1d1c","5d5e","P*6c","P*1b","1e1d","4d4e","1h1g","1c1d","1f1e","4c4d"])
+    (("Start", "Saddle_DirectGold_KakutoDefense"), ["7g7f","8c8d","7i7h","8d8e","8h7g","3c3d","2g2f","6b6c","2f2e","4a3b","3i4h","5a4b","5i6h","4b3c","6h7h","7a6b","7h8h","6b7c","4h3g","7c8d","3g4f","8d7c","2e2d","2c2d","2h2d","P*2c","2d2h"]),
+    (("Start", "Saddle_EdgePawn_Solid"), ["1g1f","3c3d","7g7f","8c8d","6g6f","8d8e","7i6h","6b6c","2g2f","4a3b","6h7g","7a6b","5g5f","5a4b","4i5h","4b3a","5i6h","3a2b","6h7h","6b7b"]),
+    (("Start", "Saddle_Gote_34Pawn_Yagura"), ["7g7f","3c3d","2g2f","4c4d","4i4h","3a3b","5g5f","4b4a","5i6h","5a4b","6h7h","4a4b","7h8h","4b4c","3i3h","3c3d","2f2e","2b3c","4h4g","8b4b"]),
+    (("Start", "Saddle_Gote_84Pawn_Ibisha"), ["2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","4b3c","6h7h","7b6c"]),
+    (("Start", "Saddle_Yokofudori_34Rook"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","8e8f","8g8f","8b8f","2d3d","8f8h+","7i8h","B*4e","3d3f","4e2g+","3f3d","+2g1g","3d3f","1g1f","3f3e","1f2f","B*3c","2f2e"]),
+    (("Start", "Saddle_Nakabisha_LeftKing"), ["5g5f","3c3d","5h5e","5c5d","5e5f","8c8d","7g7f","8d8e","7i6h","6b6c","4i5h","4a3b","3i4h","5a4b","5i4h","4b3a","4h3h","3a2b","3h2h","7a6b","2h1h","6b7c"]),
+    (("Start", "Saddle_Nakabisha_Gokigen"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","3g3f","8d7c"]),
+    (("Start", "Saddle_Sankenbisha_Ishida"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","1g1f","1c1d","3g3f","2b3c","7h7f"]),
+    (("Start", "Saddle_Shikenbisha_Exchange"), ["7g7f","3c3d","2h6h","8c8d","8h2b+","3a2b","7i8h","7a6b","8h7g","8d8e","6h6f","6b7b","4i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b8b","6i5h","4b3a","1g1f","1c1d"]),
+    (("Start", "Saddle_Shikenbisha_Mino"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","1g1f","5c5d","2g2f","4b3a","2f2e","2b3c","3g3f"]),
+    (("Start", "Saddle_Yagura_Kato"), ["7g7f","8c8d","7i6h","3c3d","6h7g","7a6b","2g2f","8d8e","5g5f","4a3b","5i6h","5a4b","4i5h","6b5c","6h7h","7c7d","2f2e","3a2b","7h8h","5c6d"]),
+    (("Start", "Saddle_Yagura_Fortress"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","3i4h","4c3b","4h4g"]),
+    (("Start", "Saddle_Kakugawari_Koshikake"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3a2b","7i8h","7a6b","3i3h","6b7b","3h4h","4a3b","4h4g","5a4b","5i6h","6c6d","4g5f","7b6c","6i7h","5a4b"]),
+    (("Start", "Saddle_Kakugawari_Hayaguri"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3a2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","P*2c","2d2h"]),
+    (("Start", "Saddle_Aigakari_Hikibisha"), ["2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2f","7a7b","3i3h","5a4b","5i6h","4b3c","4i5h","7b6c","6g6f","8e8f","8g8f","8b8f","P*8g","8f8b","3h2g","8b8d","2f2h","8d7d"]),
+    (("Start", "Saddle_Aigakari_Standard"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","4b3c","6h7h","7b6c","3h2g","8b8d","2h2f","8d7d","2f2e","7d8d","2e2f","8d7d"])
   ]
