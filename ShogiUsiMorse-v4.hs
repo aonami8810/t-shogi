@@ -50,17 +50,23 @@ type Board = Map.Map Square Piece
 -- 持ち駒（駒台）
 type Hand = Map.Map PieceType Int
 
+-- 局面の完全な一意性シグネチャ（手番、盤面、両者の持ち駒）
+type PositionKey = (Player, Board, Map.Map Player Hand)
+
 -- 状態（手番、盤面、持ち駒、Garside置換表キャッシュ、トポロジー歴史履歴）
 data State = State
   { turn    :: Player
   , board   :: Board
   , hands   :: Map.Map Player Hand
-  , cache   :: Map.Map Board (Double, Move) -- Garside標準化キャッシュ（置換表）
-  , history :: Map.Map Board Int            -- ★ トポロジー歴史：千日手検出用の盤面出現頻度
+  , cache   :: Map.Map PositionKey (Double, Move) -- Garside標準化キャッシュ（置換表）
+  , history :: Map.Map PositionKey Int            -- ★ トポロジー歴史：千日手検出用の完全局面出現頻度
   } deriving (Show)
 
+positionKey :: State -> PositionKey
+positionKey State{..} = (turn, board, hands)
+
 -- ============================================================================
--- 2. USIプロトコルパーサ ＆ 文字列変換
+-- 2. USIプロトコルパーサ ＆ 文字列変換 ＆ SFEN対応
 -- ============================================================================
 
 -- 平手初期局面
@@ -88,13 +94,15 @@ emptyHand :: Hand
 emptyHand = Map.fromList [(p, 0) | p <- [Pawn, Lance, Knight, Silver, Gold, Bishop, Rook]]
 
 initState :: State
-initState = State
-  { turn    = Sente
-  , board   = initBoard
-  , hands   = Map.fromList [(Sente, emptyHand), (Gote, emptyHand)]
-  , cache   = Map.empty
-  , history = Map.fromList [(initBoard, 1)] -- 初期局面の登録
-  }
+initState =
+  let st = State
+        { turn    = Sente
+        , board   = initBoard
+        , hands   = Map.fromList [(Sente, emptyHand), (Gote, emptyHand)]
+        , cache   = Map.empty
+        , history = Map.empty
+        }
+  in st { history = Map.singleton (positionKey st) 1 }
 
 -- 座標をUSI文字列に変換 (例: (7, 7) -> "7g")
 showSquare :: Square -> String
@@ -109,7 +117,7 @@ parseSquare _      = (1, 1)
 data Move 
   = NormalMove Square Square Bool -- 移動元, 移動先, 成るか
   | DropMove PieceType Square     -- 持ち駒の種類, 打つ場所
-  deriving (Eq, Show)
+  deriving (Eq, Show, Ord)
 
 -- USI形式での表示
 showMove :: Move -> String
@@ -122,13 +130,13 @@ showMove (DropMove p to) =
         _      -> ' '
   in pieceChar : '*' : showSquare to
 
--- USI指し手文字列のパース
+-- USI指し手文字列のパース（大文字小文字両対応）
 parseMove :: String -> Move
 parseMove str
   | '*' `elem` str =
       case break (== '*') str of
         (pStr, _:toStr) ->
-          let pt = case pStr of
+          let pt = case map toUpper pStr of
                 ('P':_) -> Pawn ; ('L':_) -> Lance ; ('N':_) -> Knight
                 ('S':_) -> Silver ; ('G':_) -> Gold ; ('B':_) -> Bishop ; ('R':_) -> Rook
                 _       -> Pawn
@@ -163,9 +171,10 @@ applyMove (NormalMove from to promo) State{..} =
           in Map.insert turn updatedHand hands
         Nothing -> hands
 
-      -- ★ 盤面出現頻度のインクリメント（トポロジー履歴）
-      newHistory = Map.insertWith (+) newBoard 1 history
-  in State (opponent turn) newBoard newHands cache newHistory
+      nextSt = State (opponent turn) newBoard newHands cache history
+      newKey = positionKey nextSt
+      newHistory = Map.insertWith (+) newKey 1 history
+  in nextSt { history = newHistory }
   where
     promote Pawn   = PPawn   ; promote Lance  = PLance
     promote Knight = PKnight ; promote Silver = PSilver
@@ -182,12 +191,77 @@ applyMove (DropMove pt to) State{..} =
       handMap = fromMaybe emptyHand (Map.lookup turn hands)
       updatedHand = Map.adjust (\old -> old - 1) pt handMap
       newHands = Map.insert turn updatedHand hands
-      -- ★ 盤面出現頻度のインクリメント
-      newHistory = Map.insertWith (+) newBoard 1 history
-  in State (opponent turn) newBoard newHands cache newHistory
+
+      nextSt = State (opponent turn) newBoard newHands cache history
+      newKey = positionKey nextSt
+      newHistory = Map.insertWith (+) newKey 1 history
+  in nextSt { history = newHistory }
 
 -- ============================================================================
--- 3. F5フィルター（シジジー事前予測による自殺手・王手放置の完全排除）
+-- 2.1 SFENパーサ (任意の局面展開に対応)
+-- ============================================================================
+
+splitByChar :: Char -> String -> [String]
+splitByChar c s = case break (== c) s of
+  (a, [])     -> [a]
+  (a, _:rest) -> a : splitByChar c rest
+
+parseSfen :: [String] -> State
+parseSfen tokens =
+  case tokens of
+    (boardStr : turnStr : handStr : _) ->
+      let bd = parseSfenBoard boardStr
+          plr = if turnStr == "w" then Gote else Sente
+          hnds = parseSfenHands handStr
+          st = State plr bd hnds Map.empty Map.empty
+      in st { history = Map.singleton (positionKey st) 1 }
+    _ -> initState
+
+parseSfenBoard :: String -> Board
+parseSfenBoard str =
+  let ranks = splitByChar '/' str
+      parseRank rNum rStr = parseRankCols 9 rNum rStr
+        where
+          parseRankCols _ _ [] = []
+          parseRankCols col rank (c:cs)
+            | isDigit c = parseRankCols (col - digitToInt c) rank cs
+            | c == '+'  = case cs of
+                (p:rest) -> ((col, rank), Piece (if isUpper p then Sente else Gote) (promotePiece (charToPieceType (toLower p)))) : parseRankCols (col - 1) rank rest
+                []       -> []
+            | otherwise = ((col, rank), Piece (if isUpper c then Sente else Gote) (charToPieceType (toLower c))) : parseRankCols (col - 1) rank cs
+      promotePiece pt = case pt of
+        Pawn -> PPawn ; Lance -> PLance ; Knight -> PKnight
+        Silver -> PSilver ; Bishop -> PBishop ; Rook -> PRook
+        x -> x
+      charToPieceType c = case c of
+        'p' -> Pawn ; 'l' -> Lance ; 'n' -> Knight ; 's' -> Silver
+        'g' -> Gold ; 'b' -> Bishop ; 'r' -> Rook ; 'k' -> King
+        _   -> Pawn
+  in Map.fromList [ piece | (rNum, rStr) <- zip [1..9] ranks, piece <- parseRank rNum rStr ]
+
+parseSfenHands :: String -> Map.Map Player Hand
+parseSfenHands "-" = Map.fromList [(Sente, emptyHand), (Gote, emptyHand)]
+parseSfenHands str = foldl' addHand (Map.fromList [(Sente, emptyHand), (Gote, emptyHand)]) (groupDigitsAndChars str)
+  where
+    groupDigitsAndChars [] = []
+    groupDigitsAndChars s =
+      let (digits, rest1) = span isDigit s
+          count = if null digits then 1 else read digits :: Int
+      in case rest1 of
+        (c:rest2) -> (c, count) : groupDigitsAndChars rest2
+        []        -> []
+    addHand m (c, count) =
+      let plr = if isUpper c then Sente else Gote
+          pt = case toLower c of
+            'p' -> Pawn ; 'l' -> Lance ; 'n' -> Knight ; 's' -> Silver
+            'g' -> Gold ; 'b' -> Bishop ; 'r' -> Rook
+            _   -> Pawn
+          handMap = fromMaybe emptyHand (Map.lookup plr m)
+          newHandMap = Map.insert pt count handMap
+      in Map.insert plr newHandMap m
+
+-- ============================================================================
+-- 3. F5フィルター（シジジー事前予測による自殺手・王手放置・打ち歩詰めの完全排除）
 -- ============================================================================
 
 -- | 盤面の任意の位置 (targetSq) が、attackerPlayer から王手（攻撃）されているか判定する
@@ -236,18 +310,63 @@ isKingUnderAttack plr bd =
   let kingPos = listToMaybe [sq | (sq, Piece p pt) <- Map.toList bd, p == plr, pt == King]
   in case kingPos of
     Just kSq -> isSquareUnderAttack (opponent plr) kSq bd
-    Nothing  -> False
+    Nothing  -> True -- 玉が見つからない場合は危険（反則局面）と判定
 
--- | F5シジジーフィルター
+-- | 打ち歩詰め判定
+-- 歩を打った結果、相手玉が王手になり、かつ相手に合法手が1手も残っていない（詰み）場合は打ち歩詰め反則
+isUchifudume :: Move -> State -> Bool
+isUchifudume mv@(DropMove Pawn _) st =
+  let nextSt = applyMove mv st
+      opp = turn nextSt
+      isOppInCheck = isKingUnderAttack opp (board nextSt)
+  in if not isOppInCheck
+     then False
+     else
+       -- 相手が自玉への王手を回避できる合法手が存在するかチェック
+       let oppRawMoves = generateMoves nextSt
+           oppLegalMoves = filter (\m -> not (isKingUnderAttack opp (board (applyMove m nextSt)))) oppRawMoves
+       in null oppLegalMoves
+isUchifudume _ _ = False
+
+-- | F5シジジーフィルター（自殺手・王手放置・打ち歩詰めの完全排除）
 f5SyzygyFilter :: State -> [Move] -> [Move]
 f5SyzygyFilter state moves =
   let turnPlr = turn state
-      validMoves = filter (\m -> not (isKingUnderAttack turnPlr (board (applyMove m state)))) moves
-  in validMoves
+      noSelfCheckMoves = filter (\m -> not (isKingUnderAttack turnPlr (board (applyMove m state)))) moves
+      legalMoves = filter (\m -> not (isUchifudume m state)) noSelfCheckMoves
+  in legalMoves
 
 -- ============================================================================
--- 4. 簡略型「モースポテンシャル」評価関数
+-- 4. モースポテンシャル ＆ 駒得（Material）統合評価関数
 -- ============================================================================
+
+pieceValue :: PieceType -> Double
+pieceValue Pawn    = 100.0
+pieceValue Lance   = 300.0
+pieceValue Knight  = 400.0
+pieceValue Silver  = 500.0
+pieceValue Gold    = 600.0
+pieceValue Bishop  = 800.0
+pieceValue Rook    = 1000.0
+pieceValue King    = 15000.0
+pieceValue PPawn   = 600.0
+pieceValue PLance  = 600.0
+pieceValue PKnight = 600.0
+pieceValue PSilver = 600.0
+pieceValue PBishop = 1100.0
+pieceValue PRook   = 1300.0
+
+evalMaterial :: Player -> State -> Double
+evalMaterial plr st =
+  let bd = board st
+      hnds = hands st
+      boardScore (Piece p pt) = (if p == plr then 1.0 else -1.0) * pieceValue pt
+      bdTotal = sum [ boardScore piece | (_, piece) <- Map.toList bd ]
+      myHand = fromMaybe emptyHand (Map.lookup plr hnds)
+      enemyHand = fromMaybe emptyHand (Map.lookup (opponent plr) hnds)
+      myHandTotal = sum [ fromIntegral cnt * pieceValue pt | (pt, cnt) <- Map.toList myHand ]
+      enemyHandTotal = sum [ fromIntegral cnt * pieceValue pt | (pt, cnt) <- Map.toList enemyHand ]
+  in bdTotal + myHandTotal - enemyHandTotal
 
 evalMorsePotential :: Player -> Board -> Double
 evalMorsePotential player bd =
@@ -265,15 +384,15 @@ evalMorsePotential player bd =
     dist (x1, y1) (x2, y2) = abs (x1 - x2) + abs (y1 - y2)
     outOfBounds (x, y) = x < 1 || x > 9 || y < 1 || y > 9
 
--- 局面の総合評価：(自玉の安全性) - (敵玉の安全性)
--- 注意：evalMorsePotential は高いほど玉が危険（破局）であるため、
--- 手番プレイヤーにとっては (敵玉の危険度) - (自玉の危険度) が高いほど有利となる。
+-- 局面の総合評価：(敵玉のモースポテンシャル - 自玉のモースポテンシャル) + (駒得マテリアル差)
 evaluateState :: Player -> State -> Double
 evaluateState player st =
   let bd = board st
       myDanger = evalMorsePotential player bd
       enemyDanger = evalMorsePotential (opponent player) bd
-  in enemyDanger - myDanger
+      morseAdvantage = (enemyDanger - myDanger) * 10.0
+      materialAdvantage = evalMaterial player st
+  in morseAdvantage + materialAdvantage
 
 -- ============================================================================
 -- 5. 合法手生成
@@ -375,9 +494,9 @@ generateMoves st = boardMoves ++ dropMoves
 -- ============================================================================
 
 -- | 同一局面が 4 回以上発生したかどうかを判定
-isSennichite :: Board -> Map.Map Board Int -> Bool
-isSennichite bd hist =
-  case Map.lookup bd hist of
+isSennichite :: PositionKey -> Map.Map PositionKey Int -> Bool
+isSennichite key hist =
+  case Map.lookup key hist of
     Just count -> count >= 4
     Nothing    -> False
 
@@ -390,44 +509,35 @@ isSennichite bd hist =
 -- 指す手がない（詰み等）の場合は Left "resign" を返す
 searchBestMoveWithCache :: State -> (Either String Move, State)
 searchBestMoveWithCache state =
-  case Map.lookup (board state) (cache state) of
-    Just (_score, mv) ->
-      -- ★ Garsideキャッシュヒット：ただし、過去の最善手を指した結果が「千日手」を引き起こさないか検証
-      let nextState = applyMove mv state
-      in if isSennichite (board nextState) (history nextState)
-         then evaluateAndFilterNoCache state -- 千日手ループに陥るため、キャッシュをスルーして安全な手を動的に再探索
-         else (Right mv, state)
-    Nothing ->
-      evaluateAndFilterNoCache state
-
-  where
-    evaluateAndFilterNoCache :: State -> (Either String Move, State)
-    evaluateAndFilterNoCache st =
-      let moves = generateMoves st
-          f5FilteredMoves = f5SyzygyFilter st moves
-          
-          -- ★指し手のトポロジー分水嶺：千日手（無限ループ）になる手と、安全な手を分類
-          (_sennichiteMoves, safeMoves) = 
-            partition (\m -> 
-              let nextState = applyMove m st
-              in isSennichite (board nextState) (history nextState)
-            ) f5FilteredMoves
-      in if null f5FilteredMoves
-         then (Left "resign", st)
-         else if null safeMoves
-           then
-             -- ★ 逃げ道がない（安全な手が一切ない）が、千日手に持ち込む手がある場合：
-             -- トポロジー的な無限収縮（引き分け）を受け入れ、USIの "bestmove draw" を送出する
-             (Left "draw", st)
-           else
-             -- 安全な手の選択肢の中から、モースポテンシャルが最も安定（最急降下）する手を選択
-             let scoredMoves = [ (evaluateState (turn st) (applyMove m st), m) | m <- safeMoves ]
+  let moves = generateMoves state
+      f5FilteredMoves = f5SyzygyFilter state moves
+      
+      -- ★ 指し手のトポロジー分水嶺：千日手（無限ループ）になる手と安全な手を分類
+      (_sennichiteMoves, safeMoves) = 
+        partition (\m -> 
+          let nextState = applyMove m state
+          in isSennichite (positionKey nextState) (history nextState)
+        ) f5FilteredMoves
+  in if null f5FilteredMoves
+     then (Left "resign", state)
+     else if null safeMoves
+       then
+         -- ★ 逃げ道がない（安全な手が一切ない）が、千日手に持ち込む手がある場合：
+         -- トポロジー的な無限収縮（引き分け）を受け入れ、USIの "bestmove draw" を送出する
+         (Left "draw", state)
+       else
+         -- キャッシュ照会：キャッシュの手が safeMoves に含まれていれば即採用
+         case Map.lookup (positionKey state) (cache state) of
+           Just (_score, mv) | mv `elem` safeMoves -> (Right mv, state)
+           _ ->
+             -- 安全な手の選択肢の中から、モースポテンシャル＋駒得が最大となる手を選択
+             let scoredMoves = [ (evaluateState (turn state) (applyMove m state), m) | m <- safeMoves ]
                  sorted = sortBy (\(s1, _) (s2, _) -> compare s2 s1) scoredMoves
              in case sorted of
                   ((bestScore, bestMove) : _) ->
-                    let newCache = Map.insert (board st) (bestScore, bestMove) (cache st)
-                    in (Right bestMove, st { cache = newCache })
-                  [] -> (Left "resign", st)
+                    let newCache = Map.insert (positionKey state) (bestScore, bestMove) (cache state)
+                    in (Right bestMove, state { cache = newCache })
+                  [] -> (Left "resign", state)
 
 -- ============================================================================
 -- 8. USIメインループ
@@ -461,11 +571,18 @@ usiLoop currentState = do
         usiLoop initState { cache = Map.empty }
       
       "position" -> do
-        -- 例: position startpos moves 7g7f 3g3f
+        -- position startpos [moves ...]
+        -- position sfen <sfen_tokens...> [moves ...]
         let movesTokens = case elemIndex "moves" tokens of
               Just idx -> drop (idx + 1) tokens
               Nothing  -> []
-            baseState = initState
+            baseTokens = case elemIndex "moves" tokens of
+              Just idx -> take idx tokens
+              Nothing  -> tokens
+            baseState = case drop 1 baseTokens of
+              ("startpos":_) -> initState
+              ("sfen":sfenParts) -> parseSfen sfenParts
+              _ -> initState
             -- 指し手を順に適用しながら、現在の対局の出現履歴（history）を同期構築
             finalState = foldl' (\st mvStr -> applyMove (parseMove mvStr) st) baseState movesTokens
         -- 置換表キャッシュ（これまでの全探索知能）は、引き継いで維持する
