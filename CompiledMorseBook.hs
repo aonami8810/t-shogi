@@ -16,41 +16,31 @@ import qualified Data.Map as Map
 -- 1. 収束した臨界ノードの定義（Type-Level Symbols）
 -- ============================================================================
 
--- | Node ID: Minimum_Ply_512_Convergence (Type: Minimum, Potential: 9779.436568552306)
--- | Node ID: Saddle_Ply_100_1b1a (Type: Saddle, Potential: 731.0748468116483)
--- | Node ID: Saddle_Ply_10_5d5e (Type: Saddle, Potential: 4581.369772446983)
--- | Node ID: Saddle_Ply_125_S*1c (Type: Saddle, Potential: 691.8750039403243)
--- | Node ID: Saddle_Ply_130_1c1b (Type: Saddle, Potential: 3956.0297511366794)
--- | Node ID: Saddle_Ply_150_L*6h (Type: Saddle, Potential: -4490.541166613273)
--- | Node ID: Saddle_Ply_160_G*7i (Type: Saddle, Potential: 1609.2888822374193)
--- | Node ID: Saddle_Ply_170_5e5d (Type: Saddle, Potential: 1333.0505492912437)
--- | Node ID: Saddle_Ply_175_S*5e (Type: Saddle, Potential: 2087.5648478321505)
--- | Node ID: Saddle_Ply_200_P*3h (Type: Saddle, Potential: 11457.66371389029)
--- | Node ID: Saddle_Ply_20_N*5f (Type: Saddle, Potential: 1499.4494063344403)
--- | Node ID: Saddle_Ply_220_P*2f (Type: Saddle, Potential: 9958.806447237213)
--- | Node ID: Saddle_Ply_225_L*5c (Type: Saddle, Potential: -5409.704885629347)
--- | Node ID: Saddle_Ply_230_1h1i+ (Type: Saddle, Potential: 10799.92823840637)
--- | Node ID: Saddle_Ply_250_L*1c (Type: Saddle, Potential: -1056.5231451490504)
--- | Node ID: Saddle_Ply_25_P*5c (Type: Saddle, Potential: 821.6313257332198)
--- | Node ID: Saddle_Ply_275_1d2c (Type: Saddle, Potential: 0.0)
--- | Node ID: Saddle_Ply_280_1c1g+ (Type: Saddle, Potential: -1688.1493965277314)
--- | Node ID: Saddle_Ply_300_9a9b (Type: Saddle, Potential: -6841.796110691312)
--- | Node ID: Saddle_Ply_30_P*5e (Type: Saddle, Potential: 3978.142473912748)
--- | Node ID: Saddle_Ply_325_1a1b (Type: Saddle, Potential: 0.0)
--- | Node ID: Saddle_Ply_350_8b7b (Type: Saddle, Potential: -6064.143816142289)
--- | Node ID: Saddle_Ply_360_9c9b (Type: Saddle, Potential: 7015.17065533352)
--- | Node ID: Saddle_Ply_375_P*9c (Type: Saddle, Potential: 7582.7695246742915)
--- | Node ID: Saddle_Ply_400_9b9a (Type: Saddle, Potential: -10000.0)
--- | Node ID: Saddle_Ply_40_4i6i (Type: Saddle, Potential: 7205.160487936695)
--- | Node ID: Saddle_Ply_425_1a1b (Type: Saddle, Potential: 10000.0)
--- | Node ID: Saddle_Ply_450_S*2c (Type: Saddle, Potential: -4547.050628056471)
--- | Node ID: Saddle_Ply_475_2c2b (Type: Saddle, Potential: 7463.52204725939)
--- | Node ID: Saddle_Ply_500_8g9f (Type: Saddle, Potential: -6101.385518818275)
--- | Node ID: Saddle_Ply_50_2a1c (Type: Saddle, Potential: 0.0)
--- | Node ID: Saddle_Ply_510_9f9g (Type: Saddle, Potential: 1010.9881003234855)
--- | Node ID: Saddle_Ply_70_9c9i+ (Type: Saddle, Potential: 4639.158999874038)
--- | Node ID: Saddle_Ply_75_P*1b (Type: Saddle, Potential: 1592.317345114745)
--- | Node ID: Saddle_Ply_90_1b1a (Type: Saddle, Potential: 2945.217373559468)
+-- | Node ID: Minimum_Ply_332_TonshiFree_Convergence (Type: Saddle, Potential: 8335.0)
+-- | Node ID: Saddle_Ply_100_5a5b (Type: Saddle, Potential: 3468.0755928752214)
+-- | Node ID: Saddle_Ply_104_2f2g+ (Type: Saddle, Potential: 3956.1082673075643)
+-- | Node ID: Saddle_Ply_120_8d8e (Type: Saddle, Potential: 5757.781945752314)
+-- | Node ID: Saddle_Ply_140_7f7g+ (Type: Saddle, Potential: 5323.75915793987)
+-- | Node ID: Saddle_Ply_160_7c6d (Type: Saddle, Potential: 3357.234413775105)
+-- | Node ID: Saddle_Ply_180_3f2g (Type: Saddle, Potential: 2637.5944802132785)
+-- | Node ID: Saddle_Ply_192_2h2i (Type: Saddle, Potential: 2661.9388306363853)
+-- | Node ID: Saddle_Ply_200_3h5f (Type: Saddle, Potential: 1478.6422090056303)
+-- | Node ID: Saddle_Ply_208_2g2h+ (Type: Saddle, Potential: 2015.021352893506)
+-- | Node ID: Saddle_Ply_20_2c2d (Type: Saddle, Potential: 249.99999999999994)
+-- | Node ID: Saddle_Ply_216_2c3c (Type: Saddle, Potential: 5177.368745091641)
+-- | Node ID: Saddle_Ply_220_R*4e (Type: Saddle, Potential: 6109.144711061155)
+-- | Node ID: Saddle_Ply_240_7h6i+ (Type: Saddle, Potential: 7290.14175754086)
+-- | Node ID: Saddle_Ply_260_L*9b (Type: Saddle, Potential: 7438.8124786004855)
+-- | Node ID: Saddle_Ply_280_4h5h (Type: Saddle, Potential: 7723.733444428873)
+-- | Node ID: Saddle_Ply_300_4e4d (Type: Saddle, Potential: 8500.040041477976)
+-- | Node ID: Saddle_Ply_304_4b3b (Type: Saddle, Potential: 10173.110901017038)
+-- | Node ID: Saddle_Ply_320_5c6c (Type: Saddle, Potential: 12612.971421424205)
+-- | Node ID: Saddle_Ply_40_8f8g+ (Type: Saddle, Potential: -1940.2889948589154)
+-- | Node ID: Saddle_Ply_48_5g6f+ (Type: Saddle, Potential: 538.7404861700172)
+-- | Node ID: Saddle_Ply_60_B*6h (Type: Saddle, Potential: 1640.0455710924346)
+-- | Node ID: Saddle_Ply_64_3d4e (Type: Saddle, Potential: -642.315676922539)
+-- | Node ID: Saddle_Ply_80_8i3i+ (Type: Saddle, Potential: 2647.5462168626905)
+-- | Node ID: Saddle_Ply_88_2i4i (Type: Saddle, Potential: 5135.184538595254)
 -- | Node ID: Start (Type: Saddle, Potential: 0.0)
 
 -- ============================================================================
@@ -58,41 +48,31 @@ import qualified Data.Map as Map
 --    アクティブ・ラーニングで収束が確認されたパスのみが 'True と判定されます。
 -- ============================================================================
 type family ValidTransition (from :: Symbol) (to :: Symbol) :: Bool where
-  ValidTransition "Saddle_Ply_510_9f9g" "Minimum_Ply_512_Convergence" = 'True
-  ValidTransition "Saddle_Ply_500_8g9f" "Saddle_Ply_510_9f9g" = 'True
-  ValidTransition "Saddle_Ply_475_2c2b" "Saddle_Ply_500_8g9f" = 'True
-  ValidTransition "Saddle_Ply_450_S*2c" "Saddle_Ply_475_2c2b" = 'True
-  ValidTransition "Saddle_Ply_425_1a1b" "Saddle_Ply_450_S*2c" = 'True
-  ValidTransition "Saddle_Ply_400_9b9a" "Saddle_Ply_425_1a1b" = 'True
-  ValidTransition "Saddle_Ply_375_P*9c" "Saddle_Ply_400_9b9a" = 'True
-  ValidTransition "Saddle_Ply_360_9c9b" "Saddle_Ply_375_P*9c" = 'True
-  ValidTransition "Saddle_Ply_350_8b7b" "Saddle_Ply_360_9c9b" = 'True
-  ValidTransition "Saddle_Ply_325_1a1b" "Saddle_Ply_350_8b7b" = 'True
-  ValidTransition "Saddle_Ply_300_9a9b" "Saddle_Ply_325_1a1b" = 'True
-  ValidTransition "Saddle_Ply_280_1c1g+" "Saddle_Ply_300_9a9b" = 'True
-  ValidTransition "Saddle_Ply_275_1d2c" "Saddle_Ply_280_1c1g+" = 'True
-  ValidTransition "Saddle_Ply_250_L*1c" "Saddle_Ply_275_1d2c" = 'True
-  ValidTransition "Saddle_Ply_230_1h1i+" "Saddle_Ply_250_L*1c" = 'True
-  ValidTransition "Saddle_Ply_225_L*5c" "Saddle_Ply_230_1h1i+" = 'True
-  ValidTransition "Saddle_Ply_220_P*2f" "Saddle_Ply_225_L*5c" = 'True
-  ValidTransition "Saddle_Ply_200_P*3h" "Saddle_Ply_220_P*2f" = 'True
-  ValidTransition "Saddle_Ply_175_S*5e" "Saddle_Ply_200_P*3h" = 'True
-  ValidTransition "Saddle_Ply_170_5e5d" "Saddle_Ply_175_S*5e" = 'True
-  ValidTransition "Saddle_Ply_160_G*7i" "Saddle_Ply_170_5e5d" = 'True
-  ValidTransition "Saddle_Ply_150_L*6h" "Saddle_Ply_160_G*7i" = 'True
-  ValidTransition "Saddle_Ply_130_1c1b" "Saddle_Ply_150_L*6h" = 'True
-  ValidTransition "Saddle_Ply_125_S*1c" "Saddle_Ply_130_1c1b" = 'True
-  ValidTransition "Saddle_Ply_100_1b1a" "Saddle_Ply_125_S*1c" = 'True
-  ValidTransition "Saddle_Ply_90_1b1a" "Saddle_Ply_100_1b1a" = 'True
-  ValidTransition "Saddle_Ply_75_P*1b" "Saddle_Ply_90_1b1a" = 'True
-  ValidTransition "Saddle_Ply_70_9c9i+" "Saddle_Ply_75_P*1b" = 'True
-  ValidTransition "Saddle_Ply_50_2a1c" "Saddle_Ply_70_9c9i+" = 'True
-  ValidTransition "Saddle_Ply_40_4i6i" "Saddle_Ply_50_2a1c" = 'True
-  ValidTransition "Saddle_Ply_30_P*5e" "Saddle_Ply_40_4i6i" = 'True
-  ValidTransition "Saddle_Ply_25_P*5c" "Saddle_Ply_30_P*5e" = 'True
-  ValidTransition "Saddle_Ply_20_N*5f" "Saddle_Ply_25_P*5c" = 'True
-  ValidTransition "Saddle_Ply_10_5d5e" "Saddle_Ply_20_N*5f" = 'True
-  ValidTransition "Start" "Saddle_Ply_10_5d5e" = 'True
+  ValidTransition "Saddle_Ply_320_5c6c" "Minimum_Ply_332_TonshiFree_Convergence" = 'True
+  ValidTransition "Saddle_Ply_304_4b3b" "Saddle_Ply_320_5c6c" = 'True
+  ValidTransition "Saddle_Ply_300_4e4d" "Saddle_Ply_304_4b3b" = 'True
+  ValidTransition "Saddle_Ply_280_4h5h" "Saddle_Ply_300_4e4d" = 'True
+  ValidTransition "Saddle_Ply_260_L*9b" "Saddle_Ply_280_4h5h" = 'True
+  ValidTransition "Saddle_Ply_240_7h6i+" "Saddle_Ply_260_L*9b" = 'True
+  ValidTransition "Saddle_Ply_220_R*4e" "Saddle_Ply_240_7h6i+" = 'True
+  ValidTransition "Saddle_Ply_216_2c3c" "Saddle_Ply_220_R*4e" = 'True
+  ValidTransition "Saddle_Ply_208_2g2h+" "Saddle_Ply_216_2c3c" = 'True
+  ValidTransition "Saddle_Ply_200_3h5f" "Saddle_Ply_208_2g2h+" = 'True
+  ValidTransition "Saddle_Ply_192_2h2i" "Saddle_Ply_200_3h5f" = 'True
+  ValidTransition "Saddle_Ply_180_3f2g" "Saddle_Ply_192_2h2i" = 'True
+  ValidTransition "Saddle_Ply_160_7c6d" "Saddle_Ply_180_3f2g" = 'True
+  ValidTransition "Saddle_Ply_140_7f7g+" "Saddle_Ply_160_7c6d" = 'True
+  ValidTransition "Saddle_Ply_120_8d8e" "Saddle_Ply_140_7f7g+" = 'True
+  ValidTransition "Saddle_Ply_104_2f2g+" "Saddle_Ply_120_8d8e" = 'True
+  ValidTransition "Saddle_Ply_100_5a5b" "Saddle_Ply_104_2f2g+" = 'True
+  ValidTransition "Saddle_Ply_88_2i4i" "Saddle_Ply_100_5a5b" = 'True
+  ValidTransition "Saddle_Ply_80_8i3i+" "Saddle_Ply_88_2i4i" = 'True
+  ValidTransition "Saddle_Ply_64_3d4e" "Saddle_Ply_80_8i3i+" = 'True
+  ValidTransition "Saddle_Ply_60_B*6h" "Saddle_Ply_64_3d4e" = 'True
+  ValidTransition "Saddle_Ply_48_5g6f+" "Saddle_Ply_60_B*6h" = 'True
+  ValidTransition "Saddle_Ply_40_8f8g+" "Saddle_Ply_48_5g6f+" = 'True
+  ValidTransition "Saddle_Ply_20_2c2d" "Saddle_Ply_40_8f8g+" = 'True
+  ValidTransition "Start" "Saddle_Ply_20_2c2d" = 'True
   ValidTransition from to = 'False
 
 -- ============================================================================
@@ -118,39 +98,29 @@ vpathLookup from to = Map.lookup (from, to) runtimePaths
 runtimePaths :: Map.Map (String, String) [String]
 runtimePaths = Map.fromList
   [
-    (("Saddle_Ply_510_9f9g", "Minimum_Ply_512_Convergence"), ["L*8g","9g9h"]),
-    (("Saddle_Ply_500_8g9f", "Saddle_Ply_510_9f9g"), ["1b2a","P*2b","2a1a","2g2f","1a2b","2f2e","1e2e","1g2g","P*8f","9f9g"]),
-    (("Saddle_Ply_475_2c2b", "Saddle_Ply_500_8g9f"), ["B*2c","2b1a","2c4a","3a4a","N*2a","1a2a","R*1a","2a1a","R*1c","P*9d","9e9d","P*9c","P*2a","1b1c","1g1f","1a1b","1f1g","1c1d","9d9e","1d1e","9e9f","L*8f","9f8g","8f8c+","8g9f"]),
-    (("Saddle_Ply_450_S*2c", "Saddle_Ply_475_2c2b"), ["2b2c","1d2c","L*9b","9c9b","S*8b","9b8b","S*8a","1c1d","G*9b","8b7c","N*5c","P*2b","2a2b","L*1b","2b2c","7c8d","1a1b","S*1c","2c1c","8d9e","5c4a+","G*2c","1c2c","P*2b","2c2b"]),
-    (("Saddle_Ply_425_1a1b", "Saddle_Ply_450_S*2c"), ["1c2e","L*9b","9a9b","L*8b","2e3g+","S*9a","L*1a","2a1a","9b9a","2b2a+","P*2b","2a2b","9a8b","P*7b","8b9b","S*8b","L*1c","1a2a","S*1a","2a1a","S*1d","8b9c+","9b9c","1b2a","S*2c"]),
-    (("Saddle_Ply_400_9b9a", "Saddle_Ply_425_1a1b"), ["3b3a+","1d1e","7b8a","9a9b","8a9a","9b8b","7c7b","8b9a","P*2b","L*1b","1a1b","L*1a","1b1a","1f1g","7b7a+","N*1b","1a1b","N*1c","1b1a","N*1b","1a1b","S*1a","1b1a","S*1b","1a1b"]),
-    (("Saddle_Ply_375_P*9c", "Saddle_Ply_400_9b9a"), ["9b9c","P*9b","9a9b","7c7b+","1f1g","P*7c","P*1b","1a1b","P*1a","1b1a","1g1f","P*9e","P*1b","P*2b","P*2a","1a2a","L*1a","P*3b","1b1c","2a1a","P*2a","2b2a+","1c1d","L*8b","9b9a"]),
-    (("Saddle_Ply_360_9c9b", "Saddle_Ply_375_P*9c"), ["P*7c","P*1b","1a1b","1g1f","1b1a","P*1b","1a1b","1f1g","1b1a","P*1b","1a1b","8a9a","1b1a","1g1f","P*9c"]),
-    (("Saddle_Ply_350_8b7b", "Saddle_Ply_360_9c9b"), ["N*7d","7b8a","1a1b","P*1a","1b2a","7c7d","2a1a","1f1g","P*9b","9c9b"]),
-    (("Saddle_Ply_325_1a1b", "Saddle_Ply_350_8b7b"), ["1f1g+","1b2b","1g1f","9d8b+","7b8b","P*9c","8b9c","L*8b","P*1b","2b1b","9b8b","P*7b","8b7b","P*6b","1f1g","6b6a+","P*1a","1b1a","1g1f","P*6b","P*1b","L*8b","7b8b","P*7b","8b7b"]),
-    (("Saddle_Ply_300_9a9b", "Saddle_Ply_325_1a1b"), ["1a2b","P*1b","2b1a","1b1c","P*9c","9b9a","N*9d","P*2a","9c9b+","9a9b","1a1b","L*2b","1b1a","L*1b","1a2a","N*1a","2a1a","P*2a","1a1b","1c1d","1b2a","1d1e","2a1a","1e1f","1a1b"]),
-    (("Saddle_Ply_280_1c1g+", "Saddle_Ply_300_9a9b"), ["L*9d","P*2c","2d2c","P*2b","2c1b","1g2h","9d9c+","9b9c","1b1a","P*1b","1a1b","1h2i","1b1a","1i1h","P*9b","9c9b","P*9c","9b9a","9c9b+","9a9b"]),
-    (("Saddle_Ply_275_1d2c", "Saddle_Ply_280_1c1g+"), ["1c1d","2c1d","L*1c","1d2d","1c1g+"]),
-    (("Saddle_Ply_250_L*1c", "Saddle_Ply_275_1d2c"), ["1d2c","1c1d","2c1d","L*1c","1d2c","1c1g+","2c1b","1g1h","P*9b","P*1a","1b1c","8b9b","L*9c","9b9c","1c1d","P*2d","1d2d","1a1b","P*9d","9c9b","9d9c+","8a9c","2d1d","L*1c","1d2c"]),
-    (("Saddle_Ply_230_1h1i+", "Saddle_Ply_250_L*1c"), ["S*5b","5a6b","1d1c","P*1b","1c1d","6b5b","G*4b","5b6a","G*5a","6a6b","G*6a","6b7b","R*6b","7a6b","6a7a","7b8b","7a7b","6b7b","4b5b","L*1c"]),
-    (("Saddle_Ply_225_L*5c", "Saddle_Ply_230_1h1i+"), ["5b6a","5c5a+","6a5a","1e1d","1h1i+"]),
-    (("Saddle_Ply_220_P*2f", "Saddle_Ply_225_L*5c"), ["1f1e","2f2g+","5c5b+","4a5b","L*5c"]),
-    (("Saddle_Ply_200_P*3h", "Saddle_Ply_220_P*2f"), ["4h3h","P*2h","6h5g","P*3g","3h2h","P*1h","2h1g","3g3h+","P*5c","5d5c","P*5b","5c5b","P*5c","5b5c","P*5b","5c5b","P*5c","5b4a","1g1f","P*2f"]),
-    (("Saddle_Ply_175_S*5e", "Saddle_Ply_200_P*3h"), ["5d5e","5c5b+","6b5b","P*5d","5b2b","1a2b+","5e5d","2b4d","5d6d","S*5d","5g6g","4d7a","6a7a","2a3a","6d5d","3a4a","6g7g","8i7g","L*6h","6i5h","P*4h","7i6h","P*5g","5h4h","P*3h"]),
-    (("Saddle_Ply_170_5e5d", "Saddle_Ply_175_S*5e"), ["3e4d","5c4d","P*5c","5f5g+","S*5e"]),
-    (("Saddle_Ply_160_G*7i", "Saddle_Ply_170_5e5d"), ["6h7i","P*5f","P*4f","4e5d","L*5c","5b5c","L*5e","5d5e","2e3e","5e5d"]),
-    (("Saddle_Ply_150_L*6h", "Saddle_Ply_160_G*7i"), ["7i6h","G*7i","6h7i","2d2e","L*4d","4c4d","2i2e","L*6h","7i6h","G*7i"]),
-    (("Saddle_Ply_130_1c1b", "Saddle_Ply_150_L*6h"), ["L*2b","1b1c","G*1b","1c1b","B*1a","1b1c","R*1d","1c2c","1d1b+","2c3d","1b1d","3d4e","1d2e","S*7i","2e2i","7i6h+","5i6h","S*7i","6h7i","L*6h"]),
-    (("Saddle_Ply_125_S*1c", "Saddle_Ply_130_1c1b"), ["1b1c","S*1b","L*6h","7h6h","1c1b"]),
-    (("Saddle_Ply_100_1b1a", "Saddle_Ply_125_S*1c"), ["L*1b","1a1b","L*1c","1b1c","3f3e","3d3e","L*1b","1c1b","4f4e","S*6i","N*1c","1b1a","7i6i","L*5h","1c2a+","1a1b","N*1c","5h5i+","6h5i","1b1c","L*1d","1c2c","1d1b+","2c1b","S*1c"]),
-    (("Saddle_Ply_90_1b1a", "Saddle_Ply_100_1b1a"), ["L*1b","1a1b","3g3f","L*6h","7h6h","L*7h","6h7h","L*6h","5g6h","1b1a"]),
-    (("Saddle_Ply_75_P*1b", "Saddle_Ply_90_1b1a"), ["2b1b","P*1c","1b1a","1c1b+","1a1b","P*1c","1b1a","1c1b+","1a1b","4h3g","S*6i","6h6i","G*7h","6i7h","1b1a"]),
-    (("Saddle_Ply_70_9c9i+", "Saddle_Ply_75_P*1b"), ["8h9i","4b3b","P*2b","3b2b","P*1b"]),
-    (("Saddle_Ply_50_2a1c", "Saddle_Ply_70_9c9i+"), ["3f3e","1c2e","S*4a","2b3a","3e3d","3c3d","4a5b+","5c5b","4g4f","3a9g+","9i9g","2e3g+","9g9c+","9a9c","G*4a","5a4a","L*4b","4a4b","P*3b","9c9i+"]),
-    (("Saddle_Ply_40_4i6i", "Saddle_Ply_50_2a1c"), ["6h6i","L*6h","5h6h","G*7i","6i7i","P*5b","2e2d","2c2d","3g3f","2a1c"]),
-    (("Saddle_Ply_30_P*5e", "Saddle_Ply_40_4i6i"), ["5f5e","P*5g","5e5c+","5b5c","6h5g","R*3i","L*4i","3i4i+","5i6h","4i6i"]),
-    (("Saddle_Ply_25_P*5c", "Saddle_Ply_30_P*5e"), ["4b5c","5h5f","L*5h","4i5h","P*5e"]),
-    (("Saddle_Ply_20_N*5f", "Saddle_Ply_25_P*5c"), ["L*5b","4a5b","5g5f","5e5f","P*5c"]),
-    (("Saddle_Ply_10_5d5e", "Saddle_Ply_20_N*5f"), ["1d1c+","1b1c","1i1h","1c1h+","2g2f","L*6h","2f2e","1h2i","7i6h","N*5f"]),
-    (("Start", "Saddle_Ply_10_5d5e"), ["2h5h","8b6b","3i4h","1a1b","1g1f","3a4b","1f1e","5c5d","1e1d","5d5e"])
+    (("Saddle_Ply_320_5c6c", "Minimum_Ply_332_TonshiFree_Convergence"), ["1b1a","4a4g+","1a1b","N*9b","1b1a","5a6a","1a1b","6a7a","1b2b","6b7b","2b1a","7a8a"]),
+    (("Saddle_Ply_304_4b3b", "Saddle_Ply_320_5c6c"), ["7b6b","L*9e","1a1b","L*4a","1b1a","3b4b","1a1b","4c5c","1b1a","4b5a","1a1b","5c6b","1b1a","G*5c","1a1b","5c6c"]),
+    (("Saddle_Ply_300_4e4d", "Saddle_Ply_304_4b3b"), ["2b1a","4d5d","6b7b","4b3b"]),
+    (("Saddle_Ply_280_4h5h", "Saddle_Ply_300_4e4d"), ["1i1h","4g4h+","1h1g","4d4g+","L*5d","2f1g","5c6c","4c4b","5d5c+","P*9d","5c5d","4g4c","9b8b","4h4g","8b7b","4g4f","7b7c","4f4e","7c7d","4e4d"]),
+    (("Saddle_Ply_260_L*9b", "Saddle_Ply_280_4h5h"), ["9g9f","2h2g","9f9e","G*1f","P*6e","1f2f","9e8d","P*9a","9d9c+","4c4d","8d8c","4d4c","9c9b","4e4d","8c8b","5g5f","8b9a","5h5g","P*1i","4h5h"]),
+    (("Saddle_Ply_240_7h6i+", "Saddle_Ply_260_L*9b"), ["7b6b","7i7h","6c5c","5h6h","1a1b","4f5h+","1b2b","6i7i","6d5d","5i6i","5d4c","4b4c","7d6d","L*9e","9f9e","4i5i","L*2h","2i2h","9e9d","L*9b"]),
+    (("Saddle_Ply_220_R*4e", "Saddle_Ply_240_7h6i+"), ["N*3h","2h3h","3g2g","S*7h","P*6f","6e6f","8d7d","P*9d","7b7c","P*3g","8b7b","N*4f","1a1b","4f5h+","1b2b","N*4f","7c6c","6i5i","2b1a","7h6i+"]),
+    (("Saddle_Ply_216_2c3c", "Saddle_Ply_220_R*4e"), ["9c9d","3c4b","9d8d","R*4e"]),
+    (("Saddle_Ply_208_2g2h+", "Saddle_Ply_216_2c3c"), ["1b1a+","P*2g","4c5c","5f4e","5c3c","4e2c","3f3g","2c3c"]),
+    (("Saddle_Ply_200_3h5f", "Saddle_Ply_208_2g2h+"), ["G*3f","5h6i","4d5d","P*4g","5d6d","P*2g","1a2a","2g2h+"]),
+    (("Saddle_Ply_192_2h2i", "Saddle_Ply_200_3h5f"), ["3c3d","2i2h","3d4d","2h2i","5d4e","4g5h","P*5f","3h5f"]),
+    (("Saddle_Ply_180_3f2g", "Saddle_Ply_192_2h2i"), ["9b9c","2g3h","P*2f","3e3f","2c3c","3g4h","2a2b","3f3g+","5b4b","3g2h","2b2c","2h2i"]),
+    (("Saddle_Ply_160_7c6d", "Saddle_Ply_180_3f2g"), ["8a7b","L*9h","8f7e","6d5e","6a6b","5e4f","6b5b","5d5e","2c4c","6c7b","G*8b","4f4g","7a7b","R*7h","2b2c","7h7i+","S*5d","3d4e","G*8f","3f2g"]),
+    (("Saddle_Ply_140_7f7g+", "Saddle_Ply_160_7c6d"), ["8b9b","L*8g","R*8b","P*7f","8b8a+","N*7a","P*6d","N*9d","L*6c","7b6c","N*8c","2g2h","8c7a+","6a6b","7a6a","6b7c","N*8c","2h3i","8c7a+","7c6d"]),
+    (("Saddle_Ply_120_8d8e", "Saddle_Ply_140_7f7g+"), ["9g9f","8e8f","8g9g","8f8g+","7f8g","P*8f","8g8f","P*8h","P*5b","6a5b","P*1b","3c4c","7e7d","6b6a","7d7c+","P*7f","6d7b+","7a7b","7c8b","7f7g+"]),
+    (("Saddle_Ply_104_2f2g+", "Saddle_Ply_120_8d8e"), ["8f9e","5f5g","6h6g","6f6g","9e8f","4e4f","N*6d","5b6b","1b1a","4f3g+","2b2c","G*3c","1c2b","P*8d","8f8g","8d8e"]),
+    (("Saddle_Ply_100_5a5b", "Saddle_Ply_104_2f2g+"), ["1b2b+","4g3f+","1a1b","2f2g+"]),
+    (("Saddle_Ply_88_2i4i", "Saddle_Ply_100_5a5b"), ["5h4i","3h4i+","R*1b","B*4g","6i7h","N*8f","7h8g","N*9e","8g8f","2e2f","N*4c","5a5b"]),
+    (("Saddle_Ply_80_8i3i+", "Saddle_Ply_88_2i4i"), ["N*4i","3i2i","7h7i","G*8i","7i6i","S*3h","1b1a","2i4i"]),
+    (("Saddle_Ply_64_3d4e", "Saddle_Ply_80_8i3i+"), ["B*5h","4c3d","1h1c+","P*2e","L*7g","5g5f","L*3b","4g3i+","2h2e","P*2d","P*5g","2d2e","4i3i","R*8i","6i7h","8i3i+"]),
+    (("Saddle_Ply_60_B*6h", "Saddle_Ply_64_3d4e"), ["5h6h","N*4g","5i6i","3d4e"]),
+    (("Saddle_Ply_48_5g6f+", "Saddle_Ply_60_B*6h"), ["1f1e","6d6e","1e1d","4c5c","P*8e","5c4c","1d1c+","4e5g+","1c1b","L*5h","6h5h","B*6h"]),
+    (("Saddle_Ply_40_8f8g+", "Saddle_Ply_48_5g6f+"), ["7h7g","8g8h","7g7f","B*5g","5h6h","8h9i","1g1f","5g6f+"]),
+    (("Saddle_Ply_20_2c2d", "Saddle_Ply_40_8f8g+"), ["2f2e","8c8d","2e2d","3a3b","2d2c+","3b3c","2c2b","3c3d","B*3a","5b4c","3a5c+","8d8e","2b3a","1a1b","P*2b","1c1d","2b2a+","8e8f","7i7h","8f8g+"]),
+    (("Start", "Saddle_Ply_20_2c2d"), ["1i1h","9a9b","5g5f","5c5d","6i5h","4a5b","4g4f","4c4d","6g6f","6c6d","7g7f","3c3d","8i7g","2a3c","7g6e","3c4e","7f7e","3d3e","2g2f","2c2d"])
   ]
