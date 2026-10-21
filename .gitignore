@@ -1,0 +1,19 @@
+# Haskell build artifacts
+*.hi
+*.o
+*.dyn_hi
+*.dyn_o
+*.exe
+
+# Cabal & Stack
+dist/
+dist-newstyle/
+.stack-work/
+.cabal-sandbox/
+cabal.sandbox.config
+*.cabal.sandbox.config
+
+# OS artifacts
+Thumbs.db
+Desktop.ini
+.DS_Store
