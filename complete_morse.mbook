@@ -1,0 +1,13 @@
+NODE:Start,Saddle,0.0
+NODE:Saddle_Yagura_Fortress,Saddle,43.54056860248669
+NODE:Saddle_Yagura_Climax,Saddle,-1644.5524228857562
+NODE:Saddle_Furibisha_Mino,Saddle,68.02261555670782
+NODE:Saddle_Mino_Attack,Saddle,-3320.4802059049844
+NODE:Saddle_Kakugawari_Clash,Saddle,-0.7058608834278957
+NODE:Minimum_Gote_Victory,Minimum,10000.0
+PATH:Start->Saddle_Yagura_Fortress:7g7f>3c3d>2g2f>8c8d>2f2e>8d8e>6i7h>4a3b>5i6i>5a4b
+PATH:Saddle_Yagura_Fortress->Saddle_Yagura_Climax:8h2b+>3a2b>B*4a>4b4a>2h5h>B*5i
+PATH:Start->Saddle_Furibisha_Mino:7g7f>3c3d>2h5h>5a5b>5h5f>4a3b>3i4h>5b4b
+PATH:Saddle_Furibisha_Mino->Saddle_Mino_Attack:8h2b+>3a2b>5f5c+>4b5c>B*5b>5c5b
+PATH:Start->Saddle_Kakugawari_Clash:7g7f>3c3d>8h2b+>3a2b>2g2f>8c8d>2f2e>2b3c
+PATH:Saddle_Mino_Attack->Minimum_Gote_Victory:5e5d>5c5d>R*5g>5c5b+>5g5h>5i6i>5h6h>6i7i

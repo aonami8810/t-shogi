@@ -8,6 +8,7 @@ import Data.Char
 import Data.List
 import Data.Maybe
 import qualified Data.Map as Map
+import qualified CompiledMorseBook as Book
 
 -- ============================================================================
 -- 1. 将棋盤と駒の基本データ構造
@@ -53,13 +54,14 @@ type Hand = Map.Map PieceType Int
 -- 局面の完全な一意性シグネチャ（手番、盤面、両者の持ち駒）
 type PositionKey = (Player, Board, Map.Map Player Hand)
 
--- 状態（手番、盤面、持ち駒、Garside置換表キャッシュ、トポロジー歴史履歴）
+-- 状態（手番、盤面、持ち駒、Garside置換表キャッシュ、トポロジー歴史履歴、指し手履歴）
 data State = State
-  { turn    :: Player
-  , board   :: Board
-  , hands   :: Map.Map Player Hand
-  , cache   :: Map.Map PositionKey (Double, Move) -- Garside標準化キャッシュ（置換表）
-  , history :: Map.Map PositionKey Int            -- ★ トポロジー歴史：千日手検出用の完全局面出現頻度
+  { turn        :: Player
+  , board       :: Board
+  , hands       :: Map.Map Player Hand
+  , cache       :: Map.Map PositionKey (Double, Move) -- Garside標準化キャッシュ（置換表）
+  , history     :: Map.Map PositionKey Int            -- ★ トポロジー歴史：千日手検出用の完全局面出現頻度
+  , moveHistory :: [String]                           -- ★ 定跡照合用の対局指し手履歴
   } deriving (Show)
 
 positionKey :: State -> PositionKey
@@ -96,11 +98,12 @@ emptyHand = Map.fromList [(p, 0) | p <- [Pawn, Lance, Knight, Silver, Gold, Bish
 initState :: State
 initState =
   let st = State
-        { turn    = Sente
-        , board   = initBoard
-        , hands   = Map.fromList [(Sente, emptyHand), (Gote, emptyHand)]
-        , cache   = Map.empty
-        , history = Map.empty
+        { turn        = Sente
+        , board       = initBoard
+        , hands       = Map.fromList [(Sente, emptyHand), (Gote, emptyHand)]
+        , cache       = Map.empty
+        , history     = Map.empty
+        , moveHistory = []
         }
   in st { history = Map.singleton (positionKey st) 1 }
 
@@ -171,7 +174,7 @@ applyMove (NormalMove from to promo) State{..} =
           in Map.insert turn updatedHand hands
         Nothing -> hands
 
-      nextSt = State (opponent turn) newBoard newHands cache history
+      nextSt = State (opponent turn) newBoard newHands cache history (moveHistory ++ [showMove (NormalMove from to promo)])
       newKey = positionKey nextSt
       newHistory = Map.insertWith (+) newKey 1 history
   in nextSt { history = newHistory }
@@ -192,7 +195,7 @@ applyMove (DropMove pt to) State{..} =
       updatedHand = Map.adjust (\old -> old - 1) pt handMap
       newHands = Map.insert turn updatedHand hands
 
-      nextSt = State (opponent turn) newBoard newHands cache history
+      nextSt = State (opponent turn) newBoard newHands cache history (moveHistory ++ [showMove (DropMove pt to)])
       newKey = positionKey nextSt
       newHistory = Map.insertWith (+) newKey 1 history
   in nextSt { history = newHistory }
@@ -213,7 +216,7 @@ parseSfen tokens =
       let bd = parseSfenBoard boardStr
           plr = if turnStr == "w" then Gote else Sente
           hnds = parseSfenHands handStr
-          st = State plr bd hnds Map.empty Map.empty
+          st = State plr bd hnds Map.empty Map.empty []
       in st { history = Map.singleton (positionKey st) 1 }
     _ -> initState
 
@@ -322,7 +325,6 @@ isUchifudume mv@(DropMove Pawn _) st =
   in if not isOppInCheck
      then False
      else
-       -- 相手が自玉への王手を回避できる合法手が存在するかチェック
        let oppRawMoves = generateMoves nextSt
            oppLegalMoves = filter (\m -> not (isKingUnderAttack opp (board (applyMove m nextSt)))) oppRawMoves
        in null oppLegalMoves
@@ -501,46 +503,58 @@ isSennichite key hist =
     Nothing    -> False
 
 -- ============================================================================
--- 7. 最善手選択 (Garside標準化置換表 ＆ F5フィルター ＆ 千日手回避)
+-- 7. 型レベル定跡（Morse V-Path）ルックアップ
 -- ============================================================================
 
--- | 千日手（トポロジー無限ループ）の発生を回避し、最善手を選択する
--- 回避不可能な千日手引き分けが確定した場合は Left "draw" を返す
--- 指す手がない（詰み等）の場合は Left "resign" を返す
+-- | 現在の指し手履歴から、CompiledMorseBook の V-Path に適合する定跡手を検索する
+lookupBookMove :: [String] -> State -> Maybe Move
+lookupBookMove currentMoves st =
+  let legalMoves = f5SyzygyFilter st (generateMoves st)
+      allPaths = Map.elems Book.runtimePaths
+      matchingPaths = filter (\p -> currentMoves `isPrefixOf` p && length p > length currentMoves) allPaths
+      candidates = [ parseMove (p !! length currentMoves) | p <- matchingPaths ]
+      validBookMoves = filter (`elem` legalMoves) candidates
+  in listToMaybe validBookMoves
+
+-- ============================================================================
+-- 8. 最善手選択 (型レベル定跡 ＆ Garside置換表 ＆ F5フィルター ＆ 千日手回避)
+-- ============================================================================
+
 searchBestMoveWithCache :: State -> (Either String Move, State)
 searchBestMoveWithCache state =
-  let moves = generateMoves state
-      f5FilteredMoves = f5SyzygyFilter state moves
-      
-      -- ★ 指し手のトポロジー分水嶺：千日手（無限ループ）になる手と安全な手を分類
-      (_sennichiteMoves, safeMoves) = 
-        partition (\m -> 
-          let nextState = applyMove m state
-          in isSennichite (positionKey nextState) (history nextState)
-        ) f5FilteredMoves
-  in if null f5FilteredMoves
-     then (Left "resign", state)
-     else if null safeMoves
-       then
-         -- ★ 逃げ道がない（安全な手が一切ない）が、千日手に持ち込む手がある場合：
-         -- トポロジー的な無限収縮（引き分け）を受け入れ、USIの "bestmove draw" を送出する
-         (Left "draw", state)
-       else
-         -- キャッシュ照会：キャッシュの手が safeMoves に含まれていれば即採用
-         case Map.lookup (positionKey state) (cache state) of
-           Just (_score, mv) | mv `elem` safeMoves -> (Right mv, state)
-           _ ->
-             -- 安全な手の選択肢の中から、モースポテンシャル＋駒得が最大となる手を選択
-             let scoredMoves = [ (evaluateState (turn state) (applyMove m state), m) | m <- safeMoves ]
-                 sorted = sortBy (\(s1, _) (s2, _) -> compare s2 s1) scoredMoves
-             in case sorted of
-                  ((bestScore, bestMove) : _) ->
-                    let newCache = Map.insert (positionKey state) (bestScore, bestMove) (cache state)
-                    in (Right bestMove, state { cache = newCache })
-                  [] -> (Left "resign", state)
+  -- 1. まず型レベル定跡（V-Path スライド）を照会
+  case lookupBookMove (moveHistory state) state of
+    Just bookMove ->
+      -- ★ 定跡ヒット：探索なしでノータイム指し
+      (Right bookMove, state)
+    Nothing ->
+      -- 2. 定跡外または定跡完了後は、通常のモースポテンシャル探索（Garsideキャッシュ + F5フィルター）
+      let moves = generateMoves state
+          f5FilteredMoves = f5SyzygyFilter state moves
+          
+          (_sennichiteMoves, safeMoves) = 
+            partition (\m -> 
+              let nextState = applyMove m state
+              in isSennichite (positionKey nextState) (history nextState)
+            ) f5FilteredMoves
+      in if null f5FilteredMoves
+         then (Left "resign", state)
+         else if null safeMoves
+           then (Left "draw", state)
+           else
+             case Map.lookup (positionKey state) (cache state) of
+               Just (_score, mv) | mv `elem` safeMoves -> (Right mv, state)
+               _ ->
+                 let scoredMoves = [ (evaluateState (turn state) (applyMove m state), m) | m <- safeMoves ]
+                     sorted = sortBy (\(s1, _) (s2, _) -> compare s2 s1) scoredMoves
+                 in case sorted of
+                      ((bestScore, bestMove) : _) ->
+                        let newCache = Map.insert (positionKey state) (bestScore, bestMove) (cache state)
+                        in (Right bestMove, state { cache = newCache })
+                      [] -> (Left "resign", state)
 
 -- ============================================================================
--- 8. USIメインループ
+-- 9. USIメインループ
 -- ============================================================================
 
 main :: IO ()
@@ -567,12 +581,9 @@ usiLoop currentState = do
         usiLoop currentState
       
       "usinewgame" -> do
-        -- 新規対局開始時にキャッシュおよび千日手用履歴（history）を初期化
         usiLoop initState { cache = Map.empty }
       
       "position" -> do
-        -- position startpos [moves ...]
-        -- position sfen <sfen_tokens...> [moves ...]
         let movesTokens = case elemIndex "moves" tokens of
               Just idx -> drop (idx + 1) tokens
               Nothing  -> []
@@ -583,17 +594,13 @@ usiLoop currentState = do
               ("startpos":_) -> initState
               ("sfen":sfenParts) -> parseSfen sfenParts
               _ -> initState
-            -- 指し手を順に適用しながら、現在の対局の出現履歴（history）を同期構築
             finalState = foldl' (\st mvStr -> applyMove (parseMove mvStr) st) baseState movesTokens
-        -- 置換表キャッシュ（これまでの全探索知能）は、引き継いで維持する
-        usiLoop finalState { cache = cache currentState }
+        usiLoop finalState { cache = cache currentState, moveHistory = movesTokens }
       
       "go" -> do
-        -- Garsideキャッシュ、F5フィルター、トポロジー的千日手回避を組み合わせた最善手検索
         let (res, nextState) = searchBestMoveWithCache currentState
         case res of
           Left "draw" -> do
-            -- ★ 千日手引き分けが確定：USIプロトコルに準拠して "draw" を送出
             putStrLn "bestmove draw"
             usiLoop nextState
           Left _ -> do

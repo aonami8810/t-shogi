@@ -4,6 +4,7 @@ module Main where
 
 import System.IO
 import System.Exit
+import System.Environment
 import Data.List
 import qualified Data.Map as Map
 import Data.Maybe
@@ -99,6 +100,7 @@ transpileToTypeLevelHaskell MorseBook{..} = unlines $
   , ""
   , "import GHC.TypeLits"
   , "import Data.Proxy"
+  , "import qualified Data.Map as Map"
   , ""
   , "-- ============================================================================"
   , "-- 1. 収束した臨界ノードの定義（Type-Level Symbols）"
@@ -137,12 +139,9 @@ transpileToTypeLevelHaskell MorseBook{..} = unlines $
   , "runtimePaths :: Map.Map (String, String) [String]"
   , "runtimePaths = Map.fromList"
   , "  ["
-  ] ++ [ "    " ++ genRuntimeTuple p ++ "," | p <- init bookPaths ] ++
+  ] ++ [ "    " ++ genRuntimeTuple p ++ "," | p <- if null bookPaths then [] else init bookPaths ] ++
   [ "    " ++ genRuntimeTuple (last bookPaths) | not (null bookPaths) ] ++
   [ "  ]"
-  , ""
-  , "-- 補助関数・ダミーインポート解決用"
-  , "import qualified Data.Map as Map"
   ]
   where
     generateNodeDoc :: MorseNode -> String
@@ -175,11 +174,17 @@ sampleMBookData = unlines
 
 main :: IO ()
 main = do
+  args <- System.Environment.getArgs
   putStrLn "=== Shogi Morse-Contraction Compiler-Generator ==="
-  putStrLn "Reading converged dynamic sampling book from active-learning..."
+  mbookContent <- case args of
+    (filePath:_) -> do
+      putStrLn $ "Reading Morse Book file from: " ++ filePath
+      readFile filePath
+    [] -> do
+      putStrLn "No input file specified. Using built-in dynamic sampling book..."
+      return sampleMBookData
   
-  -- 実際には外部から.mbookを読み込む、またはメモリ上のActiveLearningBookをデシリアライズ
-  let parsedBook = parseMBook sampleMBookData
+  let parsedBook = parseMBook mbookContent
   putStrLn $ "Successfully parsed Morse Book."
   putStrLn $ "  Total Nodes (Critical Points): " ++ show (Map.size (bookNodes parsedBook))
   putStrLn $ "  Total V-Paths (Gradient Flows): " ++ show (length (bookPaths parsedBook))
@@ -187,12 +192,8 @@ main = do
   putStrLn "Transpiling and generating type-level safe Haskell code (CompiledMorseBook.hs)..."
   let generatedHaskell = transpileToTypeLevelHaskell parsedBook
   
-  -- ファイル出力
-  writeFile "/workspace/scratch/CompiledMorseBook.hs" generatedHaskell
-  putStrLn "Compile-time safe Haskell file generated successfully in scratch."
-  
-  -- 成果物としてoutにもシリアライズ
-  writeFile "/workspace/out/CompiledMorseBook.hs" generatedHaskell
-  putStrLn "Published CompiledMorseBook.hs to outbox."
+  -- カレントディレクトリに出力
+  writeFile "CompiledMorseBook.hs" generatedHaskell
+  putStrLn "Compile-time safe Haskell file generated successfully at ./CompiledMorseBook.hs"
   
   exitSuccess

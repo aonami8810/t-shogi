@@ -13,27 +13,33 @@ import Data.Proxy
 import qualified Data.Map as Map
 
 -- ============================================================================
--- 1. åŽæŸã—ãŸè‡¨ç•ŒãƒŽãƒ¼ãƒ‰ã®å®šç¾©ï¼ˆType-Level Symbolsï¼‰
+-- 1. Žû‘©‚µ‚½—ÕŠEƒm[ƒh‚Ì’è‹`iType-Level Symbolsj
 -- ============================================================================
 
--- | Node ID: Start (Type: Saddle, Potential: 0.0)
--- | Node ID: Saddle_Yagura_30M (Type: Saddle, Potential: -12.45)
--- | Node ID: Saddle_Mino_Attack (Type: Saddle, Potential: 24.8)
 -- | Node ID: Minimum_Gote_Victory (Type: Minimum, Potential: 10000.0)
+-- | Node ID: Saddle_Furibisha_Mino (Type: Saddle, Potential: 68.02261555670782)
+-- | Node ID: Saddle_Kakugawari_Clash (Type: Saddle, Potential: -0.7058608834278957)
+-- | Node ID: Saddle_Mino_Attack (Type: Saddle, Potential: -3320.4802059049844)
+-- | Node ID: Saddle_Yagura_Climax (Type: Saddle, Potential: -1644.5524228857562)
+-- | Node ID: Saddle_Yagura_Fortress (Type: Saddle, Potential: 43.54056860248669)
+-- | Node ID: Start (Type: Saddle, Potential: 0.0)
 
 -- ============================================================================
--- 2. å‹¾é…æµï¼ˆV-Pathï¼‰ã®åž‹ãƒ¬ãƒ™ãƒ«äºŒé …é·ç§»é–¢ä¿‚ã®å®šç¾©ï¼ˆType Familyï¼‰
---    ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãƒ»ãƒ©ãƒ¼ãƒ‹ãƒ³ã‚°ã§åŽæŸãŒç¢ºèªã•ã‚ŒãŸãƒ‘ã‚¹ã®ã¿ãŒ 'True ã¨åˆ¤å®šã•ã‚Œã¾ã™ã€‚
+-- 2. Œù”z—¬iV-Pathj‚ÌŒ^ƒŒƒxƒ‹“ñ€‘JˆÚŠÖŒW‚Ì’è‹`iType Familyj
+--    ƒAƒNƒeƒBƒuEƒ‰[ƒjƒ“ƒO‚ÅŽû‘©‚ªŠm”F‚³‚ê‚½ƒpƒX‚Ì‚Ý‚ª 'True ‚Æ”»’è‚³‚ê‚Ü‚·B
 -- ============================================================================
 type family ValidTransition (from :: Symbol) (to :: Symbol) :: Bool where
-  ValidTransition "Start" "Saddle_Yagura_30M" = 'True
-  ValidTransition "Saddle_Yagura_30M" "Saddle_Mino_Attack" = 'True
   ValidTransition "Saddle_Mino_Attack" "Minimum_Gote_Victory" = 'True
+  ValidTransition "Start" "Saddle_Kakugawari_Clash" = 'True
+  ValidTransition "Saddle_Furibisha_Mino" "Saddle_Mino_Attack" = 'True
+  ValidTransition "Start" "Saddle_Furibisha_Mino" = 'True
+  ValidTransition "Saddle_Yagura_Fortress" "Saddle_Yagura_Climax" = 'True
+  ValidTransition "Start" "Saddle_Yagura_Fortress" = 'True
   ValidTransition from to = 'False
 
 -- ============================================================================
--- 3. é™çš„ãªåž‹å®‰å…¨ Morse Chainï¼ˆå‹¾é…æµãƒã‚§ãƒ¼ãƒ³ï¼šGADTï¼‰
---    ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«æ™‚å®‰å…¨ãŒ100%ä¿è¨¼ã•ã‚ŒãŸä¸€æ„ãªå®šè·¡ãƒ‘ã‚¹ã®æ§‹ç¯‰å­ã§ã™ã€‚
+-- 3. Ã“I‚ÈŒ^ˆÀ‘S Morse ChainiŒù”z—¬ƒ`ƒF[ƒ“FGADTj
+--    ƒRƒ“ƒpƒCƒ‹ŽžˆÀ‘S‚ª100%•ÛØ‚³‚ê‚½ˆêˆÓ‚È’èÕƒpƒX‚Ì\’zŽq‚Å‚·B
 -- ============================================================================
 data MorseChain (nodes :: [Symbol]) where
   Nil     :: MorseChain '[]
@@ -46,14 +52,18 @@ data MorseChain (nodes :: [Symbol]) where
                -> MorseChain (to : from : rest)
 
 -- ============================================================================
--- 4. å®Ÿè¡Œæ™‚ï¼ˆRuntimeï¼‰é«˜é€Ÿå±•é–‹ç”¨ã®V-Pathå®šç¾©ãƒžãƒƒãƒ—
+-- 4. ŽÀsŽžiRuntimej‚‘¬“WŠJ—p‚ÌV-Path’è‹`ƒ}ƒbƒv
 -- ============================================================================
 vpathLookup :: String -> String -> Maybe [String]
 vpathLookup from to = Map.lookup (from, to) runtimePaths
 
 runtimePaths :: Map.Map (String, String) [String]
 runtimePaths = Map.fromList
-  [ (("Start", "Saddle_Yagura_30M"), ["7g7f", "3c3d", "2g2f", "4c4d", "8h2b+", "3a2b", "2f2e"])
-  , (("Saddle_Yagura_30M", "Saddle_Mino_Attack"), ["5e5d", "5c5d", "R*5g", "5c5b+"])
-  , (("Saddle_Mino_Attack", "Minimum_Gote_Victory"), ["5g5h", "5i6i", "5h6h", "6i7i"])
+  [
+    (("Saddle_Mino_Attack", "Minimum_Gote_Victory"), ["5e5d","5c5d","R*5g","5c5b+","5g5h","5i6i","5h6h","6i7i"]),
+    (("Start", "Saddle_Kakugawari_Clash"), ["7g7f","3c3d","8h2b+","3a2b","2g2f","8c8d","2f2e","2b3c"]),
+    (("Saddle_Furibisha_Mino", "Saddle_Mino_Attack"), ["8h2b+","3a2b","5f5c+","4b5c","B*5b","5c5b"]),
+    (("Start", "Saddle_Furibisha_Mino"), ["7g7f","3c3d","2h5h","5a5b","5h5f","4a3b","3i4h","5b4b"]),
+    (("Saddle_Yagura_Fortress", "Saddle_Yagura_Climax"), ["8h2b+","3a2b","B*4a","4b4a","2h5h","B*5i"]),
+    (("Start", "Saddle_Yagura_Fortress"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","6i7h","4a3b","5i6i","5a4b"])
   ]
