@@ -400,6 +400,7 @@ data MidgameWeights = MidgameWeights
   , wGoldKingCoord    :: !Double -- 金と玉の連携（金玉近接・守護スクラム）重み (標準 1.5)
   , wDistanceToMate   :: !Double -- 詰み筋までの距離（DTM短縮・QEGTB接続）重み (標準 5.0)
   , wNumericalAssault :: !Double -- 数の攻め（特定地点への利きの集中・突破、局所的数の優位）重み (標準 2.0)
+  , wTacticalFork     :: !Double -- 両取り（角・桂・銀・飛車による二重威嚇）重み (標準 1.8)
   } deriving (Show, Read, Eq)
 
 defaultWeights :: MidgameWeights
@@ -415,6 +416,7 @@ defaultWeights = MidgameWeights
   , wGoldKingCoord    = 1.5
   , wDistanceToMate   = 5.0
   , wNumericalAssault = 2.0
+  , wTacticalFork     = 1.8
   }
 
 -- | 設定ファイルから中盤学習重みを読み込む（存在しない場合は defaultWeights）
@@ -474,8 +476,8 @@ isPushingKakutoPawn st m =
         _                       -> True  -- 角が2二にいる/飛車がいないのに2三歩を突くのは絶対禁止
     _ -> False
 
--- | 無駄な香車上がりなどの手損手を厳密に判定
--- （1八香、9八香、1二香、9二香など、端攻めがない限り手損として徹底排除）
+-- | 無駄な香車上がりなどの手損手を厳格に判定
+-- （1八香、9八香、1二香、9二香など、自玉の穴熊入城または直接の端破られ防衛以外は例外なく100%完全排除！）
 isFutileLanceLift :: State -> Move -> Bool
 isFutileLanceLift st (NormalMove from to _) =
   let bd = board st
@@ -486,21 +488,21 @@ isFutileLanceLift st (NormalMove from to _) =
              (tx, ty) = to
              -- 1段目または2段目からの香車前進
              isFromBackRank = if plr == Sente then fy >= 8 else fy <= 2
-             -- 端攻め・端受け（相手の端歩・端駒が迫っている）かチェック
              opp = opponent plr
-             hasOpponentEdgeThreat =
+             -- 相手が自陣深くに侵入してきた非常事態（直接の端破られ防衛）のみ例外許可
+             hasDirectBreach =
                any (\((ox, oy), Piece op _) ->
                      op == opp && ox == fx &&
-                     (if plr == Sente then oy >= 4 else oy <= 6)
+                     (if plr == Sente then oy >= 7 else oy <= 3)
                    ) (Map.toList bd)
-             -- 穴熊の完成形（玉がすでに香車の初期位置に入城している場合のみ例外許可）
+             -- 穴熊囲い（玉がすでに香車の初期位置に入城している、または直隣にいる場合のみ例外許可）
              kingPos = findKing plr bd
-             isCompletedAnaguma = case kingPos of
+             isAnagumaEntry = case kingPos of
                Just (kx, ky) -> if plr == Sente
-                                  then (fx == 1 && kx == 1 && ky == 9) || (fx == 9 && kx == 9 && ky == 9)
-                                  else (fx == 1 && kx == 1 && ky == 1) || (fx == 9 && kx == 9 && ky == 1)
+                                  then (fx == 1 && kx <= 2 && ky >= 8) || (fx == 9 && kx >= 8 && ky >= 8)
+                                  else (fx == 1 && kx <= 2 && ky <= 2) || (fx == 9 && kx >= 8 && ky <= 2)
                Nothing -> False
-         in isFromBackRank && not hasOpponentEdgeThreat && not isCompletedAnaguma
+         in isFromBackRank && not hasDirectBreach && not isAnagumaEntry
        _ -> False
 isFutileLanceLift _ _ = False
 
@@ -568,12 +570,24 @@ evalPieceControl plr st =
               | sq <- mySilvers
               ]
             
-            -- 桂馬の跳躍・攻撃参加
+            -- 桂馬の跳躍・攻撃参加（敵の歩や駒の利きに晒される無謀な高跳びは特大ペナルティ！）
             knightScore = sum
               [ let (_, ky) = sq
                     advancement = if p == Sente then 9 - ky else ky - 1
-                    advanceBonus = if advancement >= 2 then fromIntegral advancement * 40.0 else 0.0
-                in advanceBonus
+                    oppAttackers = getPiecesCovering (opponent p) sq bd
+                    myDefenders  = getPiecesCovering p sq bd
+                    hasPawnThreat = any (\(_, Piece _ opt) -> opt == Pawn) oppAttackers
+                    
+                    penalty = if hasPawnThreat
+                                then -400.0 -- 桂馬の高跳び歩の餌食（タダ捨て）特大ペナルティ
+                                else if not (null oppAttackers) && length myDefenders < length oppAttackers
+                                  then -250.0 -- 紐なし高跳びペナルティ
+                                  else 0.0
+                    
+                    advanceBonus = if advancement >= 2 && null oppAttackers
+                                     then fromIntegral advancement * 40.0
+                                     else 0.0
+                in advanceBonus + penalty
               | sq <- myKnights
               ]
         in silverScore + knightScore
@@ -589,26 +603,25 @@ evalTempoLoss plr st =
       -- 18香車（1九香〜1八香、9九香〜9八香、後手1一香〜1二香、9一香〜9二香）の無駄上がり検知
       lanceIdlingPenalty p =
         let myLances = [ sq | (sq, Piece owner pt) <- Map.toList bd, owner == p, pt == Lance ]
-            isEdgeAttacked x =
-              any (\((ox, oy), Piece op _) -> op /= p && ox == x && (if p == Sente then oy >= 4 else oy <= 6)) (Map.toList bd)
+            isEdgeBreached x =
+              any (\((ox, oy), Piece op _) -> op /= p && ox == x && (if p == Sente then oy >= 7 else oy <= 3)) (Map.toList bd)
             kingSq = findKing p bd
             isTrueAnaguma = case kingSq of
               Just (kx, ky) -> if p == Sente
-                                 then (kx == 1 && ky == 9) || (kx == 9 && ky == 9)
-                                 else (kx == 1 && ky == 1) || (kx == 9 && ky == 1)
+                                 then (kx <= 2 && ky >= 8)
+                                 else (kx <= 2 && ky <= 2)
               Nothing -> False
             penalties = sum
               [ let (lx, ly) = sq
                     isFutilePos = if p == Sente
                                     then (lx == 1 && ly == 8) || (lx == 9 && ly == 8)
                                     else (lx == 1 && ly == 2) || (lx == 9 && ly == 2)
-                in if isFutilePos && not (isEdgeAttacked lx) && not isTrueAnaguma
-                     then -600.0 -- 強烈な18香無駄上がり手損ペナルティ！
+                in if isFutilePos && not (isEdgeBreached lx) && not isTrueAnaguma
+                     then -1500.0 -- 香車無駄上がりによる致命的手損ペナルティ
                      else 0.0
               | sq <- myLances
               ]
         in penalties
-
       -- 飛車先不突きなのに金が中央に寄る手損
       driftGoldWithoutRookAdvance p =
         let myRooks = [ sq | (sq, Piece owner pt) <- Map.toList bd, owner == p, pt == Rook ]
@@ -781,6 +794,46 @@ evalLoosePieces plr st =
       oppLoose = countLoose opp
   in (fromIntegral oppLoose - fromIntegral myLoose) * 40.0
 
+-- | 6. 両取り（Fork）の検出と評価
+-- 着手した駒（または打った駒）が相手の重要駒（玉・大駒・金銀など）2枚以上を同時に射程に捉える強力な戦術手
+isForkMove :: State -> Move -> Bool
+isForkMove st m =
+  let plr = turn st
+      opp = opponent plr
+      nextSt = applyMove m st
+      nextBd = board nextSt
+      (toSq, ptMoved) = case m of
+        NormalMove _ to p ->
+          case Map.lookup to nextBd of
+            Just (Piece _ pt) -> (to, pt)
+            Nothing           -> (to, Pawn)
+        DropMove pt to -> (to, pt)
+      -- 着手した駒の利きが及ぶマス
+      attackedSquares = [ sq | sq <- Map.keys nextBd, canPieceReachTarget toSq (Piece plr ptMoved) sq nextBd ]
+      -- そのマスにいる相手の重要駒
+      targetValuablePieces =
+        [ (sq, pt) | sq <- attackedSquares
+                   , Just (Piece p pt) <- [Map.lookup sq nextBd]
+                   , p == opp
+                   , pt `elem` [King, Rook, PRook, Bishop, PBishop, Gold, Silver, PPawn, PSilver, PKnight]
+        ]
+  in length targetValuablePieces >= 2
+
+-- | 局面における両取り優位度評価
+evalTacticalFork :: Player -> State -> Double
+evalTacticalFork plr st =
+  let bd = board st
+      opp = opponent plr
+      -- 盤上の味方の駒が相手の重要駒を両取りしているか
+      countForks p = sum
+        [ let targets = [ sq | (sq, Piece op pt) <- Map.toList bd, op == opponent p
+                             , pt `elem` [King, Rook, PRook, Bishop, PBishop, Gold, Silver]
+                             , canPieceReachTarget mySq piece sq bd ]
+          in if length targets >= 2 then 200.0 else 0.0
+        | (mySq, piece@(Piece owner _)) <- Map.toList bd, owner == p
+        ]
+  in countForks plr - countForks opp
+
 -- | 移動先マスが相手の利きに晒されており、かつ味方の紐が付いていない（または安い駒で取られる）大悪手・タダ捨て手か判定
 -- ★ ただし、王手をかける手、敵の守備駒（金銀飛角など）を捕獲する手、敵陣での大駒の成り捨て（大攻勢）、
 --    数の攻め（味方の利き >= 相手の利き）による突破手は決してタダ捨て悪手ではない！
@@ -815,7 +868,12 @@ isBlunderMove st m =
       nextBd = board nextSt
       friendlyDefenders = getPiecesCovering plr toSq nextBd
       isNumericalSuperiority = length friendlyDefenders >= length oppAttackers
-  in if isCheck || isCapturingValuable || (isMajorPromotion && not (null friendlyDefenders)) || isNumericalSuperiority
+      -- 相手の歩の利きがあるマスに桂馬・銀・金・角・飛が飛び込むのは、たとえ紐があってもタダ捨て・大損交換！
+      hasEnemyPawnControl = any (\(_, Piece _ opt) -> opt == Pawn) oppAttackers
+      isPawnFodder = hasEnemyPawnControl && ptMoved `elem` [Knight, Silver, Gold, Bishop, Rook] && not isCheck && not isCapturingValuable
+  in if isPawnFodder
+     then True -- 「桂馬の高跳び歩の餌食」等は絶対タダ捨て大悪手！
+     else if isCheck || isCapturingValuable || (isMajorPromotion && not (null friendlyDefenders)) || isNumericalSuperiority
      then False -- これらは大駒の成り捨て・数の攻め・強襲手であり、タダ捨て悪手ではない！
      else
        if null oppAttackers
@@ -825,7 +883,7 @@ isBlunderMove st m =
              movedVal  = pieceValue ptMoved
          in if null friendlyDefenders
             then ptMoved /= Pawn -- 紐なしで歩以外の駒を敵の利きに無意味に飛び込ませるのはタダ捨て
-            else movedVal > minOppVal + 350.0 -- 紐があっても、歩で飛車を取られるような無謀な手
+            else (movedVal > minOppVal + 200.0) -- 紐があっても、安い駒で取られる損交換は排除！
 
 -- | 中盤の攻め筋評価（成駒の破壊力、敵玉包囲度・玉頭圧力、敵陣への拠点・垂れ歩）
 evalMidgameAttack :: Player -> State -> Double
@@ -924,10 +982,11 @@ evaluateState weights player st =
       goldKingCoordAdvantage = evalGoldKingCoordination player st * wGoldKingCoord weights
       distanceToMateAdvantage = (evalDistanceToMate player st - evalDistanceToMate opp st) * wDistanceToMate weights
       numericalAssaultAdvantage = (evalNumericalAssault player st - evalNumericalAssault opp st) * wNumericalAssault weights
+      tacticalForkAdvantage = evalTacticalFork player st * wTacticalFork weights
   in materialAdvantage + morseAdvantage + attackAdvantage + defenseAdvantage
      + kakutoKeitoAdvantage + looseAdvantage + pieceControlAdvantage
      + tempoLossAdvantage + goldKingCoordAdvantage + distanceToMateAdvantage
-     + numericalAssaultAdvantage
+     + numericalAssaultAdvantage + tacticalForkAdvantage
 
 
 -- | デフォルト重みでの評価関数（後方互換）
@@ -1110,6 +1169,7 @@ searchQuiescence weights qdepth alpha beta st =
           opp = opponent plr
           nextS = applyMove m s
           isCheck = isKingUnderAttack opp (board nextS)
+          isFork = isForkMove s m
           (toSq, ptMoved, isPromo) = case m of
             NormalMove _ to p -> (to, Pawn, p)
             DropMove pt to    -> (to, pt, False)
@@ -1118,12 +1178,12 @@ searchQuiescence weights qdepth alpha beta st =
           myAttackers = getPiecesCovering plr toSq (board nextS)
           isBreakthrough = length myAttackers > length oppDefenders
       in case m of
-           -- 1. 相手の駒を取る手、大駒成り、王手、数の攻め突破
+           -- 1. 相手の駒を取る手、大駒成り、王手、両取り、数の攻め突破
            NormalMove _ to promo ->
-             Map.member to (board s) || promo || isCheck || isBreakthrough
-           -- 2. 持ち駒の打ち込み（王手、敵玉周辺への打ち込み、数の攻め突破）
+             Map.member to (board s) || promo || isCheck || isFork || isBreakthrough
+           -- 2. 持ち駒の打ち込み（王手、両取り、敵玉周辺への打ち込み、急所打ち込み、数の攻め突破）
            DropMove pt to ->
-             isCheck || isBreakthrough || (case findKing opp (board s) of
+             isCheck || isFork || isBreakthrough || (case findKing opp (board s) of
                            Just (kx, ky) -> abs (fst to - kx) <= 2 && abs (snd to - ky) <= 2 && pt `elem` [Gold, Silver, Rook, Bishop, Knight, Pawn]
                            Nothing -> False)
 
@@ -1165,6 +1225,7 @@ searchAlphaBeta weights depth alpha beta st =
                    opp = opponent (turn st)
                    isCheck = isKingUnderAttack opp (board nextSt)
                    checkBonus = if isCheck then 400.0 else 0.0
+                   forkBonus = if isForkMove st m then 450.0 else 0.0
                    
                    -- 大駒の成り捨て・重要駒破壊・打ち込み・数の攻めボーナス
                    tacticalBonus = case m of
@@ -1187,7 +1248,7 @@ searchAlphaBeta weights depth alpha beta st =
                      _ -> 0.0
                    
                    s = evaluateState weights (turn st) nextSt
-               in s + blunderPen + lancePen + checkBonus + tacticalBonus
+               in s + blunderPen + lancePen + checkBonus + forkBonus + tacticalBonus
              orderedMoves = sortBy (\m1 m2 -> compare (scoreMove m2) (scoreMove m1)) effectiveMoves
              -- 王手をかけられているときはすべての王手回避手を読み、それ以外は上位14手を深く読む
              inCheck = isKingUnderAttack (turn st) (board st)
@@ -1326,15 +1387,109 @@ endgameTablebase =
       }
   ]
 
--- | 商空間エンドゲームテーブル (QEGTB) 照合
-lookupQuotientTablebase :: State -> Maybe (Int, Move)
-lookupQuotientTablebase st =
+-- | 玉の周囲の脱出可能マストポロジー（Escape Topology）
+-- 盤外、受手側の守備駒の壁、攻め手の利きによって塞がれていない、玉が合法的に逃げられる隣接マス
+getKingEscapes :: Player -> Square -> Board -> [Square]
+getKingEscapes kingPlayer (kx, ky) bd =
+  let opp = opponent kingPlayer
+      neighbors = [ (kx + dx, ky + dy)
+                  | dx <- [-1..1], dy <- [-1..1], (dx, dy) /= (0, 0)
+                  , not (isOutOfBounds (kx + dx, ky + dy))
+                  ]
+      canEscapeTo sq = case Map.lookup sq bd of
+        Just (Piece p _) | p == kingPlayer -> False -- 味方の壁で塞がれている
+        _ -> not (isSquareUnderAttack opp sq bd)    -- 相手の利きがなければ逃げられる
+  in filter canEscapeTo neighbors
+
+-- | 普遍商空間エンドゲームテーブルベース (Universal Quotient EGTB)
+-- 玉がどこにいようと（美濃囲い、矢倉、穴熊、中住まい、端玉、中段玉）、
+-- 玉の周囲の脱出可能トポロジーを法とする商空間同値類として一元的に即詰みを判定！
+lookupUniversalQuotientEGTB :: State -> Maybe (Int, Move)
+lookupUniversalQuotientEGTB st =
   let att = turn st
       def = opponent att
-      curBd = board st
+      bd = board st
       curHands = hands st
-      maybeDefKingSq = findKing def curBd
-  in case maybeDefKingSq of
+      maybeDefK = findKing def bd
+  in case maybeDefK of
+       Nothing -> Nothing
+       Just kSq@(kx, ky) ->
+         let escapes = getKingEscapes def kSq bd
+             myHands = fromMaybe emptyHand (Map.lookup att curHands)
+             hasGold = Map.findWithDefault 0 Gold myHands >= 1
+             hasKnight = Map.findWithDefault 0 Knight myHands >= 1
+             
+             -- 1. 普遍的金打ちイデアル（頭金・腹金・尻金・押し込みのトポロジー商空間同値類: DTM = 1）
+             -- 玉の隣接マスで、支え（紐）があり、打った金が玉に王手をかけ、
+             -- かつ玉のすべての脱出マス（escapes）をカバーするマスを探す
+             goldDropMate = if not hasGold then Nothing else
+               let candidateSquares = [ (kx + dx, ky + dy)
+                                      | dx <- [-1..1], dy <- [-1..1], (dx, dy) /= (0, 0)
+                                      , not (isOutOfBounds (kx + dx, ky + dy))
+                                      , not (Map.member (kx + dx, ky + dy) bd)
+                                      , isSquareUnderAttack att (kx + dx, ky + dy) bd -- 支え（紐）あり
+                                      ]
+                   isMateDrop sq =
+                     let dropMv = DropMove Gold sq
+                         nextSt = applyMove dropMv st
+                         nextBd = board nextSt
+                         isCheck = isKingUnderAttack def nextBd
+                         remainingEscapes = [ e | e <- escapes, e /= sq
+                                                , not (canPieceReachTarget sq (Piece att Gold) e nextBd) ]
+                     in isCheck && null remainingEscapes
+               in case filter isMateDrop candidateSquares of
+                    (mSq:_) -> Just (1, DropMove Gold mSq)
+                    []      -> Nothing
+             
+             -- 2. 盤上の龍・馬・金・成駒による普遍的突入詰み（DTM = 1）
+             boardPieceMate =
+               let myBoardAttackers = [ (sq, p) | (sq, p@(Piece pPlr pt)) <- Map.toList bd
+                                                , pPlr == att
+                                                , pt `elem` [PRook, PBishop, Gold, PPawn, PSilver, PKnight, PLance] ]
+                   candidateMoves =
+                     [ NormalMove fromSq toSq False
+                     | (fromSq, piece@(Piece _ pType)) <- myBoardAttackers
+                     , dx <- [-1..1], dy <- [-1..1], (dx, dy) /= (0, 0)
+                     , let toSq = (kx + dx, ky + dy)
+                     , not (isOutOfBounds toSq)
+                     , canPieceReachTarget fromSq piece toSq bd
+                     , isSquareUnderAttack att toSq bd || pType `elem` [PRook, PBishop]
+                     ]
+                   isMateMove mv =
+                     let nextSt = applyMove mv st
+                         nextBd = board nextSt
+                         isCheck = isKingUnderAttack def nextBd
+                         (NormalMove _ toSq _) = mv
+                         remainingEscapes = [ e | e <- escapes, e /= toSq
+                                                , not (isSquareUnderAttack att e nextBd) ]
+                     in isCheck && null remainingEscapes
+               in case filter isMateMove candidateMoves of
+                    (mv:_) -> Just (1, mv)
+                    []     -> Nothing
+             
+             -- 3. 普遍的吊るし桂イデアル（DTM = 1）
+             tsurushiKeiMate = if not hasKnight || not (null escapes) then Nothing else
+               let dirY = if att == Sente then 2 else -2
+                   dropSquares = [ (kx - 1, ky + dirY), (kx + 1, ky + dirY) ]
+                   validSq sq = not (isOutOfBounds sq) && not (Map.member sq bd)
+               in case filter validSq dropSquares of
+                    (sq:_) -> Just (1, DropMove Knight sq)
+                    []     -> Nothing
+         in listToMaybe [ res | Just res <- [goldDropMate, boardPieceMate, tsurushiKeiMate] ]
+
+-- | 商空間エンドゲームテーブル (QEGTB) 照合
+-- ★ 玉形の違いを幾何学的脱出トポロジーの商空間同値類として一元的に判定する Universal QEGTB を最優先照会！
+lookupQuotientTablebase :: State -> Maybe (Int, Move)
+lookupQuotientTablebase st =
+  case lookupUniversalQuotientEGTB st of
+    Just uRes -> Just uRes
+    Nothing ->
+      let att = turn st
+          def = opponent att
+          curBd = board st
+          curHands = hands st
+          maybeDefKingSq = findKing def curBd
+      in case maybeDefKingSq of
        Nothing -> Nothing
        Just kSq ->
          let myHands = fromMaybe emptyHand (Map.lookup att curHands)
