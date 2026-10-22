@@ -41,6 +41,8 @@ module ShogiStratifiedMidgame
   , DropRole(..)
   , DropStratumKey(..)
   , MidgameStratum(..)
+  , TsumeroType(..)
+  , detectMidgameTsumero
   , stratifyHand
   , stratifyPromotion
   , classifyDropRole
@@ -572,12 +574,75 @@ stratifyDrop st =
           else Nothing
   in DropStratumKey (sWedges, gWedges) (sForks, gForks) recentRole
 
--- | D. 統合中盤層化商空間 (Midgame Stratum)
+-- | D. 中盤詰めろイデアル (Midgame Tsumero Ideals: MTI)
+-- 次の一手でQEGTB即詰み（DTM 1 または 3）をもたらす網羅的攻防手筋
+data TsumeroType
+  = HeadSupportTsumero    -- 玉頭紐付け詰めろ (飛角銀歩桂の利きを敵玉頭マスに創出)
+  | SpaceClearanceTsumero -- 空間創出詰めろ (邪魔駒を前進・成る・捨てて金打ちスペース確保)
+  | TarekomaPawnTsumero   -- 垂れ歩詰めろ (敵玉頭2段前に歩を垂らし「と金」即詰みを狙う)
+  | DragonEncroachTsumero -- 龍のすり寄り詰めろ (龍を玉近傍に寄せて頭飛び込み・横すり寄りを狙う)
+  | IkkenRyuSetupTsumero  -- 一間竜セットアップ詰めろ (龍を1マス空きに据えて中間銀打ちを狙う)
+  | HorseAnchorTsumero    -- 馬の引き付け・斜線封鎖詰めろ (馬で脱出路を消して頭金を狙う)
+  | CrossRookSetupTsumero -- 十字飛車セットアップ詰めろ (縦横直交ラインで封鎖を完成)
+  | TsurushiSetupTsumero  -- 吊るし桂セットアップ詰めろ (前面壁玉に対して桂跳躍を狙う)
+  | KnightForkTsumero     -- 桂打ちフォーク詰めろ (玉王手と守備駒取りの二重威嚇)
+  | SilverForkTsumero     -- 割り打ちの銀詰めろ (玉と金、2枚の金の間に割り込む)
+  | BellySilverTsumero    -- 腹銀・尻銀詰めろ (玉の横や斜め後ろに銀を密着)
+  | TatatakiPawnTsumero   -- 叩きの歩詰めろ (玉頭や守備金頭に歩を叩いて崩す)
+  | FocalSacrificeTsumero -- 焦点の捨て駒詰めろ (敵の利きの交点に放り込む)
+  | GuardStrippingTsumero -- 守備金銀剥がし詰めろ (玉を守る金銀を吊り上げ/捕獲)
+  | EdgeHerdingTsumero    -- 端玉追い込み詰めろ (端歩・香で玉を端へ追い詰める)
+  | InterferenceTsumero   -- 邪魔駒打ち込み詰めろ (唯一の逃げ道に駒を打ち込んで退路塞ぎ)
+  | DoubleTsumero         -- 両詰めろ (2方向から同時にかかり受ける手がない絶対詰めろ)
+  | EscapeCounterTsumero  -- 詰めろ逃れの詰めろ (自玉の脅威を回避しつつ相手に詰めろ)
+  | PincerBrinkmateTsumero-- 挟撃必至前段詰めろ (次の一手で受けなし必至を完成)
+  deriving (Eq, Ord, Show, Enum, Bounded)
+
+-- | 局面において、攻め手が「詰めろ（相手が受けなければ次手QEGTB即詰み）」をかけているかを幾何学的に判定
+detectMidgameTsumero :: Player -> State -> DynamicQEGTB -> Maybe (TsumeroType, Move)
+detectMidgameTsumero att st qegtb =
+  let def = opponent att
+      bd = board st
+      maybeDefK = findKing def bd
+  in case maybeDefK of
+       Nothing -> Nothing
+       Just kSq@(kx, ky) ->
+         -- 相手がパス（手番スキップ）したと仮定した局面で、自分が即座にQEGTB即詰みを出せるか照合
+         let stHypotheticalMyTurn = st { turn = att }
+         in case matchQEGTB stHypotheticalMyTurn qegtb of
+              Just (_, mateMv) ->
+                -- 詰めろ成立！その幾何学的パターンを手筋ごとに分類同定
+                let myHands = fromMaybe emptyHand (Map.lookup att (hands st))
+                    dirY = if att == Sente then 1 else -1
+                    headSq = (kx, ky + dirY)
+                    
+                    tsumeroClass
+                      | Map.findWithDefault 0 Gold myHands >= 1 && isSquareUnderAttack att headSq bd
+                        = HeadSupportTsumero
+                      | any (\(_, Piece p pt) -> p == att && pt == PRook) (Map.toList bd) && abs (kx - 5) <= 2
+                        = DragonEncroachTsumero
+                      | any (\(_, Piece p pt) -> p == att && pt == PBishop) (Map.toList bd)
+                        = HorseAnchorTsumero
+                      | Map.findWithDefault 0 Knight myHands >= 1 && isKnightForkDrop st (kx, ky + 2 * dirY)
+                        = KnightForkTsumero
+                      | Map.findWithDefault 0 Pawn myHands >= 1 && not (Map.member (kx, ky + 2 * dirY) bd)
+                        = TarekomaPawnTsumero
+                      | Map.findWithDefault 0 Silver myHands >= 1
+                        = SilverForkTsumero
+                      | Map.findWithDefault 0 Gold myHands >= 2
+                        = PincerBrinkmateTsumero
+                      | otherwise
+                        = SpaceClearanceTsumero
+                in Just (tsumeroClass, mateMv)
+              Nothing -> Nothing
+
+-- | E. 統合中盤層化商空間 (Midgame Stratum)
 data MidgameStratum = MidgameStratum
   { msTurn      :: !Player
   , msHand      :: !HandStratumKey
   , msPromotion :: !PromotionStratumKey
   , msDrop      :: !DropStratumKey
+  , msTsumero   :: !(Maybe TsumeroType) -- 中盤詰めろイデアルの種類
   , msMorseTier :: !Int -- -2: 後手優勢, -1: 後手微利, 0: 互角サドル点, +1: 先手微利, +2: 先手優勢
   } deriving (Eq, Ord, Show)
 
@@ -586,17 +651,18 @@ stratifyState st =
   let hKey = stratifyHand (hands st)
       pKey = stratifyPromotion (board st)
       dKey = stratifyDrop st
+      tsumeroOpt = fmap fst (detectMidgameTsumero (turn st) st initSeedQEGTB)
       eval = evaluateStratifiedState Sente st
       tier | eval >= 300.0  = 2
            | eval >= 100.0  = 1
            | eval <= -300.0 = -2
            | eval <= -100.0 = -1
            | otherwise      = 0
-  in MidgameStratum (turn st) hKey pKey dKey tier
+  in MidgameStratum (turn st) hKey pKey dKey tsumeroOpt tier
 
 showStratumKey :: MidgameStratum -> String
 showStratumKey MidgameStratum{..} =
-  printf "Stratum[T:%s|MajDiff:%+d|GS:%+d|Pawn:(%d,%d)|Drag:(%d,%d)|Wedge:(%d,%d)|Fork:(%d,%d)|Tier:%+d]"
+  printf "Stratum[T:%s|MajDiff:%+d|GS:%+d|Pawn:(%d,%d)|Drag:(%d,%d)|Wedge:(%d,%d)|Fork:(%d,%d)|Tsumero:%s|Tier:%+d]"
     (show msTurn)
     (hsMajorDiff msHand)
     (hsGoldSilverDiff msHand)
@@ -605,6 +671,7 @@ showStratumKey MidgameStratum{..} =
     (if snd (psDragonStatus msPromotion) then (1::Int) else 0)
     (fst (dsWedgeCount msDrop)) (snd (dsWedgeCount msDrop))
     (fst (dsKnightForkPot msDrop)) (snd (dsKnightForkPot msDrop))
+    (case msTsumero of Just t -> show t ; Nothing -> "None")
     msMorseTier
 
 -- ============================================================================
@@ -672,6 +739,23 @@ evaluateStratifiedState plr st =
       recentForkBonus = case dsRecentDropRole dKey of
         Just KnightForkDrop -> if turn st /= plr then 420.0 else -420.0
         _                   -> 0.0
+
+      -- 4.8 中盤詰めろイデアルボーナス (Midgame Tsumero Advantage)
+      myTsumero = detectMidgameTsumero plr st initSeedQEGTB
+      oppTsumero = detectMidgameTsumero (opponent plr) st initSeedQEGTB
+      
+      tsumeroScore (Just (tType, _)) = case tType of
+        EscapeCounterTsumero   -> 1500.0
+        DoubleTsumero          -> 1200.0
+        PincerBrinkmateTsumero -> 1100.0
+        HeadSupportTsumero     -> 850.0
+        DragonEncroachTsumero  -> 850.0
+        KnightForkTsumero      -> 800.0
+        TarekomaPawnTsumero    -> 750.0
+        _                      -> 700.0
+      tsumeroScore Nothing = 0.0
+      
+      tsumeroNetBonus = tsumeroScore myTsumero - tsumeroScore oppTsumero
       
       -- 5. モース玉危険度ポテンシャル
       morsePot (Just (kx, ky)) pTarget =
@@ -679,7 +763,7 @@ evaluateStratifiedState plr st =
         in sum [ 10.0 / (fromIntegral (abs (kx - sx) + abs (ky - sy)) + 0.1) | ((sx, sy), _) <- enemies ]
       morsePot Nothing _ = 10000.0
       morseDiff = (morsePot oppKingPos (opponent plr) - morsePot myKingPos plr) * 6.0
-  in bdTotal + myHandTotal - enemyHandTotal + totalPromoBonus + wedgeBonus oppKingPos + knightForkBonus + recentForkBonus + morseDiff
+  in bdTotal + myHandTotal - enemyHandTotal + totalPromoBonus + wedgeBonus oppKingPos + knightForkBonus + recentForkBonus + tsumeroNetBonus + morseDiff
 
 isMorseEquilibrium :: State -> Bool
 isMorseEquilibrium st = abs (evaluateStratifiedState Sente st) <= 250.0
