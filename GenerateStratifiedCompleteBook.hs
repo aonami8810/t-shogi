@@ -133,10 +133,18 @@ searchPunishmentIDS512 st initQ maxDepth =
                       in case nonLoopMoves of
                          [] -> (reverse accMoves, False, q)
                          _  ->
-                           let scoredMoves = sortBy (\m1 m2 ->
-                                 let s1 = evaluateStratifiedState (turn s) (applyMove m1 s)
-                                     s2 = evaluateStratifiedState (turn s) (applyMove m2 s)
-                                 in compare s2 s1) nonLoopMoves
+                           let scoreM m =
+                                 let (toSq, isPromo) = case m of
+                                       NormalMove _ t p -> (t, p)
+                                       DropMove _ t    -> (t, False)
+                                     capVal = case Map.lookup toSq (board s) of
+                                       Just (Piece _ pt) -> pieceValue pt * 10.0
+                                       Nothing           -> 0.0
+                                     promoVal = if isPromo then 500.0 else 0.0
+                                     nextS = applyMove m s
+                                     checkVal = if isKingUnderAttack (opponent (turn s)) (board nextS) then 800.0 else 0.0
+                                 in capVal + promoVal + checkVal
+                               scoredMoves = sortBy (\m1 m2 -> compare (scoreM m2) (scoreM m1)) nonLoopMoves
                            in case scoredMoves of
                                 [] -> (reverse accMoves, False, q)
                                 (bestPunish:_) ->
