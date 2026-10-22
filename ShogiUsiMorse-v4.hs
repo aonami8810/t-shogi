@@ -786,13 +786,17 @@ evalKakutoKeitoDefense plr st =
                 _ -> case Map.lookup (8, 5) bd of
                        Just (Piece Gote Pawn) -> True
                        _ -> False
-            kakutoCovered = isCoveredBy Sente (8, 7) bd -- 7八金や7七角、7七銀の利きがあるか
+            kakutoCovered = isCoveredBy Sente (8, 7) bd -- 7八金や7七角、7七銀、7六飛の利きがあるか
+            -- 石田流の構想（7五歩、7八飛、7六浮き飛車）では、7六飛浮きや7七角で受けが間に合うためペナルティ免除
+            isSenteIshida = Map.lookup (7, 5) bd == Just (Piece Sente Pawn) ||
+                            Map.lookup (7, 8) bd == Just (Piece Sente Rook) ||
+                            Map.lookup (7, 6) bd == Just (Piece Sente Rook)
         in if enemyRookPawnAdvanced
-           then if kakutoCovered
-                then 150.0   -- 7八金などで角頭を堅固に防衛中
+           then if kakutoCovered || isSenteIshida
+                then 150.0   -- 7八金や石田流浮き飛車構想で角頭を防衛！
                 else -1200.0 -- 相手の飛車先が迫っているのに角頭が無防備（即敗北ペナルティ）
-           else if kakutoCovered
-                then 50.0    -- 早期の7八金角頭ガードボーナス
+           else if kakutoCovered || isSenteIshida
+                then 50.0    -- 早期の角頭ガードボーナス
                 else 0.0
 
       -- 後手視点の角頭(2,3)・桂頭守備評価
@@ -803,12 +807,16 @@ evalKakutoKeitoDefense plr st =
                 _ -> case Map.lookup (2, 5) bd of
                        Just (Piece Sente Pawn) -> True
                        _ -> False
-            kakutoCovered = isCoveredBy Gote (2, 3) bd -- 3二金や3三角、3三銀の利きがあるか
+            kakutoCovered = isCoveredBy Gote (2, 3) bd -- 3二金や3三角、3三銀、3四飛の利きがあるか
+            -- 後手石田流（3五歩、3二飛、3四浮き飛車）
+            isGoteIshida = Map.lookup (3, 5) bd == Just (Piece Gote Pawn) ||
+                           Map.lookup (3, 2) bd == Just (Piece Gote Rook) ||
+                           Map.lookup (3, 4) bd == Just (Piece Gote Rook)
         in if enemyRookPawnAdvanced
-           then if kakutoCovered
+           then if kakutoCovered || isGoteIshida
                 then 150.0
                 else -1200.0
-           else if kakutoCovered
+           else if kakutoCovered || isGoteIshida
                 then 50.0
                 else 0.0
 
@@ -816,7 +824,7 @@ evalKakutoKeitoDefense plr st =
       oppScore = if opp == Sente then senteDefenseScore else goteDefenseScore
   in myScore - oppScore
 
--- | 歩以外の放れ駒（味方の紐が付いていない駒）のペナルティ
+
 evalLoosePieces :: Player -> State -> Double
 evalLoosePieces plr st =
   let bd = board st
@@ -1327,10 +1335,11 @@ evaluateState weights player st =
       tacticalForkAdvantage = evalTacticalFork player st * wTacticalFork weights
       potentialRayAdvantage = evalPotentialRayAttack player st * wPotentialRays weights
       bishopDropDefenseAdvantage = evalBishopDropVulnerability player st - evalBishopDropVulnerability opp st
+      silverAdvanceAndIshidaAdvantage = evalSilverAdvanceAndIshidaFormation player st - evalSilverAdvanceAndIshidaFormation opp st
   in materialAdvantage + hangingAdvantage + morseAdvantage + attackAdvantage + defenseAdvantage
      + kakutoKeitoAdvantage + looseAdvantage + pieceControlAdvantage
      + tempoLossAdvantage + goldKingCoordAdvantage + distanceToMateAdvantage
-     + numericalAssaultAdvantage + tacticalForkAdvantage + potentialRayAdvantage + bishopDropDefenseAdvantage
+     + numericalAssaultAdvantage + tacticalForkAdvantage + potentialRayAdvantage + bishopDropDefenseAdvantage + silverAdvanceAndIshidaAdvantage
 
 
 -- | デフォルト重みでの評価関数（後方互換）
@@ -1758,10 +1767,11 @@ searchAlphaBeta weights depth alpha beta st =
                    
                    trappedDesperadoBonus = evalTrappedPieceDesperado st m
                    bishopDropQualityBonus = evalBishopDropQuality st m
+                   silverAndIshidaBonus = evalSilverAdvanceAndIshidaFlow st m
                    s = evaluateState weights (turn st) nextSt
                 in s + captureBonus + blunderPen + lancePen + suicidePen + checkBonus + forkBonus + tacticalBonus + fourPieceAdvanceBonus + oneTempoWinBonus + ironcladDefenseBonus
                   + discoveredBonus + rayUnblockBonus + potentialAlignBonus + quotientEquivBonus + trappedDesperadoBonus + bishopDropQualityBonus
-                  + antiQuotientSafetyBonus + shufflingPen + defensiveBonus + evalThicknessAndDominance st m + majorThreatBonus
+                  + antiQuotientSafetyBonus + shufflingPen + defensiveBonus + evalThicknessAndDominance st m + majorThreatBonus + silverAndIshidaBonus
              orderedMoves = sortBy (\m1 m2 -> compare (scoreMove m2) (scoreMove m1)) effectiveMoves
              -- 王手をかけられているときはすべての王手回避手を読み、それ以外は上位14手を深く読む
              topMoves = if inCheck then effectiveMoves else take (if depth >= 4 then 6 else (if depth >= 3 then 8 else (if depth >= 2 then 10 else 14))) orderedMoves
@@ -2613,6 +2623,173 @@ evalBishopDropVulnerability plr st =
           then - (fromIntegral dangerousCount * 1200.0) -- 危険な角打ちの隙1箇所につき -1200点！
           else 600.0 -- 隙がゼロなら完璧な鉄壁防御ボーナス！
 
+-- | 銀の前線進出（棒銀・腰掛け銀・早繰り銀）および石田流本組のモース勾配流
+-- 飛車の無駄なうろうろ手損を排し、力強い銀の前線進出と石田流の理想布陣を網羅
+-- | 銀の前線進出（棒銀・腰掛け銀・早繰り銀）および石田流本組の局面評価（モース勾配流）
+-- 局面の静的評価に直接反映することで、飛車のうろうろ手損を完全排除し、
+-- 銀の前線繰り出しと石田流本組の空中要塞構築を確実に選択させる
+evalSilverAdvanceAndIshidaFormation :: Player -> State -> Double
+evalSilverAdvanceAndIshidaFormation p st =
+  let bd = board st
+      -- 1. 銀の前進・前線配置（棒銀・腰掛け銀・早繰り銀・中央厚み）
+      silvers = [ sq | (sq, Piece owner pt) <- Map.toList bd, owner == p, pt `elem` [Silver, PSilver] ]
+      silverScore = sum
+        [ let (x, y) = sq
+              adv = if p == Sente then 9 - y else y - 1
+              -- 棒銀 (Climbing Silver: 先手2筋・1筋, 後手8筋・9筋)
+              isClimbing = if p == Sente
+                           then (x == 2 || x == 1 || (x == 3 && y == 7)) && y <= 7
+                           else (x == 8 || x == 9 || (x == 7 && y == 3)) && y >= 3
+              -- 腰掛け銀・中央厚み (Reclining / Central: 4,5,6筋の中段)
+              isCentral = if p == Sente
+                          then sq `elem` [(5, 6), (4, 6), (6, 6), (5, 5), (4, 5)]
+                          else sq `elem` [(5, 4), (6, 4), (4, 4), (5, 5), (6, 5)]
+              -- 前線進出 (Frontline: 5段目以上)
+              isFront = if p == Sente then y <= 5 else y >= 5
+          in (if isClimbing then 1800.0 else 0.0) +
+             (if isCentral  then 1600.0 else 0.0) +
+             (if isFront    then 1200.0 else (if adv >= 2 then fromIntegral adv * 250.0 else 0.0))
+        | sq <- silvers
+        ]
+      
+      -- 2. 石田流本組・三間飛車のモース勾配流（浮き飛車・7五歩・7七桂・9七角）
+      ishidaScore =
+        if p == Sente
+        then
+          let hasSente75P = Map.lookup (7, 5) bd == Just (Piece Sente Pawn)
+              hasSente76R = Map.lookup (7, 6) bd == Just (Piece Sente Rook)
+              hasSente78R = Map.lookup (7, 8) bd == Just (Piece Sente Rook)
+              hasSente77N = Map.lookup (7, 7) bd == Just (Piece Sente Knight)
+              hasSente97B = Map.lookup (9, 7) bd == Just (Piece Sente Bishop)
+              
+              sankanBonus   = if hasSente78R then (if hasSente75P then 2200.0 else 900.0) else 0.0
+              pawnBonus     = if hasSente75P then 800.0 else 0.0
+              floatingBonus = if hasSente76R && hasSente75P then 3400.0 else 0.0
+              knightBonus   = if hasSente77N && hasSente76R then 1200.0 else 0.0
+              bishopBonus   = if hasSente97B && hasSente77N then 900.0 else 0.0
+          in sankanBonus + pawnBonus + floatingBonus + knightBonus + bishopBonus
+        else
+          let hasGote35P = Map.lookup (3, 5) bd == Just (Piece Gote Pawn)
+              hasGote34R = Map.lookup (3, 4) bd == Just (Piece Gote Rook)
+              hasGote32R = Map.lookup (3, 2) bd == Just (Piece Gote Rook)
+              hasGote33N = Map.lookup (3, 3) bd == Just (Piece Gote Knight)
+              hasGote13B = Map.lookup (1, 3) bd == Just (Piece Gote Bishop)
+              
+              sankanBonus   = if hasGote32R then (if hasGote35P then 2200.0 else 900.0) else 0.0
+              pawnBonus     = if hasGote35P then 800.0 else 0.0
+              floatingBonus = if hasGote34R && hasGote35P then 3400.0 else 0.0
+              knightBonus   = if hasGote33N && hasGote34R then 1200.0 else 0.0
+              bishopBonus   = if hasGote13B && hasGote33N then 900.0 else 0.0
+          in sankanBonus + pawnBonus + floatingBonus + knightBonus + bishopBonus
+
+      -- 3. 飛車のうろうろ手損（自陣での無駄な筋変更・横移動・目的のない浮き）への厳罰
+      rooks = [ sq | (sq, Piece owner pt) <- Map.toList bd, owner == p, pt == Rook ]
+      wanderingRookPenalty = sum
+        [ let (rx, ry) = sq
+              isIshidaLegit = if p == Sente
+                              then (sq == (7, 8) || (sq == (7, 6) && Map.lookup (7, 5) bd == Just (Piece Sente Pawn)))
+                              else (sq == (3, 2) || (sq == (3, 4) && Map.lookup (3, 5) bd == Just (Piece Gote Pawn)))
+              isOriginalPos = if p == Sente then sq == (2, 8) else sq == (8, 2)
+              isLegitFuribisha = if p == Sente then rx `elem` [5, 6, 7, 8] && ry == 8
+                                 else rx `elem` [2, 3, 4, 5] && ry == 2
+              -- 飛車先が歩で塞がれているのに浮いている手損 (2七飛、2六飛等)
+              pawnAhead = if p == Sente then Map.lookup (rx, 7) bd == Just (Piece p Pawn)
+                          else Map.lookup (rx, 3) bd == Just (Piece p Pawn)
+              isAimlessLift = if p == Sente
+                              then (ry == 7 || ry == 6) && pawnAhead && not isIshidaLegit
+                              else (ry == 3 || ry == 4) && pawnAhead && not isIshidaLegit
+              -- 無意味な筋変更 (3筋や4筋など歩も突いていないのに自陣に横移動)
+              isAimlessFile = if p == Sente
+                              then not isOriginalPos && not isLegitFuribisha && not isIshidaLegit && ry >= 7
+                              else not isOriginalPos && not isLegitFuribisha && not isIshidaLegit && ry <= 3
+          in (if isAimlessLift then -3500.0 else 0.0) +
+             (if isAimlessFile then -4000.0 else 0.0)
+        | sq <- rooks
+        ]
+  in silverScore + ishidaScore + wanderingRookPenalty
+
+
+evalSilverAdvanceAndIshidaFlow :: State -> Move -> Double
+evalSilverAdvanceAndIshidaFlow st m =
+  let plr = turn st
+      opp = opponent plr
+      curBd = board st
+      nextSt = applyMove m st
+      nextBd = board nextSt
+  in case m of
+       NormalMove from to _ ->
+         case Map.lookup from curBd of
+           -- A. 銀の前進・前線進出（棒銀・腰掛け銀・早繰り銀）
+           Just (Piece p Silver) | p == plr ->
+             let (fx, fy) = from
+                 (tx, ty) = to
+                 isAdvancing = if plr == Sente then ty < fy else ty > fy
+                 -- 1. 棒銀（Climbing Silver: 先手2筋・後手8筋を登る）
+                 isClimbingSilver =
+                   if plr == Sente
+                   then (fx `elem` [1, 2, 3] && tx `elem` [1, 2, 3] && ty <= 7)
+                   else (fx `elem` [7, 8, 9] && tx `elem` [7, 8, 9] && ty >= 3)
+                 -- 2. 腰掛け銀・中央進出（Reclining / Central Silver: 5六・4六・6六）
+                 isCentralSilver =
+                   if plr == Sente
+                   then (to == (5, 6) || to == (4, 6) || to == (6, 6) || to == (5, 5) || to == (4, 5))
+                   else (to == (5, 4) || to == (6, 4) || to == (4, 4) || to == (5, 5) || to == (6, 5))
+                 -- 3. 前線（敵陣近傍）進出
+                 isFrontline = if plr == Sente then ty <= 5 else ty >= 5
+             in if not isAdvancing then 0.0
+                else if isClimbingSilver then 1800.0 -- 棒銀の力強い進出！
+                else if isCentralSilver  then 1600.0 -- 腰掛け銀・中央厚み進出！
+                else if isFrontline      then 1200.0 -- 前線進出！
+                else 600.0
+           
+           -- B. 石田流本組・三間飛車のモース勾配流
+           -- 1. 飛車の動き（三間飛車 7八飛 / 3二飛、浮き飛車 7六飛 / 3四飛）
+           Just (Piece p Rook) | p == plr ->
+             let (fx, fy) = from
+                 (tx, ty) = to
+                 -- 先手石田流
+                 isSenteSankanRook = plr == Sente && to == (7, 8)
+                 isSenteFloatingRook = plr == Sente && from == (7, 8) && to == (7, 6) &&
+                                       Map.lookup (7, 5) curBd == Just (Piece Sente Pawn)
+                 -- 後手石田流
+                 isGoteSankanRook = plr == Gote && to == (3, 2)
+                 isGoteFloatingRook = plr == Gote && from == (3, 2) && to == (3, 4) &&
+                                      Map.lookup (3, 5) curBd == Just (Piece Gote Pawn)
+             in if isSenteFloatingRook || isGoteFloatingRook
+                then 3400.0 -- ★ 石田流浮き飛車（最強の空中戦要塞！）
+                else if isSenteSankanRook || isGoteSankanRook
+                then (if Map.lookup (if plr == Sente then (7, 5) else (3, 5)) curBd == Just (Piece plr Pawn) then 2200.0 else 1000.0)
+                else 0.0
+           
+           -- 2. 歩の動き（石田流の命：7五歩 / 3五歩突き）
+           Just (Piece p Pawn) | p == plr ->
+             let isSenteIshidaPawn = plr == Sente && from == (7, 6) && to == (7, 5)
+                 isGoteIshidaPawn  = plr == Gote && from == (3, 4) && to == (3, 5)
+             in if isSenteIshidaPawn || isGoteIshidaPawn
+                then 1200.0 -- ★ 石田流の急所歩突き！
+                else 0.0
+                
+           -- 3. 桂馬の動き（石田流本組の桂跳ね：7七桂 / 3三桂）
+           Just (Piece p Knight) | p == plr ->
+             let isSenteIshidaKnight = plr == Sente && to == (7, 7) &&
+                                       Map.lookup (7, 6) curBd == Just (Piece Sente Rook)
+                 isGoteIshidaKnight  = plr == Gote && to == (3, 3) &&
+                                       Map.lookup (3, 4) curBd == Just (Piece Gote Rook)
+             in if isSenteIshidaKnight || isGoteIshidaKnight
+                then 1200.0 -- ★ 石田流本組の桂跳ね！
+                else 0.0
+                
+           -- 4. 角の動き（石田流の角転回：9七角 / 1三角）
+           Just (Piece p Bishop) | p == plr ->
+             let isSenteCornerBishop = plr == Sente && to == (9, 7)
+                 isGoteCornerBishop  = plr == Gote && to == (1, 3)
+             in if isSenteCornerBishop || isGoteCornerBishop
+                then 900.0
+                else 0.0
+           _ -> 0.0
+       _ -> 0.0
+
+
 evalPieceShuffling :: State -> Move -> Double
 evalPieceShuffling st m =
   let plr = turn st
@@ -2710,6 +2887,7 @@ evalPieceShuffling st m =
            _ -> 0.0
 
          -- 4. 飛車のうろうろ（Aimless Rook Wandering）検知：
+-- 4. 飛車のうろうろ・無駄な手損・目的のない筋変更の徹底抑止
          aimlessRookPen = case m of
            NormalMove from to promo ->
              case Map.lookup from curBd of
@@ -2717,17 +2895,34 @@ evalPieceShuffling st m =
                  let isCapturing = Map.member to curBd
                      isCheck = isKingUnderAttack opp nextBd
                      isPromo = promo
-                     isPointlessLift = (plr == Sente && from == (2, 8) && (to == (2, 7) || to == (2, 6)) &&
-                                        Map.lookup (2, 7) curBd == Just (Piece plr Pawn)) ||
-                                       (plr == Gote && from == (8, 2) && (to == (8, 3) || to == (8, 4)) &&
-                                        Map.lookup (8, 3) curBd == Just (Piece plr Pawn))
-                 in if isCapturing || isCheck || isPromo
+                     (fx, fy) = from
+                     (tx, ty) = to
+                     -- 石田流の正当な手筋（7八飛、7六浮き飛車、3二飛、3四浮き飛車）は手損ではない！
+                     isIshidaLegit = (plr == Sente && (to == (7, 8) || (from == (7, 8) && to == (7, 6)))) ||
+                                     (plr == Gote && (to == (3, 2) || (from == (3, 2) && to == (3, 4))))
+                     -- 飛車先が歩で塞がれているのに自陣をふらふら横移動する手
+                     isPointlessFileSwitch =
+                       not isIshidaLegit && fx /= tx &&
+                       null (getPiecesCovering opp from curBd) &&
+                       (case findKing opp curBd of
+                          Just (ekx, _) -> abs (tx - ekx) >= abs (fx - ekx)
+                          Nothing       -> True)
+                     -- 目的のない自陣内の縦往復（ただ下がる）
+                     isPointlessVertical =
+                       not isIshidaLegit && fx == tx &&
+                       null (getPiecesCovering opp from curBd) &&
+                       (plr == Sente && ty > fy || plr == Gote && ty < fy)
+                 in if isCapturing || isCheck || isPromo || isIshidaLegit
                     then 0.0
-                    else if isPointlessLift then -800.0 else 0.0
+                    else if isPointlessFileSwitch
+                    then -3500.0 -- 飛車の無駄な筋変更・うろうろ横移動に厳罰！
+                    else if isPointlessVertical
+                    then -2500.0 -- 飛車の無駄な自陣後退・手損に厳罰！
+                    else -1200.0 -- 目的の薄い飛車の移動手損
                _ -> 0.0
            _ -> 0.0
-           
-       in repeatPen + reversalPen + wanderingGoldPen + aimlessRookPen + kingMoveEval
+
+                in repeatPen + reversalPen + wanderingGoldPen + aimlessRookPen + kingMoveEval
 
 -- | プロ棋戦の手筋に基づく「受けの筋（Defensive Techniques）」の評価
 -- 1. 自陣への歩打ち受け（底歩、中合い、飛車先交換後の歩受け P*2c, P*8g 等）
@@ -3198,6 +3393,32 @@ usiLoop weights currentState = do
             hFlush stdout
             usiLoop weights nextState
       
+      "eval" -> do
+        let p = turn currentState
+            opp = opponent p
+            bd = board currentState
+            myDanger = evalMorsePotential p bd
+            enemyDanger = evalMorsePotential opp bd
+            morse = (enemyDanger - myDanger) * wMorseDanger weights
+            mat = evalMaterial p currentState * wMaterial weights
+            hang = evalHangingPieces p currentState
+            atk = (evalMidgameAttack p currentState - evalMidgameAttack opp currentState) * wAttack weights
+            defn = (evalMidgameDefense p currentState - evalMidgameDefense opp currentState) * wDefense weights
+            kakuto = evalKakutoKeitoDefense p currentState * wKakuto weights
+            ishida = evalSilverAdvanceAndIshidaFormation p currentState - evalSilverAdvanceAndIshidaFormation opp currentState
+            ctrl = evalPieceControl p currentState * wPieceControl weights
+            loose = evalLoosePieces p currentState * wLoosePenalty weights
+            tempo = evalTempoLoss p currentState * wTempoLoss weights
+            goldKing = evalGoldKingCoordination p currentState * wGoldKingCoord weights
+            dtm = (evalDistanceToMate p currentState - evalDistanceToMate opp currentState) * wDistanceToMate weights
+            numAssault = (evalNumericalAssault p currentState - evalNumericalAssault opp currentState) * wNumericalAssault weights
+            bdrop = evalBishopDropVulnerability p currentState - evalBishopDropVulnerability opp currentState
+            potRay = evalPotentialRayAttack p currentState * wPotentialRays weights
+            total = evaluateState weights p currentState
+        putStrLn $ "info string eval total=" ++ show total ++ " morse=" ++ show morse ++ " kakuto=" ++ show kakuto ++ " goldKing=" ++ show goldKing ++ " dtm=" ++ show dtm ++ " numAssault=" ++ show numAssault ++ " ishida=" ++ show ishida
+        hFlush stdout
+        usiLoop weights currentState
+
       "quit" -> do
         exitSuccess
       
