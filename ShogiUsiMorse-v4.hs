@@ -833,6 +833,7 @@ evalLoosePieces plr st =
 
 -- | 大駒・重要駒のタダ取られ（Hanging Pieces / En Prise）および大損交換危険度評価
 -- モース勾配流における「大駒のタダ捨て・無謀な突撃による自滅」を評価関数レベルで完全排除
+-- 各駒の価値（PieceValue）に比例したペナルティとし、角銀交換と角歩交換の価値差（400点）を厳格に保持
 evalHangingPieces :: Player -> State -> Double
 evalHangingPieces player st =
   let bd = board st
@@ -844,21 +845,17 @@ evalHangingPieces player st =
               let oppAttackers = getPiecesCovering enemy sq bd
                   myDefenders  = getPiecesCovering plr sq bd
                   hasCheapAttacker = any (\(_, Piece _ opt) -> opt `elem` [Pawn, Lance, Knight, Silver]) oppAttackers
-                  isMajor = pt `elem` [Rook, PRook, Bishop, PBishop]
-                  isGoldOrSilver = pt `elem` [Gold, Silver, PPawn, PSilver, PKnight, PLance]
+                  val = pieceValue pt
               in if null oppAttackers
                  then 0.0
                  else if null myDefenders
                       then
-                        if isMajor then -12000.0       -- 飛車・角のタダ取られは致命的壊滅！
-                        else if isGoldOrSilver then -4500.0 -- 金銀のタダ取られ
-                        else if pt `elem` [Knight, Lance] then -2500.0
-                        else -150.0
+                        -- 紐なしで取られる場合：その駒の価値 × 1.8倍（手番損失＋相手の戦力化）
+                        - (val * 1.8)
                       else
-                        if isMajor && hasCheapAttacker
-                        then -9000.0                 -- 大駒が歩・香・桂・銀にタダ同然で取られる大損
-                        else if isGoldOrSilver && any (\(_, Piece _ opt) -> opt == Pawn) oppAttackers
-                        then -2500.0
+                        -- 紐はあるが、相手の安い駒（歩・香・桂・銀）で取られる大損交換
+                        if val >= 500.0 && hasCheapAttacker
+                        then - ((val - 100.0) * 1.2)
                         else 0.0
         in sum [ hangingPenalty p | p <- pieces ]
   in evalPlayerHanging player - evalPlayerHanging opp
@@ -1488,9 +1485,20 @@ searchQuiescence weights qdepth alpha beta st =
                 rawMoves = generateMoves st
                 tacticalMoves = filter (isTacticalMove st) rawMoves
                 f5Tacticals = f5SyzygyFilter st tacticalMoves
-            in if null f5Tacticals
+                -- MVV-LVA: 取る駒の価値が高い順（銀500点 -> 歩100点）にソートして最優先探索！
+                scoreTacticalMove m = case m of
+                  NormalMove _ to isP ->
+                    let victimVal = case Map.lookup to (board st) of
+                          Just (Piece _ pt) -> pieceValue pt
+                          Nothing           -> 0.0
+                        promoVal = if isP then 200.0 else 0.0
+                    in victimVal * 10.0 + promoVal
+                  DropMove pt _ ->
+                    if pt `elem` [Rook, Bishop] then -500.0 else 100.0
+                sortedTacticals = sortBy (\m1 m2 -> compare (scoreTacticalMove m2) (scoreTacticalMove m1)) f5Tacticals
+            in if null sortedTacticals
                then curAlpha
-               else qLoop f5Tacticals curAlpha beta
+               else qLoop sortedTacticals curAlpha beta
   where
     isTacticalMove s m =
       let plr = turn s
@@ -1726,9 +1734,15 @@ searchAlphaBeta weights depth alpha beta st =
                                           then 800.0
                                           else 0.0
                    
+                   -- ★ 捕獲駒ボーナス（MVV-LVA）：銀を取る手（+3000点）と歩を取る手（+600点）に大差をつける
+                   captureBonus = case targetCaptured of
+                     Just (Piece _ pt) -> pieceValue pt * 6.0
+                     Nothing           -> 0.0
+                   
+                   trappedDesperadoBonus = evalTrappedPieceDesperado st m
                    s = evaluateState weights (turn st) nextSt
-                in s + blunderPen + lancePen + suicidePen + checkBonus + forkBonus + tacticalBonus + fourPieceAdvanceBonus + oneTempoWinBonus + ironcladDefenseBonus
-                  + discoveredBonus + rayUnblockBonus + potentialAlignBonus + quotientEquivBonus
+                in s + captureBonus + blunderPen + lancePen + suicidePen + checkBonus + forkBonus + tacticalBonus + fourPieceAdvanceBonus + oneTempoWinBonus + ironcladDefenseBonus
+                  + discoveredBonus + rayUnblockBonus + potentialAlignBonus + quotientEquivBonus + trappedDesperadoBonus
                   + antiQuotientSafetyBonus + shufflingPen + defensiveBonus + evalThicknessAndDominance st m + majorThreatBonus
              orderedMoves = sortBy (\m1 m2 -> compare (scoreMove m2) (scoreMove m1)) effectiveMoves
              -- 王手をかけられているときはすべての王手回避手を読み、それ以外は上位14手を深く読む
@@ -2430,6 +2444,77 @@ evalAntiQuotientSafety st m =
 
 -- | 飛車・金（および全駒）の目的のない往復移動（Shuffling / Ping-pong）、
 --   千日手未遂（2回目・3回目の同一局面）、彷徨い移動（うろうろ手損）の検知とペナルティ
+-- | 攻め駒（飛・角・銀・桂・竜・馬）が相手の駒に包囲・詰まされている（Trapped）かどうかの判定
+isTrappedPiece :: Square -> PieceType -> Player -> Board -> Bool
+isTrappedPiece sq pt plr bd =
+  let opp = opponent plr
+      oppAttackers = getPiecesCovering opp sq bd
+  in if null oppAttackers
+     then False -- 当たりになっていなければ詰まされていない
+     else
+       let candidateDests = [ dest | dest <- Map.keys bd ++ [ (x, y) | x <- [1..9], y <- [1..9] ]
+                                   , canPieceReachTarget sq (Piece plr pt) dest bd
+                                   , case Map.lookup dest bd of
+                                       Just (Piece p _) -> p /= plr
+                                       Nothing          -> True
+                            ]
+           isSafeSquare dest =
+             let oppAtk = getPiecesCovering opp dest bd
+                 myDef  = getPiecesCovering plr dest bd
+                 hasCheap = any (\(_, Piece _ opt) -> opt `elem` [Pawn, Lance, Knight, Silver]) oppAtk
+             in null oppAtk || (length myDef > length oppAtk && not hasCheap)
+           
+           hasSafeRetreat = any isSafeSquare candidateDests
+       in not hasSafeRetreat -- 安全な退避先が1つもなければ「詰まされている（Trapped）」！
+
+-- | 攻め駒が詰まされた場合のモース勾配流（Desperado 流）
+-- 価値の低い駒交換（歩や香との刺し違え・タダ死に）を厳罰排除し、
+-- 最大価値の駒（金・銀・角・飛）との刺し違え、または急所破壊・王手を最優先化
+evalTrappedPieceDesperado :: State -> Move -> Double
+evalTrappedPieceDesperado st m =
+  let plr = turn st
+      opp = opponent plr
+      bd = board st
+      nextSt = applyMove m st
+      nextBd = board nextSt
+      isCheck = isKingUnderAttack opp nextBd
+  in case m of
+       NormalMove from to _ ->
+         case Map.lookup from bd of
+           Just (Piece p pt) | p == plr && pt `elem` [Rook, PRook, Bishop, PBishop, Silver, PSilver, Knight] ->
+             let isTrapped = isTrappedPiece from pt plr bd
+             in if not isTrapped
+                then 0.0
+                else
+                  let targetCap = Map.lookup to bd
+                  in case targetCap of
+                       -- 1. 相手の駒を取る手（刺し違え）
+                       Just (Piece _ capPt) ->
+                         let capVal = pieceValue capPt
+                         in if capVal >= 500.0
+                            then 3200.0 + capVal * 4.0 -- 金・銀・角・飛との最大刺し違え（大成功の Desperado！）
+                            else if capVal >= 300.0
+                            then (if pt `elem` [Rook, Bishop] then -2500.0 else 600.0) -- 桂・香との刺し違え
+                            else
+                              -- ★ 歩との刺し違え（最悪の低価値駒交換！角歩交換・銀歩交換・飛車歩交換）
+                              if pt `elem` [Rook, PRook, Bishop, PBishop]
+                              then -9000.0 -- 大駒で歩を取って死ぬのは絶対禁止！
+                              else if pt `elem` [Silver, PSilver]
+                              then -6000.0 -- 銀で歩を取って死ぬのも絶対禁止！
+                              else -3500.0 -- 桂で歩を取って死ぬのも禁止！
+                       -- 2. 駒を取らずに逃げる手
+                       Nothing ->
+                         let oppAtkOnTo = getPiecesCovering opp to nextBd
+                             myDefOnTo  = getPiecesCovering plr to nextBd
+                             isStillDead = not (null oppAtkOnTo) && (null myDefOnTo || any (\(_, Piece _ opt) -> opt == Pawn) oppAtkOnTo)
+                         in if isCheck
+                            then 800.0 -- 王手で陣形を崩す手筋
+                            else if isStillDead
+                            then -7500.0 -- 駒も取れずに結局歩などにタダ取られする無駄な逃げ
+                            else 0.0
+           _ -> 0.0
+       DropMove _ _ -> 0.0
+
 evalPieceShuffling :: State -> Move -> Double
 evalPieceShuffling st m =
   let plr = turn st
