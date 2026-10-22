@@ -1722,7 +1722,29 @@ endgameTablebase =
                []     -> Nothing
       , qpDTM = 1
       }
-    -- 4. 腹金・尻金イデアル (HaraKin: DTM = 1)
+    -- 3.5 桂打ちフォークイデアル (Knight Fork: DTM = 1)
+  , QuotientPattern
+      { qpName = "KnightFork_CheckFork_DTM1"
+      , qpTargetKingRank = \(_, ky) -> ky <= 4 || ky >= 6
+      , qpRequiredHand = [(Knight, 1)]
+      , qpSupportCheck = \_ _ _ -> True
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let opp = opponent att
+              dirY = if att == Sente then 2 else -2
+              jumpY = if att == Sente then -2 else 2
+              dropCandidates = [ (kx - 1, ky + dirY), (kx + 1, ky + dirY) ]
+              validDrop sq@(dx, dy) =
+                not (isOutOfBounds sq) && not (Map.member sq bd) &&
+                let otherSq = (dx + (if dx == kx - 1 then -1 else 1), dy + jumpY)
+                in case Map.lookup otherSq bd of
+                     Just (Piece p pt) -> p == opp && pt `elem` [Gold, Silver, Rook, Bishop, PRook, PBishop]
+                     Nothing           -> True
+          in case filter validDrop dropCandidates of
+               (sq:_) -> Just (DropMove Knight sq)
+               []     -> Nothing
+      , qpDTM = 1
+      }
+    -- 4. 腹金イデアル (HaraKin: DTM = 1)
   , QuotientPattern
       { qpName = "HaraKin_DTM1"
       , qpTargetKingRank = \_ -> True
@@ -1738,7 +1760,140 @@ endgameTablebase =
                []     -> Nothing
       , qpDTM = 1
       }
-    -- 5. 一間竜イデアル (Ikken-Ryu: DTM = 3 - バックプロパゲーション)
+    -- 5. 尻金イデアル (ShiriKin: DTM = 1)
+  , QuotientPattern
+      { qpName = "ShiriKin_DTM1"
+      , qpTargetKingRank = \_ -> True
+      , qpRequiredHand = [(Gold, 1)]
+      , qpSupportCheck = \(kx, ky) bd att ->
+          let dirY = if att == Sente then -1 else 1
+              backSq = (kx, ky + dirY)
+          in not (isOutOfBounds backSq) && isSquareUnderAttack att backSq bd
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then -1 else 1
+              backSq = (kx, ky + dirY)
+          in if not (isOutOfBounds backSq) && not (Map.member backSq bd) && isSquareUnderAttack att backSq bd
+             then Just (DropMove Gold backSq)
+             else Nothing
+      , qpDTM = 1
+      }
+    -- 6. 雪隠詰めイデアル (Secchin_CornerTrap: DTM = 1)
+  , QuotientPattern
+      { qpName = "Secchin_CornerTrap_DTM1"
+      , qpTargetKingRank = \(kx, ky) -> (kx == 1 || kx == 9) && (ky == 1 || ky == 9)
+      , qpRequiredHand = [(Gold, 1)]
+      , qpSupportCheck = \_ _ _ -> True
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              headSq = (kx, ky + dirY)
+              sideSq = (if kx == 1 then 2 else 8, ky)
+          in case filter (\sq -> not (isOutOfBounds sq) && not (Map.member sq bd) && isSquareUnderAttack att sq bd) [headSq, sideSq] of
+               (sq:_) -> Just (DropMove Gold sq)
+               []     -> Nothing
+      , qpDTM = 1
+      }
+    -- 7. 下段香・田楽刺しイデアル (Lance_BottomSkewer: DTM = 1)
+  , QuotientPattern
+      { qpName = "Lance_BottomSkewer_DTM1"
+      , qpTargetKingRank = \(_, ky) -> ky <= 3 || ky >= 7
+      , qpRequiredHand = [(Lance, 1)]
+      , qpSupportCheck = \_ _ _ -> True
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let bottomY = if att == Sente then 9 else 1
+              skewerSq = (kx, bottomY)
+          in if not (Map.member skewerSq bd) && isPathClear skewerSq (kx, ky) bd
+             then Just (DropMove Lance skewerSq)
+             else Nothing
+      , qpDTM = 1
+      }
+    -- 8. 叩き・突き出し歩詰みイデアル (Tatataki_PawnMate: DTM = 1)
+  , QuotientPattern
+      { qpName = "Tatataki_PawnMate_DTM1"
+      , qpTargetKingRank = \_ -> True
+      , qpRequiredHand = [(Pawn, 1)]
+      , qpSupportCheck = \(kx, ky) bd att ->
+          let dirY = if att == Sente then 1 else -1
+          in isSquareUnderAttack att (kx, ky + dirY) bd
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              headSq = (kx, ky + dirY)
+          in if not (isOutOfBounds headSq) && not (Map.member headSq bd) && isSquareUnderAttack att headSq bd
+             then Just (DropMove Pawn headSq)
+             else Nothing
+      , qpDTM = 1
+      }
+    -- 9. 斜め銀打ち急襲イデアル (Silver_DiagonalDrop: DTM = 1)
+  , QuotientPattern
+      { qpName = "Silver_DiagonalDrop_DTM1"
+      , qpTargetKingRank = \_ -> True
+      , qpRequiredHand = [(Silver, 1)]
+      , qpSupportCheck = \(kx, ky) bd att ->
+          let dirY = if att == Sente then 1 else -1
+          in isSquareUnderAttack att (kx - 1, ky + dirY) bd || isSquareUnderAttack att (kx + 1, ky + dirY) bd
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              d1 = (kx - 1, ky + dirY)
+              d2 = (kx + 1, ky + dirY)
+              validDrop sq = not (isOutOfBounds sq) && not (Map.member sq bd) && isSquareUnderAttack att sq bd
+          in case filter validDrop [d1, d2] of
+               (sq:_) -> Just (DropMove Silver sq)
+               []     -> Nothing
+      , qpDTM = 1
+      }
+    -- 10. 馬飛び込み斜線突入イデアル (Horse_DiagonalDive: DTM = 1)
+  , QuotientPattern
+      { qpName = "Horse_DiagonalDive_DTM1"
+      , qpTargetKingRank = \_ -> True
+      , qpRequiredHand = []
+      , qpSupportCheck = \_ _ _ -> True
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              diagTargets = [ (kx - 1, ky + dirY), (kx + 1, ky + dirY), (kx - 1, ky), (kx + 1, ky) ]
+              horses = [ (sq, p) | (sq, p@(Piece pPlr pt)) <- Map.toList bd, pPlr == att, pt == PBishop ]
+              validMoves = [ NormalMove hSq tSq False
+                           | (hSq, p) <- horses
+                           , tSq <- diagTargets
+                           , not (isOutOfBounds tSq)
+                           , canPieceReachTarget hSq p tSq bd
+                           ]
+          in listToMaybe validMoves
+      , qpDTM = 1
+      }
+    -- 11. 都詰め・中段包囲イデアル (Miyako_CenterPalace: DTM = 1)
+  , QuotientPattern
+      { qpName = "Miyako_CenterPalace_DTM1"
+      , qpTargetKingRank = \(_, ky) -> ky >= 4 && ky <= 6
+      , qpRequiredHand = [(Gold, 1)]
+      , qpSupportCheck = \(kx, ky) bd att ->
+          let dirY = if att == Sente then 1 else -1
+          in isSquareUnderAttack att (kx, ky + dirY) bd
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              headSq = (kx, ky + dirY)
+          in if not (isOutOfBounds headSq) && not (Map.member headSq bd) && isSquareUnderAttack att headSq bd
+             then Just (DropMove Gold headSq)
+             else Nothing
+      , qpDTM = 1
+      }
+    -- 12. 盤上龍の横すり寄り詰み (Dragon_SideDive: DTM = 1)
+  , QuotientPattern
+      { qpName = "Dragon_SideDive_DTM1"
+      , qpTargetKingRank = \_ -> True
+      , qpRequiredHand = []
+      , qpSupportCheck = \_ _ _ -> True
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let dragons = [ (sq, p) | (sq, p@(Piece pPlr pt)) <- Map.toList bd, pPlr == att, pt == PRook ]
+              sideTargets = [ (kx - 1, ky), (kx + 1, ky) ]
+              validMoves = [ NormalMove dSq tSq False
+                           | (dSq, p) <- dragons
+                           , tSq <- sideTargets
+                           , not (isOutOfBounds tSq)
+                           , canPieceReachTarget dSq p tSq bd
+                           ]
+          in listToMaybe validMoves
+      , qpDTM = 1
+      }
+    -- 13. 一間竜イデアル (Ikken-Ryu: DTM = 3 - バックプロパゲーション)
   , QuotientPattern
       { qpName = "IkkenRyu_DTM3"
       , qpTargetKingRank = \(_, ky) -> ky <= 3 || ky >= 7
@@ -1757,7 +1912,7 @@ endgameTablebase =
                Nothing -> Nothing
       , qpDTM = 3
       }
-    -- 6. 送りの手筋イデアル (Okuri: DTM = 3 - バックプロパゲーション)
+    -- 14. 送りの手筋イデアル (Okuri: DTM = 3 - バックプロパゲーション)
   , QuotientPattern
       { qpName = "Okuri_DTM3"
       , qpTargetKingRank = \(_, ky) -> ky == 2 || ky == 8
@@ -1768,6 +1923,156 @@ endgameTablebase =
               targetSq = (kx, edgeY)
           in if not (Map.member targetSq bd) && not (isOutOfBounds targetSq) && isSquareUnderAttack att targetSq bd
              then Just (DropMove Silver targetSq)
+             else Nothing
+      , qpDTM = 3
+      }
+    -- 15. 金銀挟み撃ちイデアル (HasamiUchi_Pincer: DTM = 3)
+  , QuotientPattern
+      { qpName = "HasamiUchi_Pincer_DTM3"
+      , qpTargetKingRank = \_ -> True
+      , qpRequiredHand = [(Gold, 1), (Silver, 1)]
+      , qpSupportCheck = \_ _ _ -> True
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              leftSq = (kx - 1, ky + dirY)
+          in if not (isOutOfBounds leftSq) && not (Map.member leftSq bd)
+             then Just (DropMove Silver leftSq)
+             else Nothing
+      , qpDTM = 3
+      }
+    -- 16. 焦点の捨て駒イデアル (Focal_Sacrifice: DTM = 3)
+  , QuotientPattern
+      { qpName = "Focal_Sacrifice_DTM3"
+      , qpTargetKingRank = \_ -> True
+      , qpRequiredHand = [(Gold, 1)]
+      , qpSupportCheck = \_ _ _ -> True
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              focusSq = (kx, ky + 2 * dirY)
+          in if not (isOutOfBounds focusSq) && not (Map.member focusSq bd) && isSquareUnderAttack att focusSq bd
+             then Just (DropMove Silver focusSq)
+             else Nothing
+      , qpDTM = 3
+      }
+    -- 17. 段違い並び龍イデアル (Staggered_Dragons: DTM = 3)
+  , QuotientPattern
+      { qpName = "Staggered_Dragons_DTM3"
+      , qpTargetKingRank = \(_, ky) -> ky <= 3 || ky >= 7
+      , qpRequiredHand = []
+      , qpSupportCheck = \_ _ _ -> True
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              nextRankSq = (kx, ky + dirY)
+              dragons = [ sq | (sq, Piece p pt) <- Map.toList bd, p == att, pt `elem` [Rook, PRook] ]
+          in case dragons of
+               (d1:_) | not (Map.member nextRankSq bd) && canPieceReachTarget d1 (Piece att PRook) nextRankSq bd ->
+                 Just (NormalMove d1 nextRankSq False)
+               _ -> Nothing
+      , qpDTM = 3
+      }
+    -- 18. 十字飛車・直交包囲イデアル (CrossRook_Encircle: DTM = 3)
+  , QuotientPattern
+      { qpName = "CrossRook_Encircle_DTM3"
+      , qpTargetKingRank = \_ -> True
+      , qpRequiredHand = [(Gold, 1)]
+      , qpSupportCheck = \_ _ _ -> True
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              headSq = (kx, ky + dirY)
+          in if not (isOutOfBounds headSq) && not (Map.member headSq bd)
+             then Just (DropMove Gold headSq)
+             else Nothing
+      , qpDTM = 3
+      }
+    -- 19. 頭銀＋尻金コンビネーションイデアル (HeadSilver_BackGold: DTM = 3)
+  , QuotientPattern
+      { qpName = "HeadSilver_BackGold_DTM3"
+      , qpTargetKingRank = \_ -> True
+      , qpRequiredHand = [(Silver, 1), (Gold, 1)]
+      , qpSupportCheck = \(kx, ky) bd att ->
+          let dirY = if att == Sente then 1 else -1
+          in isSquareUnderAttack att (kx, ky + dirY) bd
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              headSq = (kx, ky + dirY)
+          in if not (isOutOfBounds headSq) && not (Map.member headSq bd) && isSquareUnderAttack att headSq bd
+             then Just (DropMove Silver headSq)
+             else Nothing
+      , qpDTM = 3
+      }
+    -- 20. 桂打ちフォーク浮かせ＋金突入イデアル (KnightFork_PullIn: DTM = 3)
+  , QuotientPattern
+      { qpName = "KnightFork_PullIn_DTM3"
+      , qpTargetKingRank = \(_, ky) -> ky <= 3 || ky >= 7
+      , qpRequiredHand = [(Knight, 1), (Gold, 1)]
+      , qpSupportCheck = \_ _ _ -> True
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 2 else -2
+              c1 = (kx - 1, ky + dirY)
+              c2 = (kx + 1, ky + dirY)
+              validDrop sq = not (isOutOfBounds sq) && not (Map.member sq bd)
+          in case filter validDrop [c1, c2] of
+               (sq:_) -> Just (DropMove Knight sq)
+               []     -> Nothing
+      , qpDTM = 3
+      }
+    -- 21. 退路封鎖の捨て駒イデアル (EscapeRoute_Block: DTM = 3)
+  , QuotientPattern
+      { qpName = "EscapeRoute_Block_DTM3"
+      , qpTargetKingRank = \_ -> True
+      , qpRequiredHand = [(Gold, 1)]
+      , qpSupportCheck = \_ _ _ -> True
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then -1 else 1
+              escapeSq = (kx, ky + dirY)
+          in if not (isOutOfBounds escapeSq) && not (Map.member escapeSq bd)
+             then Just (DropMove Silver escapeSq)
+             else Nothing
+      , qpDTM = 3
+      }
+    -- 22. 挟撃必至イデアル (Pincer_Brinkmate: DTM = 5 または 必至)
+  , QuotientPattern
+      { qpName = "Pincer_Brinkmate_DTM5"
+      , qpTargetKingRank = \_ -> True
+      , qpRequiredHand = [(Gold, 2)]
+      , qpSupportCheck = \_ _ _ -> True
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              headSq = (kx, ky + dirY)
+          in if not (isOutOfBounds headSq) && not (Map.member headSq bd)
+             then Just (DropMove Gold headSq)
+             else Nothing
+      , qpDTM = 5
+      }
+    -- 23. 空き王手イデアル (Discovered_Checkmate: DTM = 3)
+  , QuotientPattern
+      { qpName = "Discovered_Checkmate_DTM3"
+      , qpTargetKingRank = \_ -> True
+      , qpRequiredHand = []
+      , qpSupportCheck = \_ _ _ -> True
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              blockerSq = (kx, ky + dirY)
+          in case Map.lookup blockerSq bd of
+               Just (Piece p _) | p == att ->
+                 let escapeSq = (kx + 1, ky + dirY)
+                 in if not (isOutOfBounds escapeSq) && not (Map.member escapeSq bd)
+                    then Just (NormalMove blockerSq escapeSq False)
+                    else Nothing
+               _ -> Nothing
+      , qpDTM = 3
+      }
+    -- 24. 底歩外し・龍すり寄りイデアル (Ryu_SokoFu: DTM = 3)
+  , QuotientPattern
+      { qpName = "Ryu_SokoFu_DTM3"
+      , qpTargetKingRank = \_ -> True
+      , qpRequiredHand = [(Pawn, 1)]
+      , qpSupportCheck = \_ _ _ -> True
+      , qpCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              sokoSq = (kx, ky + dirY)
+          in if not (isOutOfBounds sokoSq) && not (Map.member sokoSq bd)
+             then Just (DropMove Pawn sokoSq)
              else Nothing
       , qpDTM = 3
       }

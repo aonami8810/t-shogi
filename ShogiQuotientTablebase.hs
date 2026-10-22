@@ -217,8 +217,35 @@ initEndgameTablebase =
       }
 
     -- ------------------------------------------------------------------------
-    -- 4. 尻金・腹金イデアル (HaraKin / ShiriKin: DTM = 1)
-    -- 玉の腹（横）または尻（背後）に金を密着させて逃げ道を完全封鎖
+    -- 3.5 桂打ちフォークイデアル (Knight Fork: DTM = 1 - 3)
+    -- 玉と金銀大駒を同時に跳躍急襲し、王手と重要駒取りの二重脅威で詰み・寄せに直結
+    -- ------------------------------------------------------------------------
+  , QuotientPattern
+      { qName = "KnightFork_CheckFork_DTM1"
+      , qTargetKingRank = \(_, ky) -> ky <= 4 || ky >= 6
+      , qSurroundings = []
+      , qRequiredHand = [(Knight, 1)]
+      , qSupportCheck = \_ _ _ -> True
+      , qCandidateMove = \(kx, ky) att bd ->
+          let opp = opponent att
+              dirY = if att == Sente then 2 else -2
+              jumpY = if att == Sente then -2 else 2
+              dropCandidates = [ (kx - 1, ky + dirY), (kx + 1, ky + dirY) ]
+              validDrop sq@(dx, dy) =
+                not (isOutOfBounds sq) && not (Map.member sq bd) &&
+                let otherSq = (dx + (if dx == kx - 1 then -1 else 1), dy + jumpY)
+                in case Map.lookup otherSq bd of
+                     Just (Piece p pt) -> p == opp && pt `elem` [Gold, Silver, Rook, Bishop, PRook, PBishop]
+                     Nothing           -> True
+          in case filter validDrop dropCandidates of
+               (sq:_) -> Just (DropMove Knight sq)
+               []     -> Nothing
+      , qDTM = 1
+      }
+
+    -- ------------------------------------------------------------------------
+    -- 4. 腹金イデアル (HaraKin: DTM = 1)
+    -- 玉の腹（横）に金を密着させて逃げ道を完全封鎖
     -- ------------------------------------------------------------------------
   , QuotientPattern
       { qName = "HaraKin_DTM1"
@@ -226,7 +253,6 @@ initEndgameTablebase =
       , qSurroundings = []
       , qRequiredHand = [(Gold, 1)]
       , qSupportCheck = \(kx, ky) bd att ->
-          -- 腹（横）に紐が付いているか
           isCoveredByPlayer att (kx - 1, ky) bd || isCoveredByPlayer att (kx + 1, ky) bd
       , qCandidateMove = \(kx, ky) att bd ->
           let leftSq = (kx - 1, ky)
@@ -239,22 +265,193 @@ initEndgameTablebase =
       }
 
     -- ------------------------------------------------------------------------
-    -- 5. 一間竜イデアル (Ikken-Ryu: DTM = 3 - バックプロパゲーション)
+    -- 5. 尻金イデアル (ShiriKin: DTM = 1)
+    -- 玉の背後（尻）に金を打ち込んで背後からの脱出を完全遮断
+    -- ------------------------------------------------------------------------
+  , QuotientPattern
+      { qName = "ShiriKin_DTM1"
+      , qTargetKingRank = \_ -> True
+      , qSurroundings = []
+      , qRequiredHand = [(Gold, 1)]
+      , qSupportCheck = \(kx, ky) bd att ->
+          let dirY = if att == Sente then -1 else 1
+              backSq = (kx, ky + dirY)
+          in not (isOutOfBounds backSq) && isCoveredByPlayer att backSq bd
+      , qCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then -1 else 1
+              backSq = (kx, ky + dirY)
+          in if not (isOutOfBounds backSq) && not (Map.member backSq bd) && isCoveredByPlayer att backSq bd
+             then Just (DropMove Gold backSq)
+             else Nothing
+      , qDTM = 1
+      }
+
+    -- ------------------------------------------------------------------------
+    -- 6. 雪隠詰めイデアル (Secchin_CornerTrap: DTM = 1)
+    -- 隅（1一、9一、1九、9九）に追い詰めた玉を角・香・金で袋小路にする
+    -- ------------------------------------------------------------------------
+  , QuotientPattern
+      { qName = "Secchin_CornerTrap_DTM1"
+      , qTargetKingRank = \(kx, ky) -> (kx == 1 || kx == 9) && (ky == 1 || ky == 9)
+      , qSurroundings = []
+      , qRequiredHand = [(Gold, 1)]
+      , qSupportCheck = \_ _ _ -> True
+      , qCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              headSq = (kx, ky + dirY)
+              sideSq = (if kx == 1 then 2 else 8, ky)
+          in case filter (\sq -> not (isOutOfBounds sq) && not (Map.member sq bd) && isCoveredByPlayer att sq bd) [headSq, sideSq] of
+               (sq:_) -> Just (DropMove Gold sq)
+               []     -> Nothing
+      , qDTM = 1
+      }
+
+    -- ------------------------------------------------------------------------
+    -- 7. 下段香・田楽刺しイデアル (Lance_BottomSkewer: DTM = 1)
+    -- 最下段または下段から一直線に香車を放ち、直線の退路を消滅させる
+    -- ------------------------------------------------------------------------
+  , QuotientPattern
+      { qName = "Lance_BottomSkewer_DTM1"
+      , qTargetKingRank = \(_, ky) -> ky <= 3 || ky >= 7
+      , qSurroundings = []
+      , qRequiredHand = [(Lance, 1)]
+      , qSupportCheck = \_ _ _ -> True
+      , qCandidateMove = \(kx, ky) att bd ->
+          let bottomY = if att == Sente then 9 else 1
+              skewerSq = (kx, bottomY)
+          in if not (Map.member skewerSq bd) && isPathClear skewerSq (kx, ky) bd
+             then Just (DropMove Lance skewerSq)
+             else Nothing
+      , qDTM = 1
+      }
+
+    -- ------------------------------------------------------------------------
+    -- 8. 叩き・突き出し歩詰みイデアル (Tatataki_PawnMate: DTM = 1)
+    -- 玉頭または至近に歩を突き出し・叩いて退路を封殺
+    -- ------------------------------------------------------------------------
+  , QuotientPattern
+      { qName = "Tatataki_PawnMate_DTM1"
+      , qTargetKingRank = \_ -> True
+      , qSurroundings = []
+      , qRequiredHand = [(Pawn, 1)]
+      , qSupportCheck = \(kx, ky) bd att ->
+          let dirY = if att == Sente then 1 else -1
+          in isCoveredByPlayer att (kx, ky + dirY) bd
+      , qCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              headSq = (kx, ky + dirY)
+          in if not (isOutOfBounds headSq) && not (Map.member headSq bd) && isCoveredByPlayer att headSq bd
+             then Just (DropMove Pawn headSq)
+             else Nothing
+      , qDTM = 1
+      }
+
+    -- ------------------------------------------------------------------------
+    -- 9. 斜め銀打ち急襲イデアル (Silver_DiagonalDrop: DTM = 1)
+    -- 斜め後ろに引けない玉に対し、斜め前から銀を密着させて仕留める
+    -- ------------------------------------------------------------------------
+  , QuotientPattern
+      { qName = "Silver_DiagonalDrop_DTM1"
+      , qTargetKingRank = \_ -> True
+      , qSurroundings = []
+      , qRequiredHand = [(Silver, 1)]
+      , qSupportCheck = \(kx, ky) bd att ->
+          let dirY = if att == Sente then 1 else -1
+          in isCoveredByPlayer att (kx - 1, ky + dirY) bd || isCoveredByPlayer att (kx + 1, ky + dirY) bd
+      , qCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              d1 = (kx - 1, ky + dirY)
+              d2 = (kx + 1, ky + dirY)
+              validDrop sq = not (isOutOfBounds sq) && not (Map.member sq bd) && isCoveredByPlayer att sq bd
+          in case filter validDrop [d1, d2] of
+               (sq:_) -> Just (DropMove Silver sq)
+               []     -> Nothing
+      , qDTM = 1
+      }
+
+    -- ------------------------------------------------------------------------
+    -- 10. 馬飛び込み斜線突入イデアル (Horse_DiagonalDive: DTM = 1)
+    -- 盤上の馬が斜めから玉近傍に飛び込んで斜線と周囲を制圧
+    -- ------------------------------------------------------------------------
+  , QuotientPattern
+      { qName = "Horse_DiagonalDive_DTM1"
+      , qTargetKingRank = \_ -> True
+      , qSurroundings = []
+      , qRequiredHand = []
+      , qSupportCheck = \_ _ _ -> True
+      , qCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              diagTargets = [ (kx - 1, ky + dirY), (kx + 1, ky + dirY), (kx - 1, ky), (kx + 1, ky) ]
+              horses = [ (sq, p) | (sq, p@(Piece pPlr pt)) <- Map.toList bd, pPlr == att, pt == PBishop ]
+              validMoves = [ NormalMove hSq tSq False
+                           | (hSq, p) <- horses
+                           , tSq <- diagTargets
+                           , not (isOutOfBounds tSq)
+                           , canPieceReach hSq p tSq bd
+                           ]
+          in listToMaybe validMoves
+      , qDTM = 1
+      }
+
+    -- ------------------------------------------------------------------------
+    -- 11. 都詰め・中段包囲イデアル (Miyako_CenterPalace: DTM = 1)
+    -- 中段（5五周辺等）に浮いた玉を全周囲の制空権で包囲して金を押し込む
+    -- ------------------------------------------------------------------------
+  , QuotientPattern
+      { qName = "Miyako_CenterPalace_DTM1"
+      , qTargetKingRank = \(_, ky) -> ky >= 4 && ky <= 6
+      , qSurroundings = []
+      , qRequiredHand = [(Gold, 1)]
+      , qSupportCheck = \(kx, ky) bd att ->
+          let dirY = if att == Sente then 1 else -1
+          in isCoveredByPlayer att (kx, ky + dirY) bd
+      , qCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              headSq = (kx, ky + dirY)
+          in if not (isOutOfBounds headSq) && not (Map.member headSq bd) && isCoveredByPlayer att headSq bd
+             then Just (DropMove Gold headSq)
+             else Nothing
+      , qDTM = 1
+      }
+
+    -- ------------------------------------------------------------------------
+    -- 12. 盤上龍の横すり寄り詰み (Dragon_SideDive: DTM = 1)
+    -- 龍が玉の横（腹）にすり寄って一直線に制圧
+    -- ------------------------------------------------------------------------
+  , QuotientPattern
+      { qName = "Dragon_SideDive_DTM1"
+      , qTargetKingRank = \_ -> True
+      , qSurroundings = []
+      , qRequiredHand = []
+      , qSupportCheck = \_ _ _ -> True
+      , qCandidateMove = \(kx, ky) att bd ->
+          let dragons = [ (sq, p) | (sq, p@(Piece pPlr pt)) <- Map.toList bd, pPlr == att, pt == PRook ]
+              sideTargets = [ (kx - 1, ky), (kx + 1, ky) ]
+              validMoves = [ NormalMove dSq tSq False
+                           | (dSq, p) <- dragons
+                           , tSq <- sideTargets
+                           , not (isOutOfBounds tSq)
+                           , canPieceReach dSq p tSq bd
+                           ]
+          in listToMaybe validMoves
+      , qDTM = 1
+      }
+
+    -- ------------------------------------------------------------------------
+    -- 13. 一間竜イデアル (Ikken-Ryu: DTM = 3 - バックプロパゲーション)
     -- 間に1マス挟んだ龍と金銀の連携。1手目の王手に対して玉が逃げても頭金で詰み
     -- ------------------------------------------------------------------------
   , QuotientPattern
       { qName = "IkkenRyu_DTM3"
       , qTargetKingRank = \(_, ky) -> ky <= 3 || ky >= 7
       , qSurroundings = []
-      , qRequiredHand = [(Silver, 1), (Gold, 1)] -- 詰めろ持ち駒
+      , qRequiredHand = [(Silver, 1), (Gold, 1)]
       , qSupportCheck = \_ _ _ -> True
       , qCandidateMove = \(kx, ky) att bd ->
-          -- 龍が同じ筋にいて1マス空いているか
           let rRookSq = listToMaybe [ sq | (sq@(rx, ry), Piece p pt) <- Map.toList bd
                                          , p == att, pt == PRook, rx == kx, abs (ry - ky) == 2 ]
           in case rRookSq of
                Just _ ->
-                 -- 間のマスに銀または金を放り込む最善手
                  let dirY = if att == Sente then 1 else -1
                      midSq = (kx, ky + dirY)
                  in if not (Map.member midSq bd)
@@ -265,7 +462,7 @@ initEndgameTablebase =
       }
 
     -- ------------------------------------------------------------------------
-    -- 6. 送りの手筋イデアル (Okuri_DTM3 - バックプロパゲーション)
+    -- 14. 送りの手筋イデアル (Okuri_DTM3 - バックプロパゲーション)
     -- 玉の退路に捨て駒（銀や飛車）を打ち込んで玉をおびき寄せ、頭金で即詰み
     -- ------------------------------------------------------------------------
   , QuotientPattern
@@ -275,10 +472,210 @@ initEndgameTablebase =
       , qRequiredHand = [(Gold, 1)]
       , qSupportCheck = \_ _ _ -> True
       , qCandidateMove = \(kx, ky) att bd ->
-          let edgeY = if att == Sente then 1 else 9 -- 端段
+          let edgeY = if att == Sente then 1 else 9
               targetSq = (kx, edgeY)
           in if not (Map.member targetSq bd) && isCoveredByPlayer att targetSq bd
              then Just (DropMove Silver targetSq)
+             else Nothing
+      , qDTM = 3
+      }
+
+    -- ------------------------------------------------------------------------
+    -- 15. 金銀挟み撃ちイデアル (HasamiUchi_Pincer: DTM = 3)
+    -- 左右から2枚の金銀で玉を挟み撃ちにして追い詰める
+    -- ------------------------------------------------------------------------
+  , QuotientPattern
+      { qName = "HasamiUchi_Pincer_DTM3"
+      , qTargetKingRank = \_ -> True
+      , qSurroundings = []
+      , qRequiredHand = [(Gold, 1), (Silver, 1)]
+      , qSupportCheck = \_ _ _ -> True
+      , qCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              leftSq = (kx - 1, ky + dirY)
+          in if not (isOutOfBounds leftSq) && not (Map.member leftSq bd)
+             then Just (DropMove Silver leftSq)
+             else Nothing
+      , qDTM = 3
+      }
+
+    -- ------------------------------------------------------------------------
+    -- 16. 焦点の捨て駒イデアル (Focal_Sacrifice: DTM = 3)
+    -- 複数の利きの交点に捨て駒を打ち込み、守備の連結を崩して頭金
+    -- ------------------------------------------------------------------------
+  , QuotientPattern
+      { qName = "Focal_Sacrifice_DTM3"
+      , qTargetKingRank = \_ -> True
+      , qSurroundings = []
+      , qRequiredHand = [(Gold, 1)]
+      , qSupportCheck = \_ _ _ -> True
+      , qCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              focusSq = (kx, ky + 2 * dirY)
+          in if not (isOutOfBounds focusSq) && not (Map.member focusSq bd) && isCoveredByPlayer att focusSq bd
+             then Just (DropMove Silver focusSq)
+             else Nothing
+      , qDTM = 3
+      }
+
+    -- ------------------------------------------------------------------------
+    -- 17. 段違い並び龍イデアル (Staggered_Dragons: DTM = 3)
+    -- 2本の龍・大駒が隣接段を相互にカバーしながら横逃げを完全封鎖
+    -- ------------------------------------------------------------------------
+  , QuotientPattern
+      { qName = "Staggered_Dragons_DTM3"
+      , qTargetKingRank = \(_, ky) -> ky <= 3 || ky >= 7
+      , qSurroundings = []
+      , qRequiredHand = []
+      , qSupportCheck = \_ _ _ -> True
+      , qCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              nextRankSq = (kx, ky + dirY)
+              dragons = [ sq | (sq, Piece p pt) <- Map.toList bd, p == att, pt `elem` [Rook, PRook] ]
+          in case dragons of
+               (d1:_) | not (Map.member nextRankSq bd) && canPieceReach d1 (Piece att PRook) nextRankSq bd ->
+                 Just (NormalMove d1 nextRankSq False)
+               _ -> Nothing
+      , qDTM = 3
+      }
+
+    -- ------------------------------------------------------------------------
+    -- 18. 十字飛車・直交包囲イデアル (CrossRook_Encircle: DTM = 3)
+    -- 縦横のラインで直交封鎖し、退路を消滅させる
+    -- ------------------------------------------------------------------------
+  , QuotientPattern
+      { qName = "CrossRook_Encircle_DTM3"
+      , qTargetKingRank = \_ -> True
+      , qSurroundings = []
+      , qRequiredHand = [(Gold, 1)]
+      , qSupportCheck = \_ _ _ -> True
+      , qCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              headSq = (kx, ky + dirY)
+          in if not (isOutOfBounds headSq) && not (Map.member headSq bd)
+             then Just (DropMove Gold headSq)
+             else Nothing
+      , qDTM = 3
+      }
+
+    -- ------------------------------------------------------------------------
+    -- 19. 頭銀＋尻金コンビネーションイデアル (HeadSilver_BackGold: DTM = 3)
+    -- 頭に銀を打ち、引かせたところに尻金を打ち込んで即詰み
+    -- ------------------------------------------------------------------------
+  , QuotientPattern
+      { qName = "HeadSilver_BackGold_DTM3"
+      , qTargetKingRank = \_ -> True
+      , qSurroundings = []
+      , qRequiredHand = [(Silver, 1), (Gold, 1)]
+      , qSupportCheck = \(kx, ky) bd att ->
+          let dirY = if att == Sente then 1 else -1
+          in isCoveredByPlayer att (kx, ky + dirY) bd
+      , qCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              headSq = (kx, ky + dirY)
+          in if not (isOutOfBounds headSq) && not (Map.member headSq bd) && isCoveredByPlayer att headSq bd
+             then Just (DropMove Silver headSq)
+             else Nothing
+      , qDTM = 3
+      }
+
+    -- ------------------------------------------------------------------------
+    -- 20. 桂打ちフォーク浮かせ＋金突入イデアル (KnightFork_PullIn: DTM = 3)
+    -- 桂打ちフォークで玉を前進させ、浮いた玉に金を押し込んで即詰み
+    -- ------------------------------------------------------------------------
+  , QuotientPattern
+      { qName = "KnightFork_PullIn_DTM3"
+      , qTargetKingRank = \(_, ky) -> ky <= 3 || ky >= 7
+      , qSurroundings = []
+      , qRequiredHand = [(Knight, 1), (Gold, 1)]
+      , qSupportCheck = \_ _ _ -> True
+      , qCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 2 else -2
+              c1 = (kx - 1, ky + dirY)
+              c2 = (kx + 1, ky + dirY)
+              validDrop sq = not (isOutOfBounds sq) && not (Map.member sq bd)
+          in case filter validDrop [c1, c2] of
+               (sq:_) -> Just (DropMove Knight sq)
+               []     -> Nothing
+      , qDTM = 3
+      }
+
+    -- ------------------------------------------------------------------------
+    -- 21. 退路封鎖の捨て駒イデアル (EscapeRoute_Block: DTM = 3)
+    -- 玉の逃げ道となるマスに捨て駒を打ち込んで退路を塞ぐ
+    -- ------------------------------------------------------------------------
+  , QuotientPattern
+      { qName = "EscapeRoute_Block_DTM3"
+      , qTargetKingRank = \_ -> True
+      , qSurroundings = []
+      , qRequiredHand = [(Gold, 1)]
+      , qSupportCheck = \_ _ _ -> True
+      , qCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then -1 else 1 -- 退路
+              escapeSq = (kx, ky + dirY)
+          in if not (isOutOfBounds escapeSq) && not (Map.member escapeSq bd)
+             then Just (DropMove Silver escapeSq)
+             else Nothing
+      , qDTM = 3
+      }
+
+    -- ------------------------------------------------------------------------
+    -- 22. 挟撃必至イデアル (Pincer_Brinkmate: DTM = 5 または 必至)
+    -- 逃げ道がなく、どのような合駒をしても次に頭金が防げない必至構造
+    -- ------------------------------------------------------------------------
+  , QuotientPattern
+      { qName = "Pincer_Brinkmate_DTM5"
+      , qTargetKingRank = \_ -> True
+      , qSurroundings = []
+      , qRequiredHand = [(Gold, 2)]
+      , qSupportCheck = \_ _ _ -> True
+      , qCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              headSq = (kx, ky + dirY)
+          in if not (isOutOfBounds headSq) && not (Map.member headSq bd)
+             then Just (DropMove Gold headSq)
+             else Nothing
+      , qDTM = 5
+      }
+
+    -- ------------------------------------------------------------------------
+    -- 23. 空き王手イデアル (Discovered_Checkmate: DTM = 3)
+    -- 障害駒を動かして背後の大駒の射線を開放し、同時に王手をかける
+    -- ------------------------------------------------------------------------
+  , QuotientPattern
+      { qName = "Discovered_Checkmate_DTM3"
+      , qTargetKingRank = \_ -> True
+      , qSurroundings = []
+      , qRequiredHand = []
+      , qSupportCheck = \_ _ _ -> True
+      , qCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              blockerSq = (kx, ky + dirY)
+          in case Map.lookup blockerSq bd of
+               Just (Piece p _) | p == att ->
+                 let escapeSq = (kx + 1, ky + dirY)
+                 in if not (isOutOfBounds escapeSq) && not (Map.member escapeSq bd)
+                    then Just (NormalMove blockerSq escapeSq False)
+                    else Nothing
+               _ -> Nothing
+      , qDTM = 3
+      }
+
+    -- ------------------------------------------------------------------------
+    -- 24. 底歩外し・龍すり寄りイデアル (Ryu_SokoFu: DTM = 3)
+    -- 守備の底歩や合駒を無力化し、龍を玉に密着させて即詰み
+    -- ------------------------------------------------------------------------
+  , QuotientPattern
+      { qName = "Ryu_SokoFu_DTM3"
+      , qTargetKingRank = \_ -> True
+      , qSurroundings = []
+      , qRequiredHand = [(Pawn, 1)]
+      , qSupportCheck = \_ _ _ -> True
+      , qCandidateMove = \(kx, ky) att bd ->
+          let dirY = if att == Sente then 1 else -1
+              sokoSq = (kx, ky + dirY)
+          in if not (isOutOfBounds sokoSq) && not (Map.member sokoSq bd)
+             then Just (DropMove Pawn sokoSq)
              else Nothing
       , qDTM = 3
       }
