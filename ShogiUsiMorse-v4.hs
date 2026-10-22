@@ -118,8 +118,8 @@ showSquare (f, r) = show f ++ [chr (ord 'a' + r - 1)]
 
 -- USI文字列を座標に変換 (例: "7g" -> (7, 7))
 parseSquare :: String -> Square
-parseSquare [f, r] = (digitToInt f, ord r - ord 'a' + 1)
-parseSquare _      = (1, 1)
+parseSquare [f, r] | isDigit f = (digitToInt f, ord r - ord 'a' + 1)
+parseSquare _                  = (1, 1)
 
 -- 指し手表現
 data Move 
@@ -138,23 +138,23 @@ showMove (DropMove p to) =
         _      -> ' '
   in pieceChar : '*' : showSquare to
 
--- USI指し手文字列のパース（大文字小文字両対応）
+-- USI指し手文字列のパース（大文字小文字両対応、先頭'+'の冗長成駒表記耐性）
 parseMove :: String -> Move
-parseMove str
-  | '*' `elem` str =
-      case break (== '*') str of
-        (pStr, _:toStr) ->
-          let pt = case map toUpper pStr of
-                ('P':_) -> Pawn ; ('L':_) -> Lance ; ('N':_) -> Knight
-                ('S':_) -> Silver ; ('G':_) -> Gold ; ('B':_) -> Bishop ; ('R':_) -> Rook
-                _       -> Pawn
-          in DropMove pt (parseSquare toStr)
-        _ -> DropMove Pawn (1, 1)
-  | otherwise =
-      let fromStr = take 2 str
-          toStr   = take 2 (drop 2 str)
-          promo   = "+" `isSuffixOf` str
-      in NormalMove (parseSquare fromStr) (parseSquare toStr) promo
+parseMove rawStr =
+  let str = dropWhile (== '+') rawStr
+  in if '*' `elem` str
+     then case break (== '*') str of
+            (pStr, _:toStr) ->
+              let pt = case map toUpper pStr of
+                    ('P':_) -> Pawn ; ('L':_) -> Lance ; ('N':_) -> Knight
+                    ('S':_) -> Silver ; ('G':_) -> Gold ; ('B':_) -> Bishop ; ('R':_) -> Rook
+                    _       -> Pawn
+              in DropMove pt (parseSquare toStr)
+            _ -> DropMove Pawn (1, 1)
+     else let fromStr = take 2 str
+              toStr   = take 2 (drop 2 str)
+              promo   = "+" `isSuffixOf` str
+          in NormalMove (parseSquare fromStr) (parseSquare toStr) promo
 
 -- 指し手の適用（トポロジー歴史履歴 history の自動蓄積）
 applyMove :: Move -> State -> State
@@ -928,8 +928,23 @@ isBlunderMove st m
           -- 相手の歩の利きがあるマスに桂馬・銀・金・角・飛が飛び込むのは、たとえ紐があってもタダ捨て・大損交換！
           hasEnemyPawnControl = any (\(_, Piece _ opt) -> opt == Pawn) oppAttackers
           isPawnFodder = hasEnemyPawnControl && ptMoved `elem` [Knight, Silver, Gold, Bishop, Rook] && not isCheck && not isCapturingValuable
-      in if isMajorSuicideCheck || isMajorCheapTradeCheck
-         then True -- 大駒のただ捨て王手・大損交換王手は100%絶対タダ捨て大悪手！
+          
+          -- 5. 自玉周りの着手で、着手後の局面が相手のQEGTB即詰み（DTM 1）に該当してしまう自爆手を完全排除
+          curKingSq = findKing plr bd
+          isKingMove = case m of
+            NormalMove f _ _ -> case Map.lookup f bd of
+                                  Just (Piece p King) -> p == plr
+                                  _                   -> False
+            _                -> False
+          isNearKing = case curKingSq of
+            Just (kx, ky) -> max (abs (fst toSq - kx)) (abs (snd toSq - ky)) <= 2
+            Nothing       -> False
+          isSelfSuicideQegtb = (isKingMove || isNearKing) &&
+            case lookupQuotientTablebase nextSt of
+              Just (1, _) -> True
+              _           -> False
+      in if isMajorSuicideCheck || isMajorCheapTradeCheck || isSelfSuicideQegtb
+         then True -- 大駒のただ捨て王手・大損交換王手・自爆QEGTB飛び込みは100%絶対大悪手！
          else if isPawnFodder
          then True -- 「桂馬の高跳び歩の餌食」等は絶対タダ捨て大悪手！
          else if isCheck || isCapturingValuable || (isMajorPromotion && not (null friendlyDefenders)) || isNumericalSuperiority
@@ -1541,9 +1556,13 @@ searchAlphaBeta weights depth alpha beta st =
                      NormalMove (3, 3) (3, 4) _ | turn st == Gote  -> 220.0
                      _ -> 0.0
                    
+                   -- ★ 自玉周りの指し手において、駒の配置空間が相手のQEGTBにない局面になる手を最優先！
+                   antiQuotientSafetyBonus = evalAntiQuotientSafety st m
+                   
                    s = evaluateState weights (turn st) nextSt
                in s + blunderPen + lancePen + checkBonus + forkBonus + tacticalBonus
                   + discoveredBonus + rayUnblockBonus + potentialAlignBonus + quotientEquivBonus
+                   + antiQuotientSafetyBonus
              orderedMoves = sortBy (\m1 m2 -> compare (scoreMove m2) (scoreMove m1)) effectiveMoves
              -- 王手をかけられているときはすべての王手回避手を読み、それ以外は上位14手を深く読む
              topMoves = if inCheck then effectiveMoves else take (if depth >= 2 then 14 else 10) orderedMoves
@@ -1861,6 +1880,82 @@ evalQuotientEquivalence st m =
             in fromIntegral newSupportedNeighbors * 150.0
           Nothing -> 0.0
   in qegtbDirectHitScore + escapeReductionScore + idealSupportScore
+
+-- | 自玉周りの指し手の選択において、駒の配置空間が相手のQEGTB（商空間エンドゲームテーブル）にない局面になる手を優先
+-- 1. 自玉自身の移動、自玉から2マス以内への移動・駒打ち、自玉王手回避手など「自玉周りの手」を判定
+-- 2. 指した後の局面 nextSt で相手視点から見て自玉がQEGTB即詰み・詰めろ同値類に該当する場合（自爆手）は特大ペナルティ（-8000.0）
+-- 3. 相手視点から見て自玉がQEGTBに存在しない（配置空間がQEGTBにない安全空間）局面になる手には特大優先ボーナス（+850.0）
+-- 4. 自玉脱出路の確保度、周囲の相手の利きの排除、自陣の紐・守備駒の配置度を加算評価
+evalAntiQuotientSafety :: State -> Move -> Double
+evalAntiQuotientSafety st m =
+  let plr = turn st
+      opp = opponent plr
+      curBd = board st
+      nextSt = applyMove m st
+      nextBd = board nextSt
+      
+      curKingSq = findKing plr curBd
+      nextKingSq = findKing plr nextBd
+      
+      isKingMove = case m of
+        NormalMove f _ _ -> case Map.lookup f curBd of
+                              Just (Piece p King) -> p == plr
+                              _                   -> False
+        _                -> False
+        
+      toSq = case m of
+        NormalMove _ t _ -> t
+        DropMove _ t     -> t
+        
+      isNearKing = case curKingSq of
+        Just (kx, ky) -> max (abs (fst toSq - kx)) (abs (snd toSq - ky)) <= 2
+        Nothing       -> False
+        
+      isUnderCheck = isKingUnderAttack plr curBd
+      isSelfKingRelated = isKingMove || isNearKing || isUnderCheck
+      
+  in if not isSelfKingRelated
+     then 0.0
+     else
+       -- 指した後の局面で、相手手番から見て相手が自玉をQEGTBで即詰み・詰めろにできるか照合
+       case lookupQuotientTablebase nextSt of
+         -- 相手視点のQEGTBに該当してしまう（自ら相手のQEGTB詰み網に飛び込む悪手！）
+         Just (dtm, _) ->
+           if dtm == 1 then -8000.0 else -4000.0
+         -- 相手視点のQEGTBに存在しない（配置空間がQEGTBにない安全空間！）
+         Nothing ->
+           let -- 自玉の脱出トポロジー（逃げ道）の広さ
+               escapesBonus = case nextKingSq of
+                 Just nkSq ->
+                   let escapes = length (getKingEscapes plr nkSq nextBd)
+                   in fromIntegral escapes * 160.0
+                 Nothing -> 0.0
+               
+               -- 自玉周り（隣接8マス）における相手の利きの少なさ（脅威の排除）
+               threatReductionBonus = case nextKingSq of
+                 Just (nkx, nky) ->
+                   let neighbors = [ (nkx + dx, nky + dy)
+                                   | dx <- [-1..1], dy <- [-1..1], (dx, dy) /= (0, 0)
+                                   , not (isOutOfBounds (nkx + dx, nky + dy))
+                                   ]
+                       oppThreats = length [ sq | sq <- neighbors, isSquareUnderAttack opp sq nextBd ]
+                   in if oppThreats == 0 then 400.0 else fromIntegral (max 0 (8 - oppThreats)) * 40.0
+                 Nothing -> 0.0
+               
+               -- 自玉周り（隣接8マス）における味方の利き（守備・紐）の厚み
+               friendlySupportBonus = case nextKingSq of
+                 Just (nkx, nky) ->
+                   let neighbors = [ (nkx + dx, nky + dy)
+                                   | dx <- [-1..1], dy <- [-1..1], (dx, dy) /= (0, 0)
+                                   , not (isOutOfBounds (nkx + dx, nky + dy))
+                                   ]
+                       friendlyGuards = length [ sq | sq <- neighbors, isSquareUnderAttack plr sq nextBd ]
+                   in fromIntegral friendlyGuards * 50.0
+                 Nothing -> 0.0
+               
+               -- 「配置空間がQEGTBにない」安全空間確保の基本ボーナス！
+               safeNonQegtbBonus = 850.0
+           in safeNonQegtbBonus + escapesBonus + threatReductionBonus + friendlySupportBonus
 
 calcTimeLimitMicros :: Player -> [String] -> Int
 calcTimeLimitMicros ply tokens =
