@@ -16,68 +16,6 @@ import qualified Data.Map as Map
 -- 1. 収束した臨界ノードの定義（Type-Level Symbols）
 -- ============================================================================
 
--- | Node ID: AggressiveCentralRook_Melee (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly03_8h3c+ (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly03_8h4d (Type: Saddle, Potential: 50.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly04_2b5e (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly04_2b6f (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly05_8h3c+ (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly05_8h4d (Type: Saddle, Potential: 50.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly06_2b5e (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly06_2b6f (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly07_8h3c+ (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly07_8h4d (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly08_2b5e (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly08_2b6f (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly09_8h3c+ (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly09_8h4d (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly10_1a1d (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly10_1a1e (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly11_8h2b (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly11_8h4d (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly12_1a1b (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly13_2b1c (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly13_2b3a (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly14_1a1b (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly14_1a1c (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly15_1i1h (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly15_2b1c (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly16_1a1c (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly16_1g1h (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly17_1i1h (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly17_2b3a (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly18_1g2h (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly18_3a2b (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly19_2b3a (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly19_2b4d (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly20_1h1g (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly20_1h2h (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly21_2b3a (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly21_2b4d (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly22_1i1h (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly22_3a2b (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly23_2b3a (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly23_2b4d (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly24_2i2h (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly24_4a3b (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly25_2b3b (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly25_2b4d (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly26_N*4b (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly27_3a4a (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly27_3c2d (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly29_3a3b (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly29_3a4a (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly31_3b4b (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly31_4g4f (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly32_8b4b (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly33_4b5a (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly33_4b5a+ (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly34_3i3h (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly34_3i4i (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly35_4b5a (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly35_4b5a+ (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly36_2c2d (Type: Saddle, Potential: 0.0)
--- | Node ID: AggressiveCentralRook_Melee_DevPly36_3e3f (Type: Saddle, Potential: 0.0)
 -- | Node ID: Aigakari_StratifiedEquilibrium (Type: Saddle, Potential: 0.0)
 -- | Node ID: Aigakari_StratifiedEquilibrium_DevPly03_8h3c+ (Type: Saddle, Potential: 0.0)
 -- | Node ID: Aigakari_StratifiedEquilibrium_DevPly03_8h4d (Type: Saddle, Potential: 50.0)
@@ -342,60 +280,89 @@ import qualified Data.Map as Map
 -- | Node ID: EarlyIshidaMelee_DevPly35_2b1a (Type: Saddle, Potential: 0.0)
 -- | Node ID: EarlyIshidaMelee_DevPly36_1f1g (Type: Saddle, Potential: 0.0)
 -- | Node ID: EarlyIshidaMelee_DevPly36_1f1g+ (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly04_2b5e (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly06_2b5e (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly06_2b6f (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly08_2b5e (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly08_2b6f (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly09_8h3c+ (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly09_8h4d (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly10_2b5e (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly10_2b6f (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly11_8h3c+ (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly11_8h4d (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly12_2a3c (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly12_2b5e (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly13_8h3c+ (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly13_8h4d (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly14_2a3c (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly14_2b5e (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly15_8h3c+ (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly15_8h4d (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly16_2a3c (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly16_B*1f (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly17_8h3c+ (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly17_8h4d (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly18_2a3c (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly18_B*1f (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly19_8h3c+ (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly19_8h4d (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly20_2a3c (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly20_B*1f (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly21_8h3c+ (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly21_8h4d (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly22_2a3c (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly22_B*1f (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly23_8h3c+ (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly23_8h4d (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly24_2a3c (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly24_8d7e (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly25_8h3c+ (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly25_8h4d (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly26_2a3c (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly26_8d7e (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly27_8h3c+ (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly27_8h4d (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly28_2a3c (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly28_8d7e (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly29_8h3c+ (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly29_8h4d (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly30_2a3c (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly30_8d7e (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly31_8h3c+ (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly31_8h4d (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly32_2a3c (Type: Saddle, Potential: 0.0)
--- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly32_8b8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly03_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly03_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly04_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly04_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly05_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly05_8h5e (Type: Saddle, Potential: 50.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly06_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly06_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly07_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly07_8h5e (Type: Saddle, Potential: 50.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly08_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly08_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly09_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly09_8h5e (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly10_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly10_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly11_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly11_8h5e (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly12_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly12_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly13_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly13_8h5e (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly14_4d3e (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly15_4f3e (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly15_4f5e (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly16_4d3e (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly17_2h2e (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly17_4f3e (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly18_4d3e (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly19_2d1d (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly19_2d2c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly20_4d3e (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly21_2h2c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly21_2h2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly22_4d3e (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly23_2h2c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly23_2h2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly24_4d3e (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly25_2h2c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly25_2h2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly26_4d3e (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly27_2h2c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly27_2h2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly28_4d3e (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly29_2h2c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly29_2h2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly30_4d3e (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly31_2h2c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly31_2h2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly32_2b4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly33_2h2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly33_2h2e (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly34_5e3e (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly34_5e4e (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly35_2h2c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly35_2h2d (Type: Saddle, Potential: 50.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly36_1a1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly36_1a1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly37_2h2c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly37_2h2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly38_2b3a (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly38_S*1e (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly39_2h2c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly39_2h2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly40_2a3c (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly40_2b3a (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly41_2h2c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly41_2h2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly42_1a1b (Type: Saddle, Potential: 50.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly42_3d3e (Type: Saddle, Potential: 50.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly43_2a1b (Type: Saddle, Potential: 50.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly43_2a2b (Type: Saddle, Potential: 50.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly44_1a1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly44_1a1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly45_2c1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly45_2c3c (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly46_1a1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly46_3a4b (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly47_P*2b (Type: Saddle, Potential: 50.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly47_P*2c (Type: Saddle, Potential: 50.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly48_5b4b (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly48_5b5a (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly03_8h3c+ (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly03_8h4d (Type: Saddle, Potential: 50.0)
@@ -1085,6 +1052,137 @@ import qualified Data.Map as Map
 -- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly27_7g4d (Type: Saddle, Potential: 0.0)
 -- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly28_B*1e (Type: Saddle, Potential: 0.0)
 -- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly28_B*1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly03_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly03_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly04_2b5e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly04_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly05_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly05_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly06_2b5e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly06_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly07_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly07_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly08_2b5e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly08_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly09_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly09_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly10_2b5e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly10_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly11_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly11_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly12_2b5e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly12_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly13_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly13_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly14_5a4b (Type: Saddle, Potential: 50.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly14_5a5b (Type: Saddle, Potential: 50.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly15_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly15_B*1d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly16_5a5b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly16_5a6b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly17_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly17_B*1d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly18_5a5b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly18_8b8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly19_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly19_B*1d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly20_2b3a (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly20_4b3a (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly21_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly21_B*1d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly22_4b3c (Type: Saddle, Potential: 50.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly22_4b4a (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly23_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly23_B*1d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly24_8b8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly24_8b8g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly25_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly25_B*1d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly26_8b8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly26_8b8g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly27_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly27_B*1d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly28_8b8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly28_8b8g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly29_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly29_B*1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly30_8b8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly30_8b8g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly31_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly31_B*1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly32_8d8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly32_8d8g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly33_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly33_B*1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly34_7d7e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly34_B*1e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly35_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly35_B*1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly36_1a1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly36_1a1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly37_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly37_B*1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly38_8e7e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly38_8e8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly39_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly39_B*1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly40_B*1e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly40_B*1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly41_5e3e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly41_5e4e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly43_5c4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly43_5c4d+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly45_5e3e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly45_5e4e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly46_4d3e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly46_B*1e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly03_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly03_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly04_2b5e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly04_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly05_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly05_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly06_2b5e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly06_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly07_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly07_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly08_2b5e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly08_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly09_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly09_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly22_6c5d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly24_6c5d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly24_8b8e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly26_6c5d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly26_8f9f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly28_6c5d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly28_8b8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly30_6c5d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly30_8b8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly32_6c5d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly32_8b8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly34_6c5d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly34_8b8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly35_8h7g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly35_8i7g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly36_6c5d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly36_6e5g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly38_2c2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly38_4a5b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly39_N*1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly39_N*1e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly40_2c2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly40_4a5b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly41_4f4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly41_4f4e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly42_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly42_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly43_4f4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly43_4f6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly44_2b5e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteNakabisha_IronMino_Equilibrium_DevPly44_2b6f (Type: Saddle, Potential: 0.0)
 -- | Node ID: Shikenbisha_StratifiedEquilibrium (Type: Saddle, Potential: 0.0)
 -- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly03_8h3c+ (Type: Saddle, Potential: 0.0)
 -- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly03_8h4d (Type: Saddle, Potential: 50.0)
@@ -1756,60 +1854,220 @@ type family ValidTransition (from :: Symbol) (to :: Symbol) :: Bool where
   ValidTransition "Start" "Sankenbisha_StratifiedEquilibrium_DevPly03_8h4d" = 'True
   ValidTransition "Start" "Sankenbisha_StratifiedEquilibrium_DevPly03_8h3c+" = 'True
   ValidTransition "Start" "Sankenbisha_StratifiedEquilibrium" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly32_2a3c" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly32_8b8f" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly31_8h4d" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly31_8h3c+" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly30_2a3c" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly30_8d7e" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly29_8h4d" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly29_8h3c+" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly28_2a3c" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly28_8d7e" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly27_8h4d" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly27_8h3c+" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly26_2a3c" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly26_8d7e" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly25_8h4d" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly25_8h3c+" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly24_2a3c" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly24_8d7e" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly23_8h4d" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly23_8h3c+" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly22_2a3c" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly22_B*1f" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly21_8h4d" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly21_8h3c+" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly20_2a3c" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly20_B*1f" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly19_8h4d" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly19_8h3c+" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly18_2a3c" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly18_B*1f" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly17_8h4d" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly17_8h3c+" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly16_2a3c" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly16_B*1f" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly15_8h4d" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly15_8h3c+" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly14_2a3c" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly14_2b5e" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly13_8h4d" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly13_8h3c+" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly12_2a3c" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly12_2b5e" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly11_8h4d" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly11_8h3c+" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly10_2b5e" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly10_2b6f" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly09_8h4d" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly09_8h3c+" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly08_2b5e" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly08_2b6f" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly06_2b5e" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly06_2b6f" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly04_2b5e" = 'True
-  ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly44_2b5e" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly44_2b6f" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly43_4f6f" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly43_4f4d" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly42_2b6f" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly42_2b7g+" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly41_4f4e" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly41_4f4d" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly40_2c2d" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly40_4a5b" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly39_N*1c" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly39_N*1e" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly38_2c2d" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly38_4a5b" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly36_6c5d" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly36_6e5g+" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly35_8h7g" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly35_8i7g" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly34_6c5d" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly34_8b8f" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly32_6c5d" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly32_8b8f" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly30_6c5d" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly30_8b8f" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly28_6c5d" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly28_8b8f" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly26_6c5d" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly26_8f9f" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly24_6c5d" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly24_8b8e" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly22_6c5d" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly09_8h4d" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly09_8h3c+" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly08_2b5e" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly08_2b6f" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly07_8h4d" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly07_8h3c+" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly06_2b5e" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly06_2b6f" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly05_8h4d" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly05_8h3c+" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly04_2b5e" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly04_2b6f" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly03_8h4d" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly03_8h3c+" = 'True
+  ValidTransition "Start" "SenteNakabisha_IronMino_Equilibrium" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly48_5b4b" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly48_5b5a" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly47_P*2b" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly47_P*2c" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly46_1a1b" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly46_3a4b" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly45_2c1c" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly45_2c3c" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly44_1a1b" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly44_1a1c" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly43_2a2b" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly43_2a1b" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly42_1a1b" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly42_3d3e" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly41_2h2d" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly41_2h2c+" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly40_2a3c" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly40_2b3a" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly39_2h2d" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly39_2h2c+" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly38_2b3a" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly38_S*1e" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly37_2h2d" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly37_2h2c+" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly36_1a1b" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly36_1a1c" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly35_2h2d" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly35_2h2c+" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly34_5e4e" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly34_5e3e" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly33_2h2e" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly33_2h2d" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly32_2b4d" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly31_2h2d" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly31_2h2c+" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly30_4d3e" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly29_2h2d" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly29_2h2c+" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly28_4d3e" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly27_2h2d" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly27_2h2c+" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly26_4d3e" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly25_2h2d" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly25_2h2c+" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly24_4d3e" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly23_2h2d" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly23_2h2c+" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly22_4d3e" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly21_2h2d" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly21_2h2c+" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly20_4d3e" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly19_2d1d" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly19_2d2c+" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly18_4d3e" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly17_2h2e" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly17_4f3e" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly16_4d3e" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly15_4f3e" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly15_4f5e" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly14_4d3e" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly13_8h5e" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly13_8h4d" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly12_2b6f" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly12_2b7g+" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly11_8h5e" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly11_8h4d" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly10_2b6f" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly10_2b7g+" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly09_8h5e" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly09_8h4d" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly08_2b6f" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly08_2b7g+" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly07_8h5e" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly07_8h4d" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly06_2b6f" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly06_2b7g+" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly05_8h5e" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly05_8h4d" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly04_2b6f" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly04_2b7g+" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly03_8h4d" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly03_8h3c+" = 'True
+  ValidTransition "Start" "GoteGokigen_IronDefense_Equilibrium" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly46_4d3e" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly46_B*1e" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly45_5e4e" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly45_5e3e" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly43_5c4d+" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly43_5c4d" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly41_5e4e" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly41_5e3e" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly40_B*1e" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly40_B*1g" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly39_B*1b" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly39_B*1c" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly38_8e7e" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly38_8e8f" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly37_B*1b" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly37_B*1c" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly36_1a1b" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly36_1a1c" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly35_B*1b" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly35_B*1c" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly34_7d7e" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly34_B*1e" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly33_B*1b" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly33_B*1c" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly32_8d8f" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly32_8d8g+" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly31_B*1b" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly31_B*1c" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly30_8b8f" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly30_8b8g+" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly29_B*1b" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly29_B*1c" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly28_8b8f" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly28_8b8g+" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly27_B*1b" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly27_B*1d" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly26_8b8f" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly26_8b8g+" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly25_B*1b" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly25_B*1d" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly24_8b8f" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly24_8b8g+" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly23_B*1b" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly23_B*1d" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly22_4b3c" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly22_4b4a" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly21_B*1b" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly21_B*1d" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly20_2b3a" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly20_4b3a" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly19_B*1b" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly19_B*1d" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly18_5a5b" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly18_8b8f" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly17_B*1b" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly17_B*1d" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly16_5a5b" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly16_5a6b" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly15_B*1b" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly15_B*1d" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly14_5a4b" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly14_5a5b" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly13_8h4d" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly13_8h3c+" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly12_2b5e" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly12_2b6f" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly11_8h4d" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly11_8h3c+" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly10_2b5e" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly10_2b6f" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly09_8h4d" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly09_8h3c+" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly08_2b5e" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly08_2b6f" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly07_8h4d" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly07_8h3c+" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly06_2b5e" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly06_2b6f" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly05_8h4d" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly05_8h3c+" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly04_2b5e" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly04_2b6f" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly03_8h4d" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly03_8h3c+" = 'True
+  ValidTransition "Start" "SenteKakuexchange_IronMino_Equilibrium" = 'True
   ValidTransition "Start" "SujichigaiBishop_Melee_DevPly36_2c2d" = 'True
   ValidTransition "Start" "SujichigaiBishop_Melee_DevPly36_3c2d" = 'True
   ValidTransition "Start" "SujichigaiBishop_Melee_DevPly35_2a2b" = 'True
@@ -1938,68 +2196,6 @@ type family ValidTransition (from :: Symbol) (to :: Symbol) :: Bool where
   ValidTransition "Start" "Early3eBlitz_Melee_DevPly03_8h4d" = 'True
   ValidTransition "Start" "Early3eBlitz_Melee_DevPly03_8h3c+" = 'True
   ValidTransition "Start" "Early3eBlitz_Melee" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly36_2c2d" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly36_3e3f" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly35_4b5a+" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly35_4b5a" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly34_3i4i" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly34_3i3h" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly33_4b5a+" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly33_4b5a" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly32_8b4b" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly31_3b4b" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly31_4g4f" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly29_3a4a" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly29_3a3b" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly27_3a4a" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly27_3c2d" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly26_N*4b" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly25_2b4d" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly25_2b3b" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly24_2i2h" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly24_4a3b" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly23_2b3a" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly23_2b4d" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly22_1i1h" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly22_3a2b" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly21_2b3a" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly21_2b4d" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly20_1h2h" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly20_1h1g" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly19_2b3a" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly19_2b4d" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly18_1g2h" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly18_3a2b" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly17_1i1h" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly17_2b3a" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly16_1a1c" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly16_1g1h" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly15_1i1h" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly15_2b1c" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly14_1a1b" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly14_1a1c" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly13_2b1c" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly13_2b3a" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly12_1a1b" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly11_8h4d" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly11_8h2b" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly10_1a1d" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly10_1a1e" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly09_8h4d" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly09_8h3c+" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly08_2b5e" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly08_2b6f" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly07_8h4d" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly07_8h3c+" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly06_2b5e" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly06_2b6f" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly05_8h4d" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly05_8h3c+" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly04_2b5e" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly04_2b6f" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly03_8h4d" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly03_8h3c+" = 'True
-  ValidTransition "Start" "AggressiveCentralRook_Melee" = 'True
   ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly36_1f1g+" = 'True
   ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly36_1f1g" = 'True
   ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly35_1h1g" = 'True
@@ -2678,60 +2874,220 @@ runtimePaths = Map.fromList
     (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly03_8h4d"), ["7g7f","3c3d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
     (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly03_8h3c+"), ["7g7f","3c3d","8h3c+","2a3c","1g1f","B*4h","2h4h","1a1b","B*6b"]),
     (("Start", "Sankenbisha_StratifiedEquilibrium"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","1g1f","1c1d","3g3f","2b3c","7h7f","4b5a","6i7h","8e8f","7f8f","8b8f","7g8f","B*1g","S*4b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly32_2a3c"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","3g3f","8d7c","S*7h","2a3c","P*3b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly32_8b8f"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","3g3f","8d7c","S*7h","8b8f","P*3b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly31_8h4d"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","3g3f","8d7c","8h4d","4c4d","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly31_8h3c+"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","3g3f","8d7c","8h3c+","2a3c","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly30_2a3c"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","3g3f","2a3c","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly30_8d7e"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","3g3f","8d7e","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly29_8h4d"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","8h4d","4c4d","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly29_8h3c+"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","8h3c+","2a3c","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly28_2a3c"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","2f2e","8e8f","8g8f","8b8f","P*8g","2a3c","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly28_8d7e"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","2f2e","8e8f","8g8f","8b8f","P*8g","8d7e","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly27_8h4d"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","2f2e","8e8f","8g8f","8b8f","8h4d","4c4d","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly27_8h3c+"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","2f2e","8e8f","8g8f","8b8f","8h3c+","2a3c","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly26_2a3c"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","2f2e","8e8f","8g8f","2a3c","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly26_8d7e"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","2f2e","8e8f","8g8f","8d7e","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly25_8h4d"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","2f2e","8e8f","8h4d","4c4d","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly25_8h3c+"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","2f2e","8e8f","8h3c+","2a3c","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly24_2a3c"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","2f2e","2a3c","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly24_8d7e"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","2f2e","8d7e","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly23_8h4d"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","8h4d","4c4d","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly23_8h3c+"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","8h3c+","2a3c","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly22_2a3c"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","2a3c","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly22_B*1f"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","B*1f","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly21_8h4d"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","8h4d","4c4d","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly21_8h3c+"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","8h3c+","2a3c","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly20_2a3c"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","2a3c","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly20_B*1f"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","B*1f","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly19_8h4d"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","8h4d","4c4d","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly19_8h3c+"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","8h3c+","2a3c","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly18_2a3c"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","2a3c","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly18_B*1f"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","B*1f","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly17_8h4d"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","8h4d","4c4d","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly17_8h3c+"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","8h3c+","2a3c","S*2b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly16_2a3c"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","2a3c","P*4b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly16_B*1f"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","B*1f","P*4b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly15_8h4d"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","8h4d","4c4d","P*4b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly15_8h3c+"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","8h3c+","2a3c","P*4b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly14_2a3c"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","2a3c","P*4b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly14_2b5e"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","2b5e","P*4b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly13_8h4d"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","8h4d","2b4d","P*4b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly13_8h3c+"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","8h3c+","2a3c","P*4b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly12_2a3c"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","2a3c","P*5b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly12_2b5e"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","2b5e","P*5b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly11_8h4d"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","8h4d","2b4d","P*5b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly11_8h3c+"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","8h3c+","2a3c","P*5b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly10_2b5e"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","2b5e","P*5b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly10_2b6f"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","2b6f","P*5b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly09_8h4d"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","8h4d","2b4d","P*5b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly09_8h3c+"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","8h3c+","2a3c","P*5b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly08_2b5e"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","2b5e","P*5b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly08_2b6f"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","2b6f","P*5b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly06_2b5e"), ["5g5f","3c3d","5h5e","8c8d","5e5f","2b5e","P*5b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly06_2b6f"), ["5g5f","3c3d","5h5e","8c8d","5e5f","2b6f","P*5b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly04_2b5e"), ["5g5f","3c3d","5h5e","2b5e","5f5e","1c1d","B*6b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","3g3f","8d7c","S*7h","8b8g+","P*3b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly44_2b5e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8a7c","1g1f","1c1d","5h5g","7c6e","7h6h","6e7g+","6h7g","8b8d","5f4f","6c5d","5e5d","6d6e","7g6f","2b5e","S*2b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly44_2b6f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8a7c","1g1f","1c1d","5h5g","7c6e","7h6h","6e7g+","6h7g","8b8d","5f4f","6c5d","5e5d","6d6e","7g6f","2b6f","S*2b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly43_4f6f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8a7c","1g1f","1c1d","5h5g","7c6e","7h6h","6e7g+","6h7g","8b8d","5f4f","6c5d","5e5d","6d6e","4f6f","2b6f","S*2b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly43_4f4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8a7c","1g1f","1c1d","5h5g","7c6e","7h6h","6e7g+","6h7g","8b8d","5f4f","6c5d","5e5d","6d6e","4f4d","2b4d","S*2b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly42_2b6f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8a7c","1g1f","1c1d","5h5g","7c6e","7h6h","6e7g+","6h7g","8b8d","5f4f","6c5d","5e5d","2b6f","S*2b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly42_2b7g+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8a7c","1g1f","1c1d","5h5g","7c6e","7h6h","6e7g+","6h7g","8b8d","5f4f","6c5d","5e5d","2b7g+","S*2b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly41_4f4e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8a7c","1g1f","1c1d","5h5g","7c6e","7h6h","6e7g+","6h7g","8b8d","5f4f","6c5d","4f4e","5d4e","N*2c"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly41_4f4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8a7c","1g1f","1c1d","5h5g","7c6e","7h6h","6e7g+","6h7g","8b8d","5f4f","6c5d","4f4d","2b4d","N*2c"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly40_2c2d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8a7c","1g1f","1c1d","5h5g","7c6e","7h6h","6e7g+","6h7g","8b8d","5f4f","2c2d","N*2c"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly40_4a5b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8a7c","1g1f","1c1d","5h5g","7c6e","7h6h","6e7g+","6h7g","8b8d","5f4f","4a5b","N*2c"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly39_N*1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8a7c","1g1f","1c1d","5h5g","7c6e","7h6h","6e7g+","6h7g","8b8d","N*1c","1a1c","1f1e","8d8g+","1e1d","8g8h","P*3b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly39_N*1e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8a7c","1g1f","1c1d","5h5g","7c6e","7h6h","6e7g+","6h7g","8b8d","N*1e","1d1e","1f1e","8d8g+","P*3b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly38_2c2d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8a7c","1g1f","1c1d","5h5g","7c6e","7h6h","6e7g+","6h7g","2c2d","N*2c"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly38_4a5b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8a7c","1g1f","1c1d","5h5g","7c6e","7h6h","6e7g+","6h7g","4a5b","N*2c"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly36_6c5d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8a7c","1g1f","1c1d","5h5g","7c6e","7h6h","6c5d","5e5d","2b8h+","S*2b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly36_6e5g+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8a7c","1g1f","1c1d","5h5g","7c6e","7h6h","6e5g+","5f5g","8b8g+","N*2c"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly35_8h7g"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8a7c","1g1f","1c1d","5h5g","7c6e","8h7g","6e7g+","7h7g","8b8g+","N*2c"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly35_8i7g"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8a7c","1g1f","1c1d","5h5g","7c6e","8i7g","6e5g+","5f5g","8b8g+","N*2c"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly34_6c5d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8a7c","1g1f","1c1d","5h5g","6c5d","5e5d","2b8h+","S*2b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly34_8b8f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8a7c","1g1f","1c1d","5h5g","8b8f","8g8f","2b5e","R*3b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly32_6c5d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8a7c","1g1f","6c5d","5e5d","2b8h+","S*2b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly32_8b8f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8a7c","1g1f","8b8f","8g8f","2b5e","R*3b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly30_6c5d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","6c5d","5e5d","2b8h+","S*2b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly30_8b8f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8b8f","8g8f","2b5e","R*3b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly28_6c5d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","6c5d","5e5d","2b8h+","S*2b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly28_8b8f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","8b8f","8g8f","2b5e","R*3b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly26_6c5d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","6c5d","8g8f","2b5e","R*3b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly26_8f9f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f9f","9g9f","2b5e","R*3b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly24_6c5d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","6c5d","P*3b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly24_8b8e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8e","P*3b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly22_6c5d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","6c5d","5e5d","2b8h+","S*2b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly09_8h4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","7h8i","B*4h","B*6b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly09_8h3c+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","8h3c+","2a3c","1g1f","B*4h","3i4h","1a1b","B*6b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly08_2b5e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","2b5e","5f5e","1c1d","B*6b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly08_2b6f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","2b6f","6g6f","1c1d","B*6b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly07_8h4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly07_8h3c+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","8h3c+","2a3c","1g1f","B*4h","3i4h","1a1b","B*6b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly06_2b5e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","2b5e","5f5e","1c1d","B*6b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly06_2b6f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","2b6f","6g6f","1c1d","B*6b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly05_8h4d"), ["7g7f","3c3d","5g5f","8c8d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly05_8h3c+"), ["7g7f","3c3d","5g5f","8c8d","8h3c+","2a3c","1g1f","B*4h","2h4h","1a1b","B*6b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly04_2b5e"), ["7g7f","3c3d","5g5f","2b5e","5f5e","1c1d","B*6b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly04_2b6f"), ["7g7f","3c3d","5g5f","2b6f","6g6f","1c1d","B*6b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly03_8h4d"), ["7g7f","3c3d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium_DevPly03_8h3c+"), ["7g7f","3c3d","8h3c+","2a3c","1g1f","B*4h","2h4h","1a1b","B*6b"]),
+    (("Start", "SenteNakabisha_IronMino_Equilibrium"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","4a3b","5f5e","5a4b","3i3h","7a6b","5i4h","6c6d","4h3i","3a4a","3i2h","4b3a","4i3i","6b6c","6i6h","8e8f","8g8f","8b8f","P*8g","8f8b","5h5f","7c7d","6h5h","8a7c","1g1f","1c1d","5h5g","7c6e","7h6h","6e7g+","6h7g","8b8d","5f4f","6c5d","5e5d","6d6e","7g6f","2b6f","S*2b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly48_5b4b"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","2b3a","2a2c","4b3b","2c3b","3a3b","G*4a","5b4b","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly48_5b5a"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","2b3a","2a2c","4b3b","2c3b","3a3b","G*4a","5b5a","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly47_P*2b"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","2b3a","2a2c","4b3b","2c3b","3a3b","P*2b","S*5i","6h5i","B*6h","5i6h","B*5i","6h5i","R*2i"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly47_P*2c"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","2b3a","2a2c","4b3b","2c3b","3a3b","P*2c","3b2c","N*7d","7c7d","S*7a","7b7a","G*7b","5b7b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly46_1a1b"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","2b3a","2a2c","4b3b","2c3b","1a1b","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly46_3a4b"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","2b3a","2a2c","4b3b","2c3b","3a4b","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly45_2c1c"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","2b3a","2a2c","4b3b","2c1c","1a1c","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly45_2c3c"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","2b3a","2a2c","4b3b","2c3c","3b3c","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly44_1a1b"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","2b3a","2a2c","1a1b","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly44_1a1c"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","2b3a","2a2c","1a1c","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly43_2a2b"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","2b3a","2a2b","3a2b","N*7d","7c7d","S*7a","7b7a","1f1e","1d1e"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly43_2a1b"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","2b3a","2a1b","1a1b","N*7d","7c7d","S*7a","7b7a","1f1e","1d1e"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly42_1a1b"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","1a1b","2a2b","S*5i","6h5i","B*6h","5i6h","B*5i","6h5i"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly42_3d3e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","3d3e","2a2b","3e3f","2b4b","5b4b","N*7d","7c7d","S*7a"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly41_2h2d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2d","2c2d","S*7a","7b7a","1f1e","1d1e","1i1e","1a1e","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly41_2h2c+"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2c+","2b2c","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly40_2a3c"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","2a3c","4b5b","S*5i","R*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly40_2b3a"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","2b3a","4b5b","S*5i","R*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly39_2h2d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","2h2d","2c2d","5c7a+","7b7a","1f1e","1d1e","1i1e","1a1e","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly39_2h2c+"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","2h2c+","2b2c","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly38_2b3a"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","2b3a","5c3a+","3b3a","2h2c+","S*5i","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly38_S*1e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","S*1e","1f1e","5a5c","2h2c+","2b2c","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly37_2h2d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","2h2d","2c2d","S*7a","5a7a","1f1e","1d1e","1i1e","1a1e","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly37_2h2c+"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","2h2c+","2b2c","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly36_1a1b"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","1a1b","2b3b","3a3b","2h2c+","3b2c","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly36_1a1c"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","1a1c","2b3b","3a3b","2h2c+","3b2c","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly35_2h2d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","2h2d","2c2d","8h2b+","3a2b","S*7a","5a7a","1f1e","1d1e"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly35_2h2c+"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","2h2c+","3b2c","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly34_5e4e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e4e","3g4e","2b8h+","R*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly34_5e3e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e3e","3f3e","2b8h+","R*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly33_2h2e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","2h2e","5e2e","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly33_2h2d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","2h2d","2c2d","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly32_2b4d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","2b4d","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly31_2h2d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","2h2d","2c2d","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly31_2h2c+"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","2h2c+","3b2c","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly30_4d3e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d3e","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly29_2h2d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2h2d","2c2d","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly29_2h2c+"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2h2c+","3b2c","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly28_4d3e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","4d3e","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly27_2h2d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","2h2d","2c2d","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly27_2h2c+"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","2h2c+","3b2c","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly26_4d3e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","4d3e","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly25_2h2d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","2h2d","2c2d","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly25_2h2c+"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","2h2c+","3b2c","P*8b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly24_4d3e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","4d3e","P*7b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly23_2h2d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","2h2d","2c2d","P*7b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly23_2h2c+"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","2h2c+","3b2c","P*7b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly22_4d3e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","4d3e","P*6b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly21_2h2d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","2h2d","2c2d","P*6b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly21_2h2c+"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","2h2c+","3b2c","P*6b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly20_4d3e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","4d3e","P*5b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly19_2d1d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d1d","1c1d","P*5b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly19_2d2c+"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2c+","3b2c","P*5b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly18_4d3e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","4d3e","P*5b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly17_2h2e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2e","2d2e","8h4d","2b4d","S*4b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly17_4f3e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","4f3e","3d3e","8h4d","2b4d","S*4b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly16_4d3e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","4d3e","8h2b+","3a2b","B*6b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly15_4f3e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","4f3e","3d3e","8h4d","2b4d","S*4b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly15_4f5e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","4f5e","4d5e","8h5e","2b5e","S*4b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly14_4d3e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4d3e","8h2b+","3a2b","B*6b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly13_8h5e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","8h5e","4d5e","1g1f","B*4h","2h4h","1a1b","B*6b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly13_8h4d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","8h4d","2b4d","S*4b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly12_2b6f"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","2b6f","6g6f","1c1d","B*6b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly12_2b7g+"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","2b7g+","8h7g","1c1d","B*6b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly11_8h5e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","8h5e","2b5e","1g1f","5e2h+","1f1e","2h3h","4i3h","S*4h","B*6b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly11_8h4d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly10_2b6f"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","2b6f","6g6f","1c1d","B*6b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly10_2b7g+"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","2b7g+","8h7g","1c1d","B*6b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly09_8h5e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","8h5e","2b5e","1g1f","5e2h+","3i2h","B*1e","B*6b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly09_8h4d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly08_2b6f"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","2b6f","6g6f","1c1d","B*6b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly08_2b7g+"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","2b7g+","8h7g","1c1d","B*6b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly07_8h5e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","8h5e","2b5e","1g1f","5e9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly07_8h4d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly06_2b6f"), ["7g7f","3c3d","2g2f","5c5d","2f2e","2b6f","6g6f","1c1d","B*6b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly06_2b7g+"), ["7g7f","3c3d","2g2f","5c5d","2f2e","2b7g+","8h7g","1c1d","B*6b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly05_8h5e"), ["7g7f","3c3d","2g2f","5c5d","8h5e","2b5e","1g1f","5e9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly05_8h4d"), ["7g7f","3c3d","2g2f","5c5d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly04_2b6f"), ["7g7f","3c3d","2g2f","2b6f","6g6f","1c1d","B*6b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly04_2b7g+"), ["7g7f","3c3d","2g2f","2b7g+","8h7g","1c1d","B*6b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly03_8h4d"), ["7g7f","3c3d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly03_8h3c+"), ["7g7f","3c3d","8h3c+","2a3c","1g1f","B*4h","2h4h","1a1b","B*6b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","2b3a","2a2c","4b3b","2c3b","3a3b","G*4a","3b4a","P*8b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly46_4d3e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","3g3f","8e5e","5g5e","5c4d","B*5c","3b4b","5c4b+","3a4b","G*5a","4d3e","R*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly46_B*1e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","3g3f","8e5e","5g5e","5c4d","B*5c","3b4b","5c4b+","3a4b","G*5a","B*1e","R*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly45_5e4e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","3g3f","8e5e","5g5e","5c4d","B*5c","3b4b","5c4b+","3a4b","5e4e","4d4e","R*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly45_5e3e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","3g3f","8e5e","5g5e","5c4d","B*5c","3b4b","5c4b+","3a4b","5e3e","3d3e","R*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly43_5c4d+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","3g3f","8e5e","5g5e","5c4d","B*5c","3b4b","5c4d+","4c4d","S*2b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly43_5c4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","3g3f","8e5e","5g5e","5c4d","B*5c","3b4b","5c4d","5d5e","S*2b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly41_5e4e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","3g3f","8e5e","5g5e","5c4d","5e4e","4d4e","B*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly41_5e3e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","3g3f","8e5e","5g5e","5c4d","5e3e","3d3e","B*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly40_B*1e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","3g3f","8e5e","5g5e","B*1e","B*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly40_B*1g"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","3g3f","8e5e","5g5e","B*1g","B*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly39_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","3g3f","8e5e","B*1b","5e5g+","4h5g","1a1b","R*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly39_B*1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","3g3f","8e5e","B*1c","5e5g+","1c5g+","B*1g","R*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly38_8e7e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","3g3f","8e7e","B*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly38_8e8f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","3g3f","8e8f","B*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly37_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","B*1b","1a1b","5e5d","8e8g+","P*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly37_B*1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","B*1c","1a1c","5e5d","8e8g+","P*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly36_1a1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","1a1b","B*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly36_1a1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","1a1c","B*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly35_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","B*1b","1a1b","5e5d","8d8g+","P*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly35_B*1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","B*1c","1a1c","5e5d","8d8g+","P*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly34_7d7e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d7e","B*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly34_B*1e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","B*1e","B*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly33_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","B*1b","1a1b","5e5d","5c5d","P*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly33_B*1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","B*1c","1a1c","5e5d","5c5d","P*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly32_8d8f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d8f","B*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly32_8d8g+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d8g+","B*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly31_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","B*1b","1a1b","5e5d","8d8g+","P*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly31_B*1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","B*1c","1a1c","5e5d","8d8g+","P*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly30_8b8f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8f","B*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly30_8b8g+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8g+","B*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly29_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","B*1b","1a1b","1f1e","8b8g+","7h8g","1d1e","R*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly29_B*1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","B*1c","1a1c","1f1e","8b8g+","7h8g","1d1e","R*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly28_8b8f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","8b8f","B*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly28_8b8g+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","8b8g+","B*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly27_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","B*1b","1a1b","1g1f","8b8g+","7h8g","B*1g","R*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly27_B*1d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","B*1d","1c1d","1g1f","8b8g+","7h8g","B*1g","R*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly26_8b8f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","8b8f","B*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly26_8b8g+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","8b8g+","B*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly25_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","B*1b","1a1b","1g1f","8b8g+","7h8g","B*1g","R*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly25_B*1d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","B*1d","1c1d","1g1f","8b8g+","7h8g","B*1g","R*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly24_8b8f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","8b8f","B*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly24_8b8g+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","8b8g+","B*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly23_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","B*1b","1a1b","1g1f","8b8g+","7h8g","B*1g","R*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly23_B*1d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","B*1d","1c1d","1g1f","8b8g+","7h8g","B*1g","R*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly22_4b3c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3c","B*1e","2c2d","1e2d","3c2d","1g1f","8b8g+","7h8g"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly22_4b4a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b4a","B*5b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly21_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","B*1b","1a1b","1g1f","8b8g+","7h8g","B*3i","R*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly21_B*1d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","B*1d","1c1d","1g1f","8b8g+","7h8g","B*3i","R*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly20_2b3a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","2b3a","B*1e","2a3c","1e3c+","4b3c","N*3c"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly20_4b3a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4b3a","B*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly19_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","B*1b","1a1b","1g1f","8b8g+","7h8g","B*5g","R*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly19_B*1d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","B*1d","1c1d","1g1f","8b8g+","7h8g","B*5g","R*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly18_5a5b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a5b","1g1f","8b8g+","7h8g","B*5g","R*5b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly18_8b8f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","8b8f","B*6b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly17_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","B*1b","1a1b","1g1f","8b8g+","7h8g","B*4h","R*5b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly17_B*1d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","B*1d","1c1d","1g1f","8b8g+","7h8g","B*4h","R*5b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly16_5a5b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","5a5b","1g1f","8b8g+","7h8g","B*4h","R*5b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly16_5a6b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","5a6b","B*5a","4a5a","1g1f","8b8g+","7h8g","B*4h","R*6b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly15_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","B*1b","1a1b","1g1f","8b8g+","7h8g","B*4h","R*5b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly15_B*1d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","B*1d","1c1d","1g1f","8b8g+","7h8g","B*4h","R*5b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly14_5a4b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","5a4b","2b3a","4a3a","S*3c","2a3c","B*5a","4b5a","1g1f"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly14_5a5b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","5a5b","2b3a","4a3a","S*4a","3a4a","1g1f","8b8g+","7h8g"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly13_8h4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","7h8i","8b8g+","B*6b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly13_8h3c+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h3c+","2a3c","1g1f","8b8g+","7h8g","B*4h","R*5b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly12_2b5e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","2b5e","8g8f","5e8h+","R*5b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly12_2b6f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","2b6f","8g8f","6f8h+","R*5b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly11_8h4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","8h4d","2b4d","P*5b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly11_8h3c+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","8h3c+","2a3c","P*5b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly10_2b5e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","2b5e","P*5b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly10_2b6f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","2b6f","P*5b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly09_8h4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8h4d","2b4d","8g8f","4d9i+","P*5b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly09_8h3c+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8h3c+","2a3c","8g8f","8b8f","P*5b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly08_2b5e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","2b5e","5f5e","1c1d","B*6b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly08_2b6f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","2b6f","6g6f","1c1d","B*6b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly07_8h4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly07_8h3c+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","8h3c+","2a3c","1g1f","B*4h","3i4h","1a1b","B*6b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly06_2b5e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","2b5e","5f5e","1c1d","B*6b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly06_2b6f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","2b6f","6g6f","1c1d","B*6b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly05_8h4d"), ["7g7f","3c3d","5g5f","8c8d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly05_8h3c+"), ["7g7f","3c3d","5g5f","8c8d","8h3c+","2a3c","1g1f","B*4h","2h4h","1a1b","B*6b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly04_2b5e"), ["7g7f","3c3d","5g5f","2b5e","5f5e","1c1d","B*6b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly04_2b6f"), ["7g7f","3c3d","5g5f","2b6f","6g6f","1c1d","B*6b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly03_8h4d"), ["7g7f","3c3d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly03_8h3c+"), ["7g7f","3c3d","8h3c+","2a3c","1g1f","B*4h","2h4h","1a1b","B*6b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","3g3f","8e5e","5g5e","5c4d","B*5c","3b4b","5c4b+","3a4b","G*5a","4d5e","R*4b"]),
     (("Start", "SujichigaiBishop_Melee_DevPly36_2c2d"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g1h","1a2a","1h1i","G*3a","4a5a","2a1a","1i2i","1a2a","2i3i","2a1a","2c2d","P*5b"]),
     (("Start", "SujichigaiBishop_Melee_DevPly36_3c2d"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g1h","1a2a","1h1i","G*3a","4a5a","2a1a","1i2i","1a2a","2i3i","2a1a","3c2d","P*5b"]),
     (("Start", "SujichigaiBishop_Melee_DevPly35_2a2b"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g1h","1a2a","1h1i","G*3a","4a5a","2a1a","1i2i","1a2a","2i3i","2a2b","3i4i","P*5b"]),
@@ -2860,68 +3216,6 @@ runtimePaths = Map.fromList
     (("Start", "Early3eBlitz_Melee_DevPly03_8h4d"), ["7g7f","3c3d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
     (("Start", "Early3eBlitz_Melee_DevPly03_8h3c+"), ["7g7f","3c3d","8h3c+","2a3c","1g1f","B*4h","2h4h","1a1b","B*6b"]),
     (("Start", "Early3eBlitz_Melee"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e1f","2a1a","3c8h+","N*4c"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly36_2c2d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","S*4b","5a5b","2g2f","3d3e","2f2e","2c2d","P*5b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly36_3e3f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","S*4b","5a5b","2g2f","3d3e","2f2e","3e3f","P*5b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly35_4b5a+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","S*4b","5a5b","2g2f","3d3e","4b5a+","5b5a","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly35_4b5a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","S*4b","5a5b","2g2f","3d3e","4b5a","3i4i","P*5b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly34_3i4i"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","S*4b","5a5b","2g2f","3i4i","P*5b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly34_3i3h"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","S*4b","5a5b","2g2f","3i3h","P*5b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly33_4b5a+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","S*4b","5a5b","4b5a+","5b5a","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly33_4b5a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","S*4b","5a5b","4b5a","3i4i","P*5b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly32_8b4b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","S*4b","8b4b","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly31_3b4b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","3b4b","5a4b","P*4b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly31_4g4f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","4g4f","3i4i","S*4b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly29_3a4a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","3a4a","4b4a","G*4b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly29_3a3b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","3a3b","4b3b","P*3b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly27_3a4a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3a4a","5a4a","S*3b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly27_3c2d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c2d","2c2d","S*4b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly26_N*4b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","N*4b","S*4b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly25_2b4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b4d","4c4d","S*4b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly25_2b3b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3b","4a3b","S*4b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly24_2i2h"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i2h","S*4b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly24_4a3b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","4a3b","S*4b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly23_2b3a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2b3a","4a3a","S*4b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly23_2b4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2b4d","4c4d","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly22_1i1h"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i1h","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly22_3a2b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","3a2b","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly21_2b3a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","2b3a","4a3a","S*4b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly21_2b4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","2b4d","4c4d","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly20_1h2h"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h2h","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly20_1h1g"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1g","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly19_2b3a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","2b3a","4a3a","S*4b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly19_2b4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","2b4d","4c4d","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly18_1g2h"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g2h","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly18_3a2b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","3a2b","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly17_1i1h"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1i1h","3a2b","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly17_2b3a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","2b3a","4a3a","S*4b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly16_1a1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1c","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly16_1g1h"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1g1h","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly15_1i1h"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1i1h","3a2b","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly15_2b1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","2b1c","1a1c","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly14_1a1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","1a1b","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly14_1a1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","1a1c","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly13_2b1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","2b1c","1a1c","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly13_2b3a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","2b3a","4a3a","S*4b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly12_1a1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1a1b","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly11_8h4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h4d","2b4d","P*5b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly11_8h2b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b","3a2b","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly10_1a1d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","1a1d","P*5b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly10_1a1e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","1a1e","P*5b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly09_8h4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","8h4d","2b4d","1f1e","4d9i+","P*5b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly09_8h3c+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","8h3c+","2a3c","1f1e","1a1e","P*5b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly08_2b5e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","2b5e","5f5e","1a1b","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly08_2b6f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","2b6f","6g6f","1a1b","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly07_8h4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i","P*5b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly07_8h3c+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","8h3c+","2a3c","1g1f","B*4h","3i4h","1a1b","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly06_2b5e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","2b5e","5f5e","1c1d","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly06_2b6f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","2b6f","6g6f","1c1d","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly05_8h4d"), ["7g7f","3c3d","5g5f","8c8d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly05_8h3c+"), ["7g7f","3c3d","5g5f","8c8d","8h3c+","2a3c","1g1f","B*4h","2h4h","1a1b","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly04_2b5e"), ["7g7f","3c3d","5g5f","2b5e","5f5e","1c1d","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly04_2b6f"), ["7g7f","3c3d","5g5f","2b6f","6g6f","1c1d","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly03_8h4d"), ["7g7f","3c3d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
-    (("Start", "AggressiveCentralRook_Melee_DevPly03_8h3c+"), ["7g7f","3c3d","8h3c+","2a3c","1g1f","B*4h","2h4h","1a1b","B*6b"]),
-    (("Start", "AggressiveCentralRook_Melee"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","S*4b","5a5b","2g2f","3d3e","2f2e","3i4i","P*5b"]),
     (("Start", "EarlyClimbingSilver_Melee_DevPly36_1f1g+"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e1f","2a1a","1f1g+","N*4c"]),
     (("Start", "EarlyClimbingSilver_Melee_DevPly36_1f1g"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e1f","2a1a","1f1g","N*4c"]),
     (("Start", "EarlyClimbingSilver_Melee_DevPly35_1h1g"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e1f","1h1g","3c8h+","N*4c"]),
