@@ -495,22 +495,27 @@ evalMorsePotential player bd =
     outOfBounds (x, y) = x < 1 || x > 9 || y < 1 || y > 9
 
 -- | 角頭の歩突き（先手8七歩 8g8f、後手2三歩 2c2d）の絶対禁止判定
--- 飛車が8筋/2筋にいない状態で角頭の歩を突く悪手を完全に検知・排除
+-- ★ 超重要：相手の歩を取る「同歩（Take Vanguard Pawn）」は絶対に許可・大推奨！
+-- 相手駒がおらず、飛車もいない状態で単に角頭の歩を突く悪手のみを排除
 isPushingKakutoPawn :: State -> Move -> Bool
 isPushingKakutoPawn st m =
   let plr = turn st
       bd = board st
   in case m of
     NormalMove (8, 7) (8, 6) _ | plr == Sente ->
-      case Map.lookup (8, 8) bd of
-        Just (Piece Sente Rook)  -> False -- 8八飛（向かい飛車）なら許容
-        Just (Piece Sente PRook) -> False
-        _                        -> True  -- 角が8八にいる/飛車がいないのに8七歩を突くのは絶対禁止
+      let isCapturing = Map.member (8, 6) bd -- 相手の8六歩を取る「同歩」は超重要守備手！
+      in if isCapturing then False
+         else case Map.lookup (8, 8) bd of
+           Just (Piece Sente Rook)  -> False -- 8八飛（向かい飛車）なら許容
+           Just (Piece Sente PRook) -> False
+           _                        -> True  -- 単なる突き出しは禁止
     NormalMove (2, 3) (2, 4) _ | plr == Gote ->
-      case Map.lookup (2, 2) bd of
-        Just (Piece Gote Rook)  -> False -- 2二飛なら許容
-        Just (Piece Gote PRook) -> False
-        _                       -> True  -- 角が2二にいる/飛車がいないのに2三歩を突くのは絶対禁止
+      let isCapturing = Map.member (2, 4) bd -- 相手の2四歩を取る「同歩」は超重要守備手！
+      in if isCapturing then False
+         else case Map.lookup (2, 2) bd of
+           Just (Piece Gote Rook)  -> False -- 2二飛なら許容
+           Just (Piece Gote PRook) -> False
+           _                       -> True  -- 単なる突き出しは禁止
     _ -> False
 
 -- | 無駄な香車上がりなどの手損手を厳格に判定
@@ -1337,10 +1342,13 @@ evaluateState weights player st =
       bishopDropDefenseAdvantage = evalBishopDropVulnerability player st - evalBishopDropVulnerability opp st
       silverAdvanceAndIshidaAdvantage = evalSilverAdvanceAndIshidaFormation player st - evalSilverAdvanceAndIshidaFormation opp st
       comprehensiveAdvanceAdvantage = evalComprehensiveAdvancementFormation player st - evalComprehensiveAdvancementFormation opp st
+      sittingKingAdvantage = evalSittingKingPenalty player st - evalSittingKingPenalty opp st
+      nakabishaCastleAdvantage = evalMinoAndTsunoGinFormation player st - evalMinoAndTsunoGinFormation opp st
+      vanguardBreachAdvantage = evalRookVanguardBreachPenalty player st - evalRookVanguardBreachPenalty opp st
   in materialAdvantage + hangingAdvantage + morseAdvantage + attackAdvantage + defenseAdvantage
      + kakutoKeitoAdvantage + looseAdvantage + pieceControlAdvantage
      + tempoLossAdvantage + goldKingCoordAdvantage + distanceToMateAdvantage
-     + numericalAssaultAdvantage + tacticalForkAdvantage + potentialRayAdvantage + bishopDropDefenseAdvantage + silverAdvanceAndIshidaAdvantage + comprehensiveAdvanceAdvantage
+     + numericalAssaultAdvantage + tacticalForkAdvantage + potentialRayAdvantage + bishopDropDefenseAdvantage + silverAdvanceAndIshidaAdvantage + comprehensiveAdvanceAdvantage + sittingKingAdvantage + nakabishaCastleAdvantage + vanguardBreachAdvantage
 
 
 -- | デフォルト重みでの評価関数（後方互換）
@@ -1463,8 +1471,8 @@ isSennichite key hist =
 lookupBookMove :: [String] -> State -> Maybe Move
 lookupBookMove currentMoves st =
   let legalMoves = f5SyzygyFilter st (generateMoves st)
-      -- 角頭歩突きおよび無駄な香車上がりなどの手損手は定跡であっても絶対に除外
-      safeLegalMoves = filter (\m -> not (isPushingKakutoPawn st m) && not (isFutileLanceLift st m)) legalMoves
+      -- 角頭歩突き、無駄な香車上がり、歩がある時の飛車先大駒無駄合駒は絶対に除外
+      safeLegalMoves = filter (\m -> not (isPushingKakutoPawn st m) && not (isFutileLanceLift st m) && not (isFutileInterpositionOnRookFile st m)) legalMoves
       allPaths = Map.elems Book.runtimePaths
       matchingPaths = filter (\p -> currentMoves `isPrefixOf` p && length p > length currentMoves) allPaths
       candidates = [ parseMove (p !! length currentMoves) | p <- matchingPaths ]
@@ -1540,7 +1548,12 @@ searchQuiescence weights qdepth alpha beta st =
                  oppAttackers = getPiecesCovering opp to (board nextS)
                  friendlyDefenders = getPiecesCovering plr to (board nextS)
                  isSuicideDrop = isMajor && not (null oppAttackers) && null friendlyDefenders
-             in not isSuicideDrop && isCheck
+                 -- ★ 飛車先直射を遮断する歩打ち受け（P*8g 先手8七歩打 / P*2c 後手2三歩打）は最重要戦術手！
+                 isRookInterceptionPawn =
+                   pt == Pawn &&
+                   ((plr == Sente && to == (8, 7) && (Map.lookup (8, 6) (board s) == Just (Piece opp Rook) || Map.lookup (8, 5) (board s) == Just (Piece opp Rook))) ||
+                    (plr == Gote  && to == (2, 3) && (Map.lookup (2, 4) (board s) == Just (Piece opp Rook) || Map.lookup (2, 5) (board s) == Just (Piece opp Rook))))
+             in (not isSuicideDrop && isCheck) || isRookInterceptionPawn
 
     qLoop [] curA _ = curA
     qLoop (m:ms) curA b =
@@ -1579,7 +1592,7 @@ searchAlphaBeta weights depth alpha beta st =
       -- ★ 王手されている局面では一切の除外を行わずすべての合法手
       nonKakutoMoves = if inCheck
                        then safeMoves
-                       else filter (\m -> not (isPushingKakutoPawn st m) && not (isFutileLanceLift st m)) safeMoves
+                       else filter (\m -> not (isPushingKakutoPawn st m) && not (isFutileLanceLift st m) && not (isFutileInterpositionOnRookFile st m)) safeMoves
       effectiveMoves = if null nonKakutoMoves then safeMoves else nonKakutoMoves
   in if null f5Moves
      then (-10000.0, []) -- 詰み
@@ -1771,10 +1784,12 @@ searchAlphaBeta weights depth alpha beta st =
                    silverAndIshidaBonus = evalSilverAdvanceAndIshidaFlow st m
                    comprehensiveAdvanceBonus = evalComprehensiveAdvancementFlow st m
                    strategicCommitmentBonus = evalStrategicCommitment st m
+                   rookFileDefenseBonus = evalRookFileDefenseFlow st m
+                   nakabishaCastlingBonus = evalNakabishaCastlingFlow st m
                    s = evaluateState weights (turn st) nextSt
                 in s + captureBonus + blunderPen + lancePen + suicidePen + checkBonus + forkBonus + tacticalBonus + fourPieceAdvanceBonus + oneTempoWinBonus + ironcladDefenseBonus
                   + discoveredBonus + rayUnblockBonus + potentialAlignBonus + quotientEquivBonus + trappedDesperadoBonus + bishopDropQualityBonus
-                  + antiQuotientSafetyBonus + shufflingPen + defensiveBonus + evalThicknessAndDominance st m + majorThreatBonus + silverAndIshidaBonus + comprehensiveAdvanceBonus + strategicCommitmentBonus
+                  + antiQuotientSafetyBonus + shufflingPen + defensiveBonus + evalThicknessAndDominance st m + majorThreatBonus + silverAndIshidaBonus + comprehensiveAdvanceBonus + strategicCommitmentBonus + rookFileDefenseBonus + nakabishaCastlingBonus
              orderedMoves = sortBy (\m1 m2 -> compare (scoreMove m2) (scoreMove m1)) effectiveMoves
              -- 王手をかけられているときはすべての王手回避手を読み、それ以外は上位14手を深く読む
              topMoves = if inCheck then effectiveMoves else take (if depth >= 4 then 6 else (if depth >= 3 then 8 else (if depth >= 2 then 10 else 14))) orderedMoves
@@ -2961,6 +2976,199 @@ evalComprehensiveAdvancementFormation p st =
                in if isFloating then 300.0 else 0.0
              _ -> 0.0
   in sum (map scorePiece pieces)
+
+-- ============================================================================
+-- 居飛車の飛車先受け（Ironclad Rook-File Defense）＆ 居玉防止＆美濃・つの銀中飛車
+-- ============================================================================
+
+-- | 相手の飛車先直射に対して、手持ちに歩があるのに歩以外の駒（角・金・銀等）を差し出す大悪手を完全除外
+-- ★ 歩で受かるのに大駒や金銀を合駒として打つ手は、自滅的駒損・手損であり絶対禁止！
+isFutileInterpositionOnRookFile :: State -> Move -> Bool
+isFutileInterpositionOnRookFile st m =
+  let plr = turn st
+      opp = opponent plr
+      bd = board st
+      myHand = Map.findWithDefault Map.empty plr (hands st)
+      hasPawn = Map.findWithDefault 0 Pawn myHand > 0
+  in if not hasPawn
+     then False -- 手持ちに歩がない（歩切れ）なら緊急合駒として角や金銀の合駒もやむを得ない
+     else case m of
+       DropMove pt toSq ->
+         let isSenteBreached = plr == Sente && toSq == (8, 7) &&
+                               (Map.lookup (8, 6) bd == Just (Piece opp Rook) || Map.lookup (8, 5) bd == Just (Piece opp Rook))
+             isGoteBreached  = plr == Gote  && toSq == (2, 3) &&
+                               (Map.lookup (2, 4) bd == Just (Piece opp Rook) || Map.lookup (2, 5) bd == Just (Piece opp Rook))
+         in (isSenteBreached || isGoteBreached) && pt /= Pawn
+       _ -> False
+
+-- | 飛車先の受け（Rook-File Interception Defense）：
+-- 1. 相手の飛車先突き（8六歩 / 2四歩）に対する「同歩（Capture Vanguard Pawn）」
+-- 2. 飛車直射局面における「8七歩打ち（P*8g）」「2三歩打ち（P*2c）」の絶対的歩受け
+-- ★ 迎撃・歩受け放置は即敗北（竜作り被弾）に直結するため、玉囲いをも圧倒する最高優先度(+7500点 / -15000点)を付与
+evalRookFileDefenseFlow :: State -> Move -> Double
+evalRookFileDefenseFlow st m =
+  let plr = turn st
+      opp = opponent plr
+      curBd = board st
+      nextSt = applyMove m st
+      nextBd = board nextSt
+      myHand = Map.findWithDefault Map.empty plr (hands st)
+      hasPawn = Map.findWithDefault 0 Pawn myHand > 0
+      
+      -- 現在、相手の飛車先歩（8六歩 / 2四歩）が自陣に突き刺さっているか
+      oppPawnBreaching =
+        if plr == Sente
+        then Map.lookup (8, 6) curBd == Just (Piece opp Pawn)
+        else Map.lookup (2, 4) curBd == Just (Piece opp Pawn)
+        
+      -- 現在、相手の飛車（8六飛 / 2四飛）が直射しているか
+      oppRookBreaching =
+        if plr == Sente
+        then (Map.lookup (8, 6) curBd == Just (Piece opp Rook) || Map.lookup (8, 5) curBd == Just (Piece opp Rook)) &&
+             Map.lookup (8, 7) curBd /= Just (Piece Sente Pawn)
+        else (Map.lookup (2, 4) curBd == Just (Piece opp Rook) || Map.lookup (2, 5) curBd == Just (Piece opp Rook)) &&
+             Map.lookup (2, 3) curBd /= Just (Piece Gote Pawn)
+  in case m of
+       -- A. 相手の飛車先直射に対する「8七歩打ち（P*8g）」「2三歩打ち（P*2c）」
+       DropMove pt toSq ->
+         let isSente87Drop = plr == Sente && toSq == (8, 7) && oppRookBreaching
+             isGote23Drop  = plr == Gote  && toSq == (2, 3) && oppRookBreaching
+         in if (isSente87Drop || isGote23Drop)
+            then if pt == Pawn
+                 then 8500.0 -- ★ 飛車先の直射を止める絶対の歩受け手筋！竜作りを完全阻止！
+                 else if hasPawn
+                      then -15000.0 -- ★ 歩があるのに角や金銀を打つのは自滅的大悪手！
+                      else 500.0   -- 歩がない時のやむを得ない緊急合駒
+            else if oppRookBreaching then -10000.0 else 0.0
+
+       -- B. 相手の飛車先歩に対する「同歩（Capture Vanguard Pawn）」
+       NormalMove from toSq _ ->
+         let isSenteCapture86 = plr == Sente && from == (8, 7) && toSq == (8, 6) && oppPawnBreaching
+             isGoteCapture24  = plr == Gote  && from == (2, 3) && toSq == (2, 4) && oppPawnBreaching
+         in if isSenteCapture86 || isGoteCapture24
+            then 7000.0 -- ★ 相手の飛車先突破を同歩で迎え撃つ絶対の迎撃手筋！
+            -- 飛車先が突き刺さっているのに手抜き（玉囲い等）をして放置した場合は超厳罰！
+            else if oppPawnBreaching || oppRookBreaching
+            then -10000.0 -- 飛車先突破を放置して竜を作られる即敗北手抜きを完全排除！
+            else 0.0
+
+-- | 中飛車における美濃囲い＆つの銀（Twin Silvers Central Rook）の形成評価
+evalNakabishaCastlingFlow :: State -> Move -> Double
+evalNakabishaCastlingFlow st m =
+  let plr = turn st
+      opp = opponent plr
+      curBd = board st
+      hist = moveHistory st
+      isNakabishaMode = any (\mvStr -> mvStr == "2h5h" || mvStr == "5g5f") hist ||
+                        Map.lookup (if plr == Sente then (5, 8) else (5, 2)) curBd == Just (Piece plr Rook)
+      -- 相手の飛車先が突き刺さっている緊急事態には玉囲いどころではない（迎撃最優先！）
+      oppPawnBreaching =
+        if plr == Sente then Map.lookup (8, 6) curBd == Just (Piece opp Pawn)
+        else Map.lookup (2, 4) curBd == Just (Piece opp Pawn)
+      oppRookBreaching =
+        if plr == Sente then (Map.lookup (8, 6) curBd == Just (Piece opp Rook) || Map.lookup (8, 5) curBd == Just (Piece opp Rook)) && Map.lookup (8, 7) curBd == Nothing
+        else (Map.lookup (2, 4) curBd == Just (Piece opp Rook) || Map.lookup (2, 5) curBd == Just (Piece opp Rook)) && Map.lookup (2, 3) curBd == Nothing
+  in if not isNakabishaMode || oppPawnBreaching || oppRookBreaching
+     then 0.0 -- 飛車先突破危機の間は玉囲いボーナスを停止し、迎撃を絶対優先！
+     else case m of
+       -- 1. 玉の美濃囲い移動（5九 -> 4八 -> 3八 -> 2八）
+       NormalMove from toSq _ ->
+         case Map.lookup from curBd of
+           Just (Piece p King) | p == plr ->
+             if plr == Sente
+             then if toSq == (4, 8) then 1800.0
+                  else if toSq == (3, 8) then 2400.0
+                  else if toSq == (2, 8) then 2600.0
+                  else 0.0
+             else if toSq == (6, 2) then 1800.0
+                  else if toSq == (7, 2) then 2400.0
+                  else if toSq == (8, 2) then 2600.0
+                  else 0.0
+           -- 2. つの銀中飛車（Twin Silvers: 4七銀・6七銀への展開）
+           Just (Piece p Silver) | p == plr ->
+             if plr == Sente
+             then if toSq == (4, 7) || toSq == (6, 7) then 2200.0
+                  else if toSq == (4, 8) || toSq == (6, 8) then 1600.0
+                  else 0.0
+             else if toSq == (6, 3) || toSq == (4, 3) then 2200.0
+                  else if toSq == (6, 2) || toSq == (4, 2) then 1600.0
+                  else 0.0
+           _ -> 0.0
+       _ -> 0.0
+
+-- | 居玉（Sitting King / Central King Danger）の局面ペナルティ
+-- 玉が初期位置（5九 / 5一）に居座っている危険局面を厳罰化
+evalSittingKingPenalty :: Player -> State -> Double
+evalSittingKingPenalty p st =
+  let bd = board st
+      opp = opponent p
+      kingSq = findKing p bd
+      oppMajorCount = length [ sq | (sq, Piece owner pt) <- Map.toList bd, owner == opp, pt `elem` [Rook, PRook, Bishop, PBishop] ]
+  in case kingSq of
+       Just (5, 9) | p == Sente ->
+         -- 先手居玉：相手の大駒がいるのに5九居玉なら超厳罰！
+         -2500.0 - fromIntegral oppMajorCount * 400.0
+       Just (5, 1) | p == Gote ->
+         -2500.0 - fromIntegral oppMajorCount * 400.0
+       -- 4八や6八など囲いへの第一歩を踏み出していれば安全
+       _ -> 0.0
+
+-- | 美濃囲い・つの銀中飛車の局面完成度評価
+evalMinoAndTsunoGinFormation :: Player -> State -> Double
+evalMinoAndTsunoGinFormation p st =
+  let bd = board st
+      kingSq = findKing p bd
+      isNakabisha = Map.lookup (if p == Sente then (5, 8) else (5, 2)) bd == Just (Piece p Rook) ||
+                    Map.lookup (if p == Sente then (5, 6) else (5, 4)) bd == Just (Piece p Rook)
+  in if not isNakabisha
+     then 0.0
+     else
+       let -- 美濃囲い評価
+           minoScore = case kingSq of
+             Just (kx, ky) | p == Sente && kx `elem` [2, 3] && ky `elem` [8, 9] -> 2400.0
+             Just (kx, ky) | p == Gote  && kx `elem` [7, 8] && ky `elem` [1, 2] -> 2400.0
+             Just (4, 8)   | p == Sente -> 1500.0
+             Just (6, 2)   | p == Gote  -> 1500.0
+             _ -> 0.0
+           -- つの銀（4七銀＆6七銀）評価
+           tsunoScore =
+             if p == Sente
+             then (if Map.lookup (4, 7) bd == Just (Piece Sente Silver) then 1200.0 else 0.0) +
+                  (if Map.lookup (6, 7) bd == Just (Piece Sente Silver) then 1200.0 else 0.0)
+             else (if Map.lookup (6, 3) bd == Just (Piece Gote Silver) then 1200.0 else 0.0) +
+                  (if Map.lookup (4, 3) bd == Just (Piece Gote Silver) then 1200.0 else 0.0)
+       in minoScore + tsunoScore
+
+-- | 局面評価：飛車先突破・直射被弾の危機ペナルティ
+-- 相手飛車が直通していて自陣の歩受け（8七/2三）がされていない局面は、
+-- 次の手番で竜を作られて即敗北するため超特大ペナルティ(-10000点)
+-- ★ 手番側が手持ちに歩を持っている場合は、この手番で受けられるためペナルティ免除
+evalRookVanguardBreachPenalty :: Player -> State -> Double
+evalRookVanguardBreachPenalty p st =
+  let bd = board st
+      opp = opponent p
+      myHands = Map.findWithDefault Map.empty p (hands st)
+      hasPawnInHand = Map.findWithDefault 0 Pawn myHands > 0
+      
+      -- 相手の歩が突き刺さっているのに、同歩で取らずに手抜き放置した局面
+      isPawnIgnored =
+        if p == Sente
+        then Map.lookup (8, 6) bd == Just (Piece opp Pawn) && Map.lookup (8, 7) bd == Just (Piece Sente Pawn)
+        else Map.lookup (2, 4) bd == Just (Piece opp Pawn) && Map.lookup (2, 3) bd == Just (Piece Gote Pawn)
+        
+      -- 相手の飛車が直射していて、8七/2三に歩がない無防備局面（歩以外の駒や空マスなら突破状態）
+      isRookBreached =
+        if p == Sente
+        then (Map.lookup (8, 6) bd == Just (Piece opp Rook) || Map.lookup (8, 5) bd == Just (Piece opp Rook)) &&
+             Map.lookup (8, 7) bd /= Just (Piece Sente Pawn)
+        else (Map.lookup (2, 4) bd == Just (Piece opp Rook) || Map.lookup (2, 5) bd == Just (Piece opp Rook)) &&
+             Map.lookup (2, 3) bd /= Just (Piece Gote Pawn)
+             
+      -- 自分が手番(turn st == p)かつ手持ちに歩があるなら、この手番で歩打ち受けできるため無罰
+      canDefendThisTurn = turn st == p && hasPawnInHand
+  in if isPawnIgnored then -5000.0
+     else if isRookBreached && not canDefendThisTurn then -10000.0
+     else 0.0
 
 evalPieceShuffling :: State -> Move -> Double
 evalPieceShuffling st m =
