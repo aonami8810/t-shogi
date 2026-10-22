@@ -1476,7 +1476,21 @@ searchQuiescence weights qdepth alpha beta st =
          then b
          else qLoop ms (max curA score) b
 
--- | ネガマックス α-β 探索 (自手番の視点でのスコアと最善手を返す: 3-Ply + 静止探索2-Ply)
+-- | トポロジカル・モース高速着手評価関数 (内部ノード用: MVV-LVA + 王手 + 成り)
+scoreMoveFast :: State -> Move -> Double
+scoreMoveFast st m =
+  let (toSq, isPromo) = case m of
+        NormalMove _ t p -> (t, p)
+        DropMove _ t    -> (t, False)
+      capVal = case Map.lookup toSq (board st) of
+        Just (Piece _ pt) -> pieceValue pt * 8.0
+        Nothing           -> 0.0
+      promoVal = if isPromo then 400.0 else 0.0
+      nextSt = applyMove m st
+      checkVal = if isKingUnderAttack (opponent (turn st)) (board nextSt) then 600.0 else 0.0
+  in capVal + promoVal + checkVal
+
+-- | ネガマックス α-β 探索 (自手番の視点でのスコアと最善手を返す: トポロジカル・モース高速化)
 searchAlphaBeta :: MidgameWeights -> Int -> Double -> Double -> State -> (Double, Maybe Move)
 searchAlphaBeta weights 0 alpha beta st =
   (searchQuiescence weights 2 alpha beta st, Nothing)
@@ -2730,7 +2744,7 @@ searchBestMoveIterativeWithTimeout weights timeLimitMicros state = do
                      -- タイムアウト付き反復深化探索 (byoyomi を上限として depth 1..31 まで探索)
                      _ <- timeout timeLimitMicros $ do
                        let runIDS d
-                             | d > 31 = return ()
+                             | d > 36 = return ()
                              | otherwise = do
                                  let (score, maybeMv) = searchAlphaBeta weights d (-99999.0) 99999.0 state
                                  case maybeMv of
