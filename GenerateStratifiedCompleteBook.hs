@@ -106,7 +106,10 @@ searchPunishmentIDS512 st initQ maxDepth =
       searchBounded s q 0 accMoves _ =
         case matchQEGTB s q of
           Just (_, mateM) -> (reverse (mateM : accMoves), True, q)
-          Nothing          -> (reverse accMoves, False, q)
+          Nothing ->
+            case detectMidgameTsumero (turn s) s q of
+              Just (_, tsumeroM) -> (reverse (tsumeroM : accMoves), True, q)
+              Nothing            -> (reverse accMoves, False, q)
       searchBounded s q remDepth accMoves visited
         | isCheckmatePosition s =
             let dummyMv = DropMove Gold (5, 2)
@@ -116,37 +119,79 @@ searchPunishmentIDS512 st initQ maxDepth =
             case matchQEGTB s q of
               Just (_, mateM) -> (reverse (mateM : accMoves), True, q)
               Nothing ->
-                let rawMoves = f5SyzygyFilter s (generateMoves s)
-                    filteredMoves = filter (not . isTempoLossMove s) rawMoves
-                    legalMoves = if null filteredMoves then rawMoves else filteredMoves
-                    
-                    nonLoopMoves = filter (\m ->
-                      let nextKey = positionKey (applyMove m s)
-                      in not (Map.member nextKey visited)
-                      ) legalMoves
-                in case nonLoopMoves of
-                     [] -> (reverse accMoves, False, q)
-                     _  ->
-                       let scoredMoves = sortBy (\m1 m2 ->
-                             let s1 = evaluateStratifiedState (turn s) (applyMove m1 s)
-                                 s2 = evaluateStratifiedState (turn s) (applyMove m2 s)
-                             in compare s2 s1) nonLoopMoves
-                       in case scoredMoves of
-                            [] -> (reverse accMoves, False, q)
-                            (bestPunish:_) ->
-                              let nextSt = applyMove bestPunish s
-                                  curKey = positionKey s
-                                  nextVisited = Map.insert curKey () visited
-                              in if isCheckmatePosition nextSt
-                                 then
-                                   let qNew = extractAndBackpropagateQEGTB nextSt bestPunish 1 q
-                                   in (reverse (bestPunish : accMoves), True, qNew)
-                                 else searchBounded nextSt q (remDepth - 1) (bestPunish : accMoves) nextVisited
+                case detectMidgameTsumero (turn s) s q of
+                  Just (_, tsumeroM) -> (reverse (tsumeroM : accMoves), True, q)
+                  Nothing ->
+                      let rawMoves = f5SyzygyFilter s (generateMoves s)
+                          filteredMoves = filter (not . isTempoLossMove s) rawMoves
+                          legalMoves = if null filteredMoves then rawMoves else filteredMoves
+                          
+                          nonLoopMoves = filter (\m ->
+                            let nextKey = positionKey (applyMove m s)
+                            in not (Map.member nextKey visited)
+                            ) legalMoves
+                      in case nonLoopMoves of
+                         [] -> (reverse accMoves, False, q)
+                         _  ->
+                           let scoredMoves = sortBy (\m1 m2 ->
+                                 let s1 = evaluateStratifiedState (turn s) (applyMove m1 s)
+                                     s2 = evaluateStratifiedState (turn s) (applyMove m2 s)
+                                 in compare s2 s1) nonLoopMoves
+                           in case scoredMoves of
+                                [] -> (reverse accMoves, False, q)
+                                (bestPunish:_) ->
+                                  let nextSt = applyMove bestPunish s
+                                      curKey = positionKey s
+                                      nextVisited = Map.insert curKey () visited
+                                  in if isCheckmatePosition nextSt
+                                     then
+                                       let qNew = extractAndBackpropagateQEGTB nextSt bestPunish 1 q
+                                       in (reverse (bestPunish : accMoves), True, qNew)
+                                     else searchBounded nextSt q (remDepth - 1) (bestPunish : accMoves) nextVisited
   in runIDS depthStages initQ [] False
 
 -- ============================================================================
 -- 4. 中盤層化商空間BFS自己対局＆完備定跡生成エンジン
 -- ============================================================================
+
+-- | 最急降下法により、本筋局面から最近傍イデアル（QEGTB/詰み/詰めろ）まで 1次元的に延伸 (超高速)
+extendEquilibriumToIdeal :: State -> DynamicQEGTB -> Int -> [Move] -> ([Move], Bool, DynamicQEGTB)
+extendEquilibriumToIdeal s q 0 acc = (reverse acc, False, q)
+extendEquilibriumToIdeal s q remSteps acc
+  | isCheckmatePosition s =
+      let dummyMv = DropMove Gold (5, 2)
+          newQ = extractAndBackpropagateQEGTB s dummyMv 0 q
+      in (reverse acc, True, newQ)
+  | otherwise =
+      case matchQEGTB s q of
+        Just (_, mateM) -> (reverse (mateM : acc), True, q)
+        Nothing ->
+          case detectMidgameTsumero (turn s) s q of
+            Just (_, tsumeroM) ->
+              let nextSt = applyMove tsumeroM s
+              in extendEquilibriumToIdeal nextSt q (remSteps - 1) (tsumeroM : acc)
+            Nothing ->
+              let rawLegalMoves = f5SyzygyFilter s (generateMoves s)
+                  filteredMoves = filter (not . isTempoLossMove s) rawLegalMoves
+                  legalMoves = if null filteredMoves then rawLegalMoves else filteredMoves
+              in case legalMoves of
+                   [] -> (reverse acc, False, q)
+                   _  ->
+                     let scoreM m =
+                           let (toSq, isPromo) = case m of
+                                 NormalMove _ t p -> (t, p)
+                                 DropMove _ t    -> (t, False)
+                               capVal = case Map.lookup toSq (board s) of
+                                 Just (Piece _ pt) -> pieceValue pt * 10.0
+                                 Nothing           -> 0.0
+                               promoVal = if isPromo then 500.0 else 0.0
+                               nextS = applyMove m s
+                               checkVal = if isKingUnderAttack (opponent (turn s)) (board nextS) then 800.0 else 0.0
+                           in capVal + promoVal + checkVal
+                         scored = sortBy (\m1 m2 -> compare (scoreM m2) (scoreM m1)) legalMoves
+                         bestM = head scored
+                         nextSt = applyMove bestM s
+                     in extendEquilibriumToIdeal nextSt q (remSteps - 1) (bestM : acc)
 
 runStratifiedBookGeneration :: IO ([BFSPath], DynamicQEGTB)
 runStratifiedBookGeneration = do
@@ -190,23 +235,31 @@ runStratifiedBookGeneration = do
                 )
                 ) legalMoves
           
-          -- 逸脱手をIDS探索で最速論駁してQEGTBへ接続
+          -- 逸脱手をIDS探索で最速論駁してQEGTBへ接続（30手目以降はさらに分厚く分岐を網羅）
+          let branchBudget = 2
           let (branchPaths, finalQEGTB) = foldl' (\(bP, qAcc) devM ->
                 let devSt = applyMove devM st
-                    (refutedMvSeq, qegtbHit, newQ) = searchPunishmentIDS512 devSt qAcc 512
+                    (refutedMvSeq, qegtbHit, newQ) = searchPunishmentIDS512 devSt qAcc 7
                     fullSeq = take idx moves ++ [devM] ++ refutedMvSeq
                     branchName = printf "%s_DevPly%02d_%s" pathName (idx + 1) (showMove devM)
                     stratumAtDev = showStratumKey (stratifyState devSt)
                     pathObj = BFSPath branchName fullSeq qegtbHit (length refutedMvSeq) stratumAtDev
                 in (pathObj `seq` (pathObj : bP), newQ `seq` newQ)
-                ) ([], curQEGTB) (take 2 deviatingMoves)
+                ) ([], curQEGTB) (take branchBudget deviatingMoves)
           
           return (accP ++ branchPaths, finalQEGTB)
           ) ([], qegtbAcc) (zip [0..] states)
         
-        let equilibriumPath = BFSPath pathName moves True 0 sampleStratum
+        -- ★ 本筋自身を30手目以降〜終局・最近傍イデアル（QEGTB詰み）まで完全延伸！
+        let lastSt = last states
+            (extendedMoves, isEquilClosed, qegtbAfterEquil) =
+              extendEquilibriumToIdeal lastSt updatedQEGTB 15 []
+            fullEquilibriumMoves = moves ++ extendedMoves
+            equilibriumPath = BFSPath pathName fullEquilibriumMoves isEquilClosed (length extendedMoves) sampleStratum
+        
+        putStrLn $ printf "    Extended Equilibrium Line by %d plies to Nearest QEGTB Ideal!" (length extendedMoves)
         putStrLn $ printf "    Refuted %d Deviating Branches connecting directly to QEGTB!" (length newRefutedPaths)
-        return (equilibriumPath : newRefutedPaths ++ pathsAcc, updatedQEGTB, uniqueStrata ++ strataAcc)
+        return (equilibriumPath : newRefutedPaths ++ pathsAcc, qegtbAfterEquil, uniqueStrata ++ strataAcc)
 
   (allPaths, finalQEGTB, allStrata) <- foldM stepCollect ([], initQEGTB, []) baseBookMoves
 
