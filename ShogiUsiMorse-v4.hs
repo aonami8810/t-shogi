@@ -1022,7 +1022,23 @@ isBlunderMove st m
                     in isMovingToCenter && hasNoThreat && not isCheck
                   _ -> False
               _ -> False
-      in if isMajorSuicideCheck || isMajorCheapTradeCheck || isSelfSuicideQegtb || isShufflingBlunder || isExposingCornerBishopBlunder || isWanderingKingBlunder
+          -- 9. 角道が通っていない死に角打ち（98角など）の完全排除
+          isDeadBishopDrop = case m of
+            DropMove Bishop to ->
+              let dirs = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
+                  countRay (dx, dy) =
+                    let raySquares = takeWhile (\(x, y) -> x >= 1 && x <= 9 && y >= 1 && y <= 9)
+                                               [ (fst to + i * dx, snd to + i * dy) | i <- [1..8] ]
+                        validSquares [] = 0
+                        validSquares (sq:sqs) =
+                          case Map.lookup sq bd of
+                            Nothing -> 1 + validSquares sqs
+                            Just _  -> 1
+                    in validSquares raySquares
+                  totalMobility = sum (map countRay dirs)
+              in totalMobility <= 2
+            _ -> False
+      in if isMajorSuicideCheck || isMajorCheapTradeCheck || isDeadBishopDrop || isSelfSuicideQegtb || isShufflingBlunder || isExposingCornerBishopBlunder || isWanderingKingBlunder
          then True -- 大駒ただ捨て王手・大損交換・自爆QEGTB・飛車金玉うろうろ往復・88角打ち隙放置は100%絶対大悪手！
          else if isPawnFodder
          then True -- 「桂馬の高跳び歩の餌食」等は絶対タダ捨て大悪手！
@@ -1310,10 +1326,11 @@ evaluateState weights player st =
       numericalAssaultAdvantage = (evalNumericalAssault player st - evalNumericalAssault opp st) * wNumericalAssault weights
       tacticalForkAdvantage = evalTacticalFork player st * wTacticalFork weights
       potentialRayAdvantage = evalPotentialRayAttack player st * wPotentialRays weights
+      bishopDropDefenseAdvantage = evalBishopDropVulnerability player st - evalBishopDropVulnerability opp st
   in materialAdvantage + hangingAdvantage + morseAdvantage + attackAdvantage + defenseAdvantage
      + kakutoKeitoAdvantage + looseAdvantage + pieceControlAdvantage
      + tempoLossAdvantage + goldKingCoordAdvantage + distanceToMateAdvantage
-     + numericalAssaultAdvantage + tacticalForkAdvantage + potentialRayAdvantage
+     + numericalAssaultAdvantage + tacticalForkAdvantage + potentialRayAdvantage + bishopDropDefenseAdvantage
 
 
 -- | デフォルト重みでの評価関数（後方互換）
@@ -1657,7 +1674,7 @@ searchAlphaBeta weights depth alpha beta st =
                            let (tx, ty) = to
                                isAligned = (pt `elem` [Rook, Lance] && tx == ekx) ||
                                            (pt == Rook && ty == eky) ||
-                                           (pt == Bishop && abs (tx - ekx) == abs (ty - eky)) ||
+                                            (pt == Bishop && abs (tx - ekx) == abs (ty - eky) && canPieceReachTarget to (Piece (turn st) Bishop) (ekx, eky) nextBd) ||
                                            (pt == Knight && abs (tx - ekx) <= 2 && abs (ty - eky) <= 2)
                            in if isAligned then 220.0 else 0.0
                          Nothing -> 0.0
@@ -1740,9 +1757,10 @@ searchAlphaBeta weights depth alpha beta st =
                      Nothing           -> 0.0
                    
                    trappedDesperadoBonus = evalTrappedPieceDesperado st m
+                   bishopDropQualityBonus = evalBishopDropQuality st m
                    s = evaluateState weights (turn st) nextSt
                 in s + captureBonus + blunderPen + lancePen + suicidePen + checkBonus + forkBonus + tacticalBonus + fourPieceAdvanceBonus + oneTempoWinBonus + ironcladDefenseBonus
-                  + discoveredBonus + rayUnblockBonus + potentialAlignBonus + quotientEquivBonus + trappedDesperadoBonus
+                  + discoveredBonus + rayUnblockBonus + potentialAlignBonus + quotientEquivBonus + trappedDesperadoBonus + bishopDropQualityBonus
                   + antiQuotientSafetyBonus + shufflingPen + defensiveBonus + evalThicknessAndDominance st m + majorThreatBonus
              orderedMoves = sortBy (\m1 m2 -> compare (scoreMove m2) (scoreMove m1)) effectiveMoves
              -- 王手をかけられているときはすべての王手回避手を読み、それ以外は上位14手を深く読む
@@ -2514,6 +2532,86 @@ evalTrappedPieceDesperado st m =
                             else 0.0
            _ -> 0.0
        DropMove _ _ -> 0.0
+
+-- | 角打ちの手（DropMove Bishop to）の品質・角道の開通度（Mobility）評価
+-- 98角のように角道が自駒で塞がれている無意味な死に角打ちを完全排除
+evalBishopDropQuality :: State -> Move -> Double
+evalBishopDropQuality st m =
+  let plr = turn st
+      opp = opponent plr
+      curBd = board st
+      nextSt = applyMove m st
+      nextBd = board nextSt
+  in case m of
+       DropMove Bishop to ->
+         let dirs = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
+             countRay (dx, dy) =
+               let raySquares = takeWhile (\(x, y) -> x >= 1 && x <= 9 && y >= 1 && y <= 9)
+                                          [ (fst to + i * dx, snd to + i * dy) | i <- [1..8] ]
+                   validSquares [] = 0
+                   validSquares (sq:sqs) =
+                     case Map.lookup sq curBd of
+                       Nothing -> 1 + validSquares sqs
+                       Just _  -> 1
+               in validSquares raySquares
+             
+             totalMobility = sum (map countRay dirs)
+             
+             oppKingSq = findKing opp nextBd
+             hasDirectRayToKing = case oppKingSq of
+               Just kSq -> canPieceReachTarget to (Piece plr Bishop) kSq nextBd
+               Nothing  -> False
+               
+             inEnemyZone y = if plr == Sente then y <= 3 else y >= 7
+             attacksEnemyCamp = any (\(dx, dy) ->
+               let targetSquares = [ (fst to + i * dx, snd to + i * dy) | i <- [1..8] ]
+               in any (\sq -> not (isOutOfBounds sq) && inEnemyZone (snd sq)) targetSquares
+               ) dirs
+         in if totalMobility <= 2
+            then -10000.0 -- 角道が0〜2マスしか通っていない！98角などの完全な死角打ちは厳禁！
+            else if totalMobility <= 4 && not hasDirectRayToKing
+            then -4000.0  -- 角道が狭すぎる無意味な角打ち
+            else if hasDirectRayToKing
+            then 800.0    -- 敵玉に直通する急所角打ち！
+            else if attacksEnemyCamp
+            then 400.0    -- 相手陣を睨む有効な角打ち
+            else 100.0
+       _ -> 0.0
+
+-- | 相手の角打ち（Bishop Drop Threat）に対する脆弱性・無防備さの評価
+-- 相手が手持ちに角を持っているとき、自陣・中段への危険な角打ち（両取り・馬作り・王手）をスキャンして厳罰化
+evalBishopDropVulnerability :: Player -> State -> Double
+evalBishopDropVulnerability plr st =
+  let opp = opponent plr
+      oppHand = Map.findWithDefault Map.empty opp (hands st)
+      hasOppBishop = Map.findWithDefault 0 Bishop oppHand > 0
+  in if not hasOppBishop
+     then 0.0
+     else
+       let bd = board st
+           targetY = if plr == Sente then [4..9] else [1..6]
+           candidateDropSquares = [ (x, y) | x <- [1..9], y <- targetY, not (Map.member (x, y) bd) ]
+           
+           isDangerousBishopDrop sq =
+             let myDefenders = getPiecesCovering plr sq bd
+                 isProtected = not (null myDefenders)
+                 
+                 testBd = Map.insert sq (Piece opp Bishop) bd
+                 threatenedPieces = [ tsq | (tsq, Piece p pt) <- Map.toList testBd
+                                          , p == plr
+                                          , pt `elem` [King, Rook, PRook, Gold, Silver]
+                                          , canPieceReachTarget sq (Piece opp Bishop) tsq testBd ]
+                 
+                 isForkOrCheck = length threatenedPieces >= 2 ||
+                                 any (\tsq -> Map.lookup tsq bd == Just (Piece plr King)) threatenedPieces
+                 
+                 canPromoteNext = if opp == Sente then snd sq >= 7 else snd sq <= 3
+             in not isProtected && (isForkOrCheck || canPromoteNext)
+             
+           dangerousCount = length (filter isDangerousBishopDrop candidateDropSquares)
+       in if dangerousCount > 0
+          then - (fromIntegral dangerousCount * 1200.0) -- 危険な角打ちの隙1箇所につき -1200点！
+          else 600.0 -- 隙がゼロなら完璧な鉄壁防御ボーナス！
 
 evalPieceShuffling :: State -> Move -> Double
 evalPieceShuffling st m =
