@@ -43,6 +43,8 @@ module ShogiStratifiedMidgame
   , MidgameStratum(..)
   , TsumeroType(..)
   , detectMidgameTsumero
+  , OpeningMultiTsumeroType(..)
+  , detectOpeningMultiTsumero
   , stratifyHand
   , stratifyPromotion
   , classifyDropRole
@@ -636,6 +638,78 @@ detectMidgameTsumero att st qegtb =
                 in Just (tsumeroClass, mateMv)
               Nothing -> Nothing
 
+-- | 序盤多重詰めろイデアル (Opening Multiple-Tsumero Ideals: OMI)
+-- 序盤（手数 <= 35）において、1手で2つ以上の独立した即詰み筋（または受ける手がない両詰めろ）を生じさせる決定打
+data OpeningMultiTsumeroType
+  -- 1. 大駒斜線放射型 (Bifurcated Bishop Ray)
+  = Yokofu45BishopMultiTsumero      -- 横歩取り△4五角型 (飛車取り＋玉頭急襲＋2方向即詰み)
+  | SujichigaiBishopMultiTsumero    -- 筋違い角型 (コビン直撃＋中央頭金両詰めろ)
+  | EarlySilverBishopMultiTsumero   -- 角換わり早繰り銀・遠見角型 (端攻め香連動＋前面金打ち両詰めろ)
+  | PacmanBishopMultiTsumero        -- パックマン中央角型 (中央制圧＋左右挟撃両詰めろ)
+  -- 2. 飛車直交突破型 (Orthogonal Rook Penetration)
+  | AigakariClimbingRookMultiTsumero-- 相掛かり棒銀突破・龍侵入型 (玉頭突入＋下段横すり寄り両詰めろ)
+  | SodebishaDragonMultiTsumero     -- 袖飛車・早仕掛け龍直撃型 (頭金＋一間竜両詰めろ)
+  | NakabishaCentralRookMultiTsumero-- 原始中飛車中央直通龍型 (5筋直通＋左右金打ち両詰めろ)
+  | MigiShikenCrossRookMultiTsumero -- 右四間腰掛け銀・十字飛車型 (コビン・横腹直通＋銀桂両詰めろ)
+  -- 3. 桂馬奇襲跳躍型 (Leaping Knight Double-Strike)
+  | DemonKillerKnightMultiTsumero   -- 鬼殺し桂跳躍型 (玉頭爆破＋端香取り両詰めろ)
+  | UreshinoKnightForkMultiTsumero  -- 嬉野流・鳥刺し急戦桂打ち型 (玉・金銀両睨み＋脱出路封鎖両詰めろ)
+  | ElmoCrushKnightMultiTsumero     -- 右四間対エルモ/舟囲い4五桂型 (金頭成り捨て＋角頭直撃両詰めろ)
+  -- 4. 歩の手筋・クサビ・焦点型 (Wedge & Sacrificial Pawn Synergy)
+  | DoubleTatakiPawnMultiTsumero    -- 序盤連打・叩き歩玉浮かせ型 (玉浮かせ＋左右挟み撃ち両詰めろ)
+  | DoubleTarekomaPawnMultiTsumero  -- 継ぎ歩＋垂れ歩ダブルと金型 (2筋・4筋ダブル即詰み)
+  | FocalPawnSacrificeMultiTsumero  -- 焦点の歩捨て型 (交点爆破＋守備壁穴あけ両詰めろ)
+  -- 5. 大駒切り捨て強襲型 (Major Piece Sacrifice Decisive)
+  | EarlyRookSacrificeMultiTsumero  -- 序盤飛車切り捨て型 (退路ゼロ化＋左右金打ち両詰めろ)
+  | DiscoveredBishopBatteryMultiTsumero -- 角切り空き王手バッテリー型 (直射ライン開放＋別マス即詰み両詰めろ)
+  -- 6. 囲い欠陥直撃型 (Structural Castle Flaw Exploitation)
+  | SittingKingKobinMultiTsumero    -- 居玉コビン割り型 (初期玉弱点直撃＋左右挟撃両詰めろ)
+  | WallPieceTrapMultiTsumero       -- 壁銀・壁桂誘発型 (退路自滅＋前面・逆サイド両詰めろ)
+  | FunagakoiFlawMultiTsumero       -- 舟囲いコビン崩し型 (角桂連動＋上下退路遮断両詰めろ)
+  | AnagumaDefectMultiTsumero       -- 穴熊未完成急襲型 (端攻め＋中央直撃両詰めろ)
+  -- 7. 序盤超局所イデアル
+  | UchifudumeEscapeMultiTsumero    -- 打ち歩詰め回避不能・禁手誘発型両詰めろ
+  deriving (Eq, Ord, Show, Enum, Bounded)
+
+-- | 序盤における複数の詰めろ（両詰めろ・多重即詰み筋）が生じる手を検出
+detectOpeningMultiTsumero :: Player -> State -> DynamicQEGTB -> Maybe (OpeningMultiTsumeroType, [Move])
+detectOpeningMultiTsumero att st qegtb =
+  let ply = length (moveHistory st)
+  in if ply > 35 -- 序盤の境界条件
+     then Nothing
+     else
+       let def = opponent att
+           bd = board st
+           maybeDefK = findKing def bd
+       in case maybeDefK of
+            Nothing -> Nothing
+            Just kSq@(kx, ky) ->
+              let stHypo = st { turn = att }
+                  legalMoves = f5SyzygyFilter stHypo (generateMoves stHypo)
+                  mateMoves = [ mv
+                              | mv <- legalMoves
+                              , let nextSt = applyMove mv stHypo
+                              , isCheckmatePosition nextSt || isJust (matchQEGTB nextSt qegtb)
+                              ]
+              in if length mateMoves >= 2
+                 then
+                   let myHands = fromMaybe emptyHand (Map.lookup att (hands st))
+                       hasDropB = Map.findWithDefault 0 Bishop myHands > 0
+                       hasDropN = Map.findWithDefault 0 Knight myHands > 0
+                       hasDropR = Map.findWithDefault 0 Rook myHands > 0
+                       hasPRook = any (\(_, Piece p pt) -> p == att && pt == PRook) (Map.toList bd)
+                       isOppSitting = kx == 5 && (ky == 1 || ky == 9)
+                       
+                       multiClass
+                         | hasDropB && (kx >= 4 && kx <= 6) = Yokofu45BishopMultiTsumero
+                         | hasDropN = DemonKillerKnightMultiTsumero
+                         | hasPRook = AigakariClimbingRookMultiTsumero
+                         | isOppSitting = SittingKingKobinMultiTsumero
+                         | hasDropR = EarlyRookSacrificeMultiTsumero
+                         | otherwise = DoubleTatakiPawnMultiTsumero
+                   in Just (multiClass, mateMoves)
+                 else Nothing
+
 -- | E. 統合中盤層化商空間 (Midgame Stratum)
 data MidgameStratum = MidgameStratum
   { msTurn      :: !Player
@@ -757,13 +831,20 @@ evaluateStratifiedState plr st =
       
       tsumeroNetBonus = tsumeroScore myTsumero - tsumeroScore oppTsumero
       
+      -- 4.9 序盤多重詰めろイデアルボーナス (Opening Multiple-Tsumero Bonus)
+      myOpeningMulti = detectOpeningMultiTsumero plr st initSeedQEGTB
+      oppOpeningMulti = detectOpeningMultiTsumero (opponent plr) st initSeedQEGTB
+      openingMultiScore (Just _) = 2000.0
+      openingMultiScore Nothing  = 0.0
+      openingMultiBonus = openingMultiScore myOpeningMulti - openingMultiScore oppOpeningMulti
+      
       -- 5. モース玉危険度ポテンシャル
       morsePot (Just (kx, ky)) pTarget =
         let enemies = Map.toList $ Map.filter (\(Piece p _) -> p /= pTarget) bd
         in sum [ 10.0 / (fromIntegral (abs (kx - sx) + abs (ky - sy)) + 0.1) | ((sx, sy), _) <- enemies ]
       morsePot Nothing _ = 10000.0
       morseDiff = (morsePot oppKingPos (opponent plr) - morsePot myKingPos plr) * 6.0
-  in bdTotal + myHandTotal - enemyHandTotal + totalPromoBonus + wedgeBonus oppKingPos + knightForkBonus + recentForkBonus + tsumeroNetBonus + morseDiff
+  in bdTotal + myHandTotal - enemyHandTotal + totalPromoBonus + wedgeBonus oppKingPos + knightForkBonus + recentForkBonus + tsumeroNetBonus + openingMultiBonus + morseDiff
 
 isMorseEquilibrium :: State -> Bool
 isMorseEquilibrium st = abs (evaluateStratifiedState Sente st) <= 250.0
