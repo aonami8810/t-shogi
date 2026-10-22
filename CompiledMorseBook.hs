@@ -16,6 +16,68 @@ import qualified Data.Map as Map
 -- 1. 収束した臨界ノードの定義（Type-Level Symbols）
 -- ============================================================================
 
+-- | Node ID: AggressiveCentralRook_Melee (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly03_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly03_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly04_2b5e (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly04_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly05_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly05_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly06_2b5e (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly06_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly07_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly07_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly08_2b5e (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly08_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly09_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly09_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly10_1a1d (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly10_1a1e (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly11_8h2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly11_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly12_1a1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly13_2b1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly13_2b3a (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly14_1a1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly14_1a1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly15_1i1h (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly15_2b1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly16_1a1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly16_1g1h (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly17_1i1h (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly17_2b3a (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly18_1g2h (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly18_3a2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly19_2b3a (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly19_2b4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly20_1h1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly20_1h2h (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly21_2b3a (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly21_2b4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly22_1i1h (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly22_3a2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly23_2b3a (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly23_2b4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly24_2i2h (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly24_4a3b (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly25_2b3b (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly25_2b4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly26_N*4b (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly27_3a4a (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly27_3c2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly29_3a3b (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly29_3a4a (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly31_3b4b (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly31_4g4f (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly32_8b4b (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly33_4b5a (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly33_4b5a+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly34_3i3h (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly34_3i4i (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly35_4b5a (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly35_4b5a+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly36_2c2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: AggressiveCentralRook_Melee_DevPly36_3e3f (Type: Saddle, Potential: 0.0)
 -- | Node ID: Aigakari_StratifiedEquilibrium (Type: Saddle, Potential: 0.0)
 -- | Node ID: Aigakari_StratifiedEquilibrium_DevPly03_8h3c+ (Type: Saddle, Potential: 0.0)
 -- | Node ID: Aigakari_StratifiedEquilibrium_DevPly03_8h4d (Type: Saddle, Potential: 50.0)
@@ -73,6 +135,213 @@ import qualified Data.Map as Map
 -- | Node ID: Aigakari_StratifiedEquilibrium_DevPly33_2e5e (Type: Saddle, Potential: 0.0)
 -- | Node ID: Aigakari_StratifiedEquilibrium_DevPly35_2f2d (Type: Saddle, Potential: 50.0)
 -- | Node ID: Aigakari_StratifiedEquilibrium_DevPly35_2f6f (Type: Saddle, Potential: 50.0)
+-- | Node ID: Early3eBlitz_Melee (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly03_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly03_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly04_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly04_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly05_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly05_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly06_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly06_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly07_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly07_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly08_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly08_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly09_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly09_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly10_1a1d (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly10_1a1e (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly11_8h2b+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly11_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly12_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly12_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly13_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly13_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly14_1a1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly14_2b1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly15_1c2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly15_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly16_2b1a (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly16_2b1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly17_1b2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly17_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly18_2e1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly18_2e3g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly19_1a1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly19_1i1h (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly20_1g2g (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly20_1g2h (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly21_2a1a (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly21_2a3a (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly22_2c2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly22_3a2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly23_2a1a (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly23_2a2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly24_2c2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly24_3c2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly25_2h3h (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly25_2h4h (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly26_2a1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly26_2a3b (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly27_2h3h (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly27_2h4h (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly28_2b1a (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly28_3c4b (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly29_2h3h (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly29_2h4h (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly30_3c2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly30_3c2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly31_1h1f (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly31_1h1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly32_1d2c (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly32_1d2e (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly33_1h1f (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly33_1h1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly34_1e2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly34_1e2f (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly35_1h1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly35_2a2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly36_1f1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: Early3eBlitz_Melee_DevPly36_1f1g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly03_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly03_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly04_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly04_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly05_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly05_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly06_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly06_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly07_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly07_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly08_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly08_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly09_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly09_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly10_1a1d (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly10_1a1e (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly11_8h2b+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly11_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly12_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly12_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly13_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly13_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly14_1a1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly14_2b1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly15_1c2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly15_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly16_2b1a (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly16_2b1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly17_1b2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly17_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly18_2e1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly18_2e3g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly19_1a1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly19_1i1h (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly20_1g2g (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly20_3c2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly21_2a1a (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly21_2a3a (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly22_2c2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly22_3a2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly23_2a1a (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly23_2a2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly24_2c2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly24_3c2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly25_2h2g (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly25_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly26_2a1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly26_2a3b (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly27_2h2f (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly27_2h2g (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly28_2b1a (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly28_3c4b (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly29_2h2f (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly29_2h2g (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly30_3c2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly30_3c2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly31_1h1f (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly31_1h1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly32_1d2c (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly32_1d2e (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly33_1h1f (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly33_1h1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly34_1e2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly34_1e2f (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly35_1h1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly35_2a2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly36_1f1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly36_1f1g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly03_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly03_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: EarlyIshidaMelee_DevPly04_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly04_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly05_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly05_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly06_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly06_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly07_7f8e (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly07_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly08_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly08_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly09_7f8e (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly09_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly10_1a1d (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly10_1a1e (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly11_7f8e (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly11_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly12_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly12_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly13_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly13_7f8e (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly14_1a1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly14_2b1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly15_1c2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly15_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly16_2b1a (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly16_2b1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly17_1b2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly17_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly18_2e1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly18_2e3g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly19_1a1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly19_1i1h (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly20_1g2g (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly20_1g2h (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly21_2a1a (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly21_2a3a (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly22_2c2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly22_3a2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly23_2a1a (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly23_2a2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly24_2c2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly24_3c2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly25_2h3h (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly25_2h4h (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly26_2a1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly26_2a3b (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly27_2h3h (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly27_2h4h (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly28_2b1a (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly28_2c2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly29_2h3h (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly29_2h4h (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly30_3c6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly30_3c7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly31_1h1f (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly31_1h1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly32_1d2e (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly32_3c2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly33_1h1f (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly33_1h1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly34_1e2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly34_1e2f (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly35_1h1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly35_2b1a (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly36_1f1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyIshidaMelee_DevPly36_1f1g+ (Type: Saddle, Potential: 0.0)
 -- | Node ID: GokigenNakabisha_StratifiedEquilibrium (Type: Saddle, Potential: 0.0)
 -- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly04_2b5e (Type: Saddle, Potential: 0.0)
 -- | Node ID: GokigenNakabisha_StratifiedEquilibrium_DevPly06_2b5e (Type: Saddle, Potential: 0.0)
@@ -708,6 +977,61 @@ import qualified Data.Map as Map
 -- | Node ID: MetaIdeal_510_MorseGradientSink_62 (Type: Minimum, Potential: 9999.0)
 -- | Node ID: MetaIdeal_511_MorseGradientSink_63 (Type: Minimum, Potential: 9999.0)
 -- | Node ID: MetaIdeal_512_MorseGradientSink_64 (Type: Minimum, Potential: 9999.0)
+-- | Node ID: MigiShikenBlitz_Melee (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly03_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly03_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly04_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly04_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly05_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly07_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly09_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly10_1a1d (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly10_1a1e (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly13_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly14_1a1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly14_2b1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly15_1c2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly15_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly16_2b1a (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly16_2b1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly17_1b2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly17_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly18_2e1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly18_2e3g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly19_1a1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly19_1i1h (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly20_1g2h (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly20_3c2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly21_2a1a (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly21_2a3a (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly22_2c2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly22_3a2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly23_2a1a (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly23_2a3a (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly25_2a1a (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly25_2a2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly26_3c1a (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly26_3c1e (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly27_3a3b (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly27_3a4a (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly28_4b1e (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly28_4b2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly29_3a3b (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly29_3a4a (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly30_N*1a (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly30_N*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly31_3a3b (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly31_3a4a (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly32_4b2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly32_4b3c (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly33_2c2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly33_2c3c (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly34_3g2h (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly34_3g4h (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly35_3a4a (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly35_3i2h (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly36_3h2i (Type: Saddle, Potential: 0.0)
+-- | Node ID: MigiShikenBlitz_Melee_DevPly36_3h3i (Type: Saddle, Potential: 0.0)
 -- | Node ID: Sankenbisha_StratifiedEquilibrium (Type: Saddle, Potential: 0.0)
 -- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly03_8h3c+ (Type: Saddle, Potential: 0.0)
 -- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly03_8h4d (Type: Saddle, Potential: 50.0)
@@ -815,7 +1139,202 @@ import qualified Data.Map as Map
 -- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly37_7g8f (Type: Saddle, Potential: 0.0)
 -- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly38_2a3c (Type: Saddle, Potential: 0.0)
 -- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly38_2d1e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly03_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly03_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly04_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly04_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly05_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly05_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly06_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly06_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly07_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly07_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly08_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly08_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly09_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly09_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly10_1a1d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly10_1a1e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly11_8h2b+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly11_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly12_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly12_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly13_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly13_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly14_1a1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly14_2b1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly15_1c2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly15_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly16_2b1a (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly16_2b1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly17_1b2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly17_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly18_2e1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly18_2e3g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly19_1a1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly19_1i1h (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly20_1g2h (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly20_3c2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly21_2a1a (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly21_2a3a (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly22_2c2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly22_3a2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly23_2a1a (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly23_2a2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly24_2c2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly24_3c2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly25_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly25_3a4a (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly26_2a1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly26_2a3b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly27_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly27_3a2a (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly28_2b1a (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly28_3c4b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly29_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly29_3a2a (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly30_3c2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly30_3c2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly31_1h1f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly31_1h1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly32_1d2c (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly32_1d2e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly33_1h1f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly33_1h1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly34_1e2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly34_1e2f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly35_1h1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly35_2a2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly36_1f1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SodebishaBlitz_Melee_DevPly36_1f1g+ (Type: Saddle, Potential: 0.0)
 -- | Node ID: Start (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly03_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly03_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly04_5a4b (Type: Saddle, Potential: 50.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly04_5a5b (Type: Saddle, Potential: 50.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly05_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly05_B*1d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly06_B*1f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly06_B*1h (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly07_4e3d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly07_4e5d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly08_B*1e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly08_B*1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly09_4e3d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly09_4e5d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly10_1a1d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly10_1a1e (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly11_4e5d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly12_B*1d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly12_B*1f (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly13_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly13_6c5b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly15_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly15_G*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly17_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly18_1a1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly18_1a1d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly20_1a1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly20_1a1d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly21_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly21_G*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly22_1a1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly22_2e1g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly23_1c2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly23_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly24_2e1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly24_2e3g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly25_1b2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly25_1i1h (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly26_1g2h (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly26_4b1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly27_1a1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly27_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly28_1h1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly28_1h2h (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly29_2a2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly29_2a3a (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly31_2a2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly31_3a4a (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly32_1i1h (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly32_4b3b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly33_1a1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly33_3a4a (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly34_2i2h (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly34_3c2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly35_2a2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly35_3a4a (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly36_2c2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly36_3c2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly04_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly04_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly05_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly05_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: UreshinoMelee_DevPly06_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly06_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly07_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly07_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly08_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly08_2b7g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly09_1f1e (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly09_8h4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly10_1a1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly10_1a1c (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly11_1i1f (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly11_1i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly12_5a5b (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly12_5a6b (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly13_1i1f (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly13_1i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly14_3c2e (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly14_5a4b (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly15_1i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly15_2h1h (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly16_1g2g (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly16_1g2h (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly17_2h1h (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly17_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly18_1h2h (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly18_1h2i (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly19_2h1h (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly19_2i1g (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly20_1i1h (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly20_3c2e (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly21_2h1h (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly21_2h4h (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly22_2i2h (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly22_3c2e (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly23_2c1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly23_2c3b (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly24_3c2e (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly24_3i2i (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly25_2b1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly25_2b3a (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly26_3b2a (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly26_3c2e (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly27_2a2b (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly27_2h1h (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly28_3c2e (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly28_3i2i (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly29_2h3h (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly29_2h4h (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly30_3c2e (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly30_3i4i (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly31_2i2e (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly31_2i2f (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly32_1e2f (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly32_3c2e (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly33_2h3h (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly33_2h4h (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly34_1f2g (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly34_1f2g+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly35_2i2e (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly35_2i2g (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly36_1g1h (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly36_1g2g (Type: Saddle, Potential: 0.0)
 -- | Node ID: Yagura_StratifiedEquilibrium (Type: Saddle, Potential: 0.0)
 -- | Node ID: Yagura_StratifiedEquilibrium_DevPly03_8h3c+ (Type: Saddle, Potential: 0.0)
 -- | Node ID: Yagura_StratifiedEquilibrium_DevPly03_8h4d (Type: Saddle, Potential: 0.0)
@@ -1291,6 +1810,525 @@ type family ValidTransition (from :: Symbol) (to :: Symbol) :: Bool where
   ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly06_2b6f" = 'True
   ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium_DevPly04_2b5e" = 'True
   ValidTransition "Start" "GokigenNakabisha_StratifiedEquilibrium" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly36_2c2d" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly36_3c2d" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly35_2a2b" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly35_3a4a" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly34_2i2h" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly34_3c2b" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly33_1a1b" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly33_3a4a" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly32_1i1h" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly32_4b3b" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly31_2a2b" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly31_3a4a" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly29_2a3a" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly29_2a2b" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly28_1h2h" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly28_1h1g" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly27_1a1b" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly27_2i1g" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly26_1g2h" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly26_4b1b" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly25_1b2b" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly25_1i1h" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly24_2e1g" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly24_2e3g+" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly23_1c2b" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly23_2i1g" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly22_1a1c" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly22_2e1g+" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly21_2i1g" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly21_G*1b" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly20_1a1c" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly20_1a1d" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly18_1a1c" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly18_1a1d" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly17_2i1g" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly15_2i1g" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly15_G*1b" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly13_2i1g" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly13_6c5b" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly12_B*1d" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly12_B*1f" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly11_4e5d" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly10_1a1d" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly10_1a1e" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly09_4e3d" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly09_4e5d" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly08_B*1e" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly08_B*1g" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly07_4e3d" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly07_4e5d" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly06_B*1f" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly06_B*1h" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly05_B*1b" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly05_B*1d" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly04_5a4b" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly04_5a5b" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly03_8h4d" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee_DevPly03_8h3c+" = 'True
+  ValidTransition "Start" "SujichigaiBishop_Melee" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly36_1f1g+" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly36_1f1g" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly35_1h1g" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly35_2a2b" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly34_1e2f" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly34_1e2d" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly33_1h1g" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly33_1h1f" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly32_1d2e" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly32_1d2c" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly31_1h1g" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly31_1h1f" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly30_3c2b" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly30_3c2d" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly29_2h3h" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly29_2h4h" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly28_2b1a" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly28_3c4b" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly27_2h3h" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly27_2h4h" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly26_2a1b" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly26_2a3b" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly25_2h3h" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly25_2h4h" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly24_2c2d" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly24_3c2b" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly23_2a1a" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly23_2a2b" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly22_2c2d" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly22_3a2b" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly21_2a1a" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly21_2a3a" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly20_1g2h" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly20_1g2g" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly19_1a1b" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly19_1i1h" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly18_2e1g" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly18_2e3g+" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly17_1b2b" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly17_2i1g" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly16_2b1a" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly16_2b1c" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly15_1c2b" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly15_2i1g" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly14_1a1c" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly14_2b1c" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly13_2i1g" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly13_8h4d" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly12_2b6f" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly12_2b7g+" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly11_8h4d" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly11_8h2b+" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly10_1a1d" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly10_1a1e" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly09_8h4d" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly09_8h3c+" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly08_2b6f" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly08_2b7g+" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly07_8h4d" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly07_8h3c+" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly06_2b6f" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly06_2b7g+" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly05_8h4d" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly05_8h3c+" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly04_2b6f" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly04_2b7g+" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly03_8h4d" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee_DevPly03_8h3c+" = 'True
+  ValidTransition "Start" "Early3eBlitz_Melee" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly36_2c2d" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly36_3e3f" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly35_4b5a+" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly35_4b5a" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly34_3i4i" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly34_3i3h" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly33_4b5a+" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly33_4b5a" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly32_8b4b" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly31_3b4b" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly31_4g4f" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly29_3a4a" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly29_3a3b" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly27_3a4a" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly27_3c2d" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly26_N*4b" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly25_2b4d" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly25_2b3b" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly24_2i2h" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly24_4a3b" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly23_2b3a" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly23_2b4d" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly22_1i1h" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly22_3a2b" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly21_2b3a" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly21_2b4d" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly20_1h2h" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly20_1h1g" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly19_2b3a" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly19_2b4d" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly18_1g2h" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly18_3a2b" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly17_1i1h" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly17_2b3a" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly16_1a1c" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly16_1g1h" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly15_1i1h" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly15_2b1c" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly14_1a1b" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly14_1a1c" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly13_2b1c" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly13_2b3a" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly12_1a1b" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly11_8h4d" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly11_8h2b" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly10_1a1d" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly10_1a1e" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly09_8h4d" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly09_8h3c+" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly08_2b5e" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly08_2b6f" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly07_8h4d" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly07_8h3c+" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly06_2b5e" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly06_2b6f" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly05_8h4d" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly05_8h3c+" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly04_2b5e" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly04_2b6f" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly03_8h4d" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee_DevPly03_8h3c+" = 'True
+  ValidTransition "Start" "AggressiveCentralRook_Melee" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly36_1f1g+" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly36_1f1g" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly35_1h1g" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly35_2a2b" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly34_1e2f" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly34_1e2d" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly33_1h1g" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly33_1h1f" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly32_1d2e" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly32_1d2c" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly31_1h1g" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly31_1h1f" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly30_3c2b" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly30_3c2d" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly29_2h2g" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly29_2h2f" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly28_2b1a" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly28_3c4b" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly27_2h2g" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly27_2h2f" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly26_2a1b" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly26_2a3b" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly25_2h2g" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly25_2i1g" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly24_2c2d" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly24_3c2b" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly23_2a1a" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly23_2a2b" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly22_2c2d" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly22_3a2b" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly21_2a1a" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly21_2a3a" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly20_1g2g" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly20_3c2b" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly19_1a1b" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly19_1i1h" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly18_2e1g" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly18_2e3g+" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly17_1b2b" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly17_2i1g" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly16_2b1a" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly16_2b1c" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly15_1c2b" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly15_2i1g" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly14_1a1c" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly14_2b1c" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly13_2i1g" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly13_8h4d" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly12_2b6f" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly12_2b7g+" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly11_8h4d" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly11_8h2b+" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly10_1a1d" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly10_1a1e" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly09_8h4d" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly09_8h3c+" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly08_2b6f" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly08_2b7g+" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly07_8h4d" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly07_8h3c+" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly06_2b6f" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly06_2b7g+" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly05_8h4d" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly05_8h3c+" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly04_2b6f" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly04_2b7g+" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly03_8h4d" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee_DevPly03_8h3c+" = 'True
+  ValidTransition "Start" "EarlyClimbingSilver_Melee" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly36_3h2i" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly36_3h3i" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly35_3a4a" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly35_3i2h" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly34_3g2h" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly34_3g4h" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly33_2c3c" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly33_2c2d" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly32_4b3c" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly32_4b2d" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly31_3a4a" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly31_3a3b" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly30_N*1a" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly30_N*1b" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly29_3a4a" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly29_3a3b" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly28_4b2d" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly28_4b1e" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly27_3a4a" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly27_3a3b" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly26_3c1a" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly26_3c1e" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly25_2a1a" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly25_2a2b" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly23_2a1a" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly23_2a3a" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly22_2c2d" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly22_3a2b" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly21_2a1a" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly21_2a3a" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly20_1g2h" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly20_3c2b" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly19_1a1b" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly19_1i1h" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly18_2e1g" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly18_2e3g+" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly17_1b2b" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly17_2i1g" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly16_2b1a" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly16_2b1c" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly15_1c2b" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly15_2i1g" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly14_1a1c" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly14_2b1c" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly13_2i1g" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly10_1a1d" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly10_1a1e" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly09_8h4d" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly07_8h4d" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly05_8h4d" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly04_2b6f" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly04_2b7g+" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly03_8h4d" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee_DevPly03_8h3c+" = 'True
+  ValidTransition "Start" "MigiShikenBlitz_Melee" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly36_1f1g+" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly36_1f1g" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly35_1h1g" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly35_2a2b" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly34_1e2f" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly34_1e2d" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly33_1h1g" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly33_1h1f" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly32_1d2e" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly32_1d2c" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly31_1h1g" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly31_1h1f" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly30_3c2b" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly30_3c2d" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly29_2i1g" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly29_3a2a" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly28_2b1a" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly28_3c4b" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly27_2i1g" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly27_3a2a" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly26_2a1b" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly26_2a3b" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly25_2i1g" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly25_3a4a" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly24_2c2d" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly24_3c2b" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly23_2a1a" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly23_2a2b" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly22_2c2d" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly22_3a2b" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly21_2a1a" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly21_2a3a" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly20_1g2h" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly20_3c2b" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly19_1a1b" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly19_1i1h" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly18_2e1g" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly18_2e3g+" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly17_1b2b" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly17_2i1g" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly16_2b1a" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly16_2b1c" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly15_1c2b" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly15_2i1g" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly14_1a1c" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly14_2b1c" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly13_2i1g" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly13_8h4d" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly12_2b6f" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly12_2b7g+" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly11_8h4d" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly11_8h2b+" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly10_1a1d" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly10_1a1e" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly09_8h4d" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly09_8h3c+" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly08_2b6f" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly08_2b7g+" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly07_8h4d" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly07_8h3c+" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly06_2b6f" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly06_2b7g+" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly05_8h4d" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly05_8h3c+" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly04_2b6f" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly04_2b7g+" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly03_8h4d" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee_DevPly03_8h3c+" = 'True
+  ValidTransition "Start" "SodebishaBlitz_Melee" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly36_1f1g+" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly36_1f1g" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly35_1h1g" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly35_2b1a" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly34_1e2f" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly34_1e2d" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly33_1h1g" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly33_1h1f" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly32_1d2e" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly32_3c2b" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly31_1h1g" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly31_1h1f" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly30_3c6f" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly30_3c7g+" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly29_2h3h" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly29_2h4h" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly28_2b1a" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly28_2c2d" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly27_2h3h" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly27_2h4h" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly26_2a1b" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly26_2a3b" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly25_2h3h" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly25_2h4h" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly24_2c2d" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly24_3c2b" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly23_2a1a" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly23_2a2b" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly22_2c2d" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly22_3a2b" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly21_2a1a" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly21_2a3a" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly20_1g2h" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly20_1g2g" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly19_1a1b" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly19_1i1h" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly18_2e1g" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly18_2e3g+" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly17_1b2b" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly17_2i1g" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly16_2b1a" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly16_2b1c" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly15_1c2b" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly15_2i1g" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly14_1a1c" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly14_2b1c" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly13_2i1g" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly13_7f8e" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly12_2b6f" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly12_2b7g+" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly11_7f8e" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly11_8h4d" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly10_1a1d" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly10_1a1e" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly09_7f8e" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly09_8h4d" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly08_2b6f" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly08_2b7g+" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly07_7f8e" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly07_8h4d" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly06_2b6f" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly06_2b7g+" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly05_8h4d" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly05_8h3c+" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly04_2b6f" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly04_2b7g+" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly03_8h4d" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee_DevPly03_8h3c+" = 'True
+  ValidTransition "Start" "EarlyIshidaMelee" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly36_1g1h" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly36_1g2g" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly35_2i2g" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly35_2i2e" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly34_1f2g+" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly34_1f2g" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly33_2h3h" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly33_2h4h" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly32_1e2f" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly32_3c2e" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly31_2i2f" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly31_2i2e" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly30_3c2e" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly30_3i4i" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly29_2h3h" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly29_2h4h" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly28_3c2e" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly28_3i2i" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly27_2a2b" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly27_2h1h" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly26_3b2a" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly26_3c2e" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly25_2b3a" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly25_2b1b" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly24_3c2e" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly24_3i2i" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly23_2c1b" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly23_2c3b" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly22_2i2h" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly22_3c2e" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly21_2h1h" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly21_2h4h" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly20_1i1h" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly20_3c2e" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly19_2h1h" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly19_2i1g" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly18_1h2i" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly18_1h2h" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly17_2h1h" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly17_2i1g" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly16_1g2h" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly16_1g2g" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly15_1i1g" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly15_2h1h" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly14_3c2e" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly14_5a4b" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly13_1i1g" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly13_1i1f" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly12_5a5b" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly12_5a6b" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly11_1i1g" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly11_1i1f" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly10_1a1b" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly10_1a1c" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly09_1f1e" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly09_8h4d" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly08_2b6f" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly08_2b7g+" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly07_8h4d" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly07_8h3c+" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly06_2b6f" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly06_2b7g+" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly05_8h4d" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly05_8h3c+" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly04_2b6f" = 'True
+  ValidTransition "Start" "UreshinoMelee_DevPly04_2b7g+" = 'True
+  ValidTransition "Start" "UreshinoMelee" = 'True
   ValidTransition from to = 'False
 
 -- ============================================================================
@@ -1693,5 +2731,524 @@ runtimePaths = Map.fromList
     (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly06_2b5e"), ["5g5f","3c3d","5h5e","8c8d","5e5f","2b5e","P*5b"]),
     (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly06_2b6f"), ["5g5f","3c3d","5h5e","8c8d","5e5f","2b6f","P*5b"]),
     (("Start", "GokigenNakabisha_StratifiedEquilibrium_DevPly04_2b5e"), ["5g5f","3c3d","5h5e","2b5e","5f5e","1c1d","B*6b"]),
-    (("Start", "GokigenNakabisha_StratifiedEquilibrium"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","3g3f","8d7c","S*7h","8b8g+","P*3b"])
+    (("Start", "GokigenNakabisha_StratifiedEquilibrium"), ["5g5f","3c3d","5h5e","8c8d","5e5f","8d8e","7g7f","6b6c","7i6h","4a3b","4i5h","5a4b","3i4h","3a2b","5i4h","4b3a","4h3h","7a6b","3h2h","6b7c","2g2f","7c8d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","3g3f","8d7c","S*7h","8b8g+","P*3b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly36_2c2d"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g1h","1a2a","1h1i","G*3a","4a5a","2a1a","1i2i","1a2a","2i3i","2a1a","2c2d","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly36_3c2d"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g1h","1a2a","1h1i","G*3a","4a5a","2a1a","1i2i","1a2a","2i3i","2a1a","3c2d","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly35_2a2b"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g1h","1a2a","1h1i","G*3a","4a5a","2a1a","1i2i","1a2a","2i3i","2a2b","3i4i","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly35_3a4a"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g1h","1a2a","1h1i","G*3a","4a5a","2a1a","1i2i","1a2a","2i3i","3a4a","4b4a","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly34_2i2h"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g1h","1a2a","1h1i","G*3a","4a5a","2a1a","1i2i","1a2a","2i2h","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly34_3c2b"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g1h","1a2a","1h1i","G*3a","4a5a","2a1a","1i2i","1a2a","3c2b","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly33_1a1b"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g1h","1a2a","1h1i","G*3a","4a5a","2a1a","1i2i","1a1b","4b1b","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly33_3a4a"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g1h","1a2a","1h1i","G*3a","4a5a","2a1a","1i2i","3a4a","4b4a","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly32_1i1h"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g1h","1a2a","1h1i","G*3a","4a5a","2a1a","1i1h","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly32_4b3b"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g1h","1a2a","1h1i","G*3a","4a5a","2a1a","4b3b","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly31_2a2b"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g1h","1a2a","1h1i","G*3a","4a5a","2a2b","3c2b","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly31_3a4a"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g1h","1a2a","1h1i","G*3a","4a5a","3a4a","4b4a","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly29_2a3a"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g1h","1a2a","1h1i","2a3a","4a3a","G*3b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly29_2a2b"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g1h","1a2a","1h1i","2a2b","3c2b","G*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly28_1h2h"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g1h","1a2a","1h2h","G*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly28_1h1g"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g1h","1a2a","1h1g","G*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly27_1a1b"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g1h","1a1b","4b1b","G*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly27_2i1g"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g1h","2i1g","1h1g","G*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly26_1g2h"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g2h","G*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly26_4b1b"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","4b1b","G*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly25_1b2b"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b2b","3c2b","G*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly25_1i1h"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1i1h","4b1b","G*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly24_2e1g"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g","G*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly24_2e3g+"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e3g+","G*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly23_1c2b"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c2b","3c2b","G*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly23_2i1g"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","2i1g","1b1c","G*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly22_1a1c"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1c","G*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly22_2e1g+"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","2e1g+","G*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly21_2i1g"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","2i1g","2e1g+","G*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly21_G*1b"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","G*1b","1a1b","P*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly20_1a1c"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","1a1c","G*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly20_1a1d"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","1a1d","G*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly18_1a1c"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","1a1c","P*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly18_1a1d"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","1a1d","P*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly17_2i1g"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","2i1g","2e1g+","P*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly15_2i1g"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","2i1g","2e1g+","G*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly15_G*1b"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*1b","1a1b","P*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly13_2i1g"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","2i1g","2e1g+","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly13_6c5b"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c5b","4a5b","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly12_B*1d"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","B*1d","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly12_B*1f"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","B*1f","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly11_4e5d"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e5d","5c5d","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly10_1a1d"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","1a1d","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly10_1a1e"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","1a1e","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly09_4e3d"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","4e3d","1e1f","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly09_4e5d"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","4e5d","5c5d","1f1e","1a1e","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly08_B*1e"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","B*1e","1f1e","1d1e","B*6b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly08_B*1g"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","B*1g","1i1g","1a1b","B*6b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly07_4e3d"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","4e3d","B*4h","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly07_4e5d"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","4e5d","5c5d","1g1f","B*4h","2h4h","B*6h","B*6b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly06_B*1f"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","B*1f","1g1f","1a1b","B*6b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly06_B*1h"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","B*1h","1i1h","1c1d","B*6b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly05_B*1b"), ["7g7f","3c3d","8h2b+","3a2b","B*1b","1a1b","1g1f","B*4h","2h4h","B*6h","B*6b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly05_B*1d"), ["7g7f","3c3d","8h2b+","3a2b","B*1d","1c1d","1g1f","B*4h","2h4h","B*6h","B*6b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly04_5a4b"), ["7g7f","3c3d","8h2b+","5a4b","2b3a","4a3a","S*3c","2a3c","B*5a","4b5a","1g1f"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly04_5a5b"), ["7g7f","3c3d","8h2b+","5a5b","2b3a","4a3a","S*4a","3a4a","1g1f","S*4h","2h4h"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly03_8h4d"), ["7g7f","3c3d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly03_8h3c+"), ["7g7f","3c3d","8h3c+","2a3c","1g1f","B*4h","2h4h","1a1b","B*6b"]),
+    (("Start", "SujichigaiBishop_Melee"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g1h","1a2a","1h1i","G*3a","4a5a","2a1a","1i2i","1a2a","2i3i","2a1a","3i4i","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly36_1f1g+"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e1f","2a1a","1f1g+","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly36_1f1g"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e1f","2a1a","1f1g","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly35_1h1g"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e1f","1h1g","3c8h+","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly35_2a2b"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e1f","2a2b","3c8h+","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly34_1e2f"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e2f","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly34_1e2d"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e2d","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly33_1h1g"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","1h1g","3c8h+","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly33_1h1f"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","1h1f","3c8h+","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly32_1d2e"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d2e","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly32_1d2c"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d2c","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly31_1h1g"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","1h1g","3c8h+","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly31_1h1f"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","1h1f","3c8h+","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly30_3c2b"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","3c2b","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly30_3c2d"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","3c2d","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly29_2h3h"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2h3h","3c8h+","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly29_2h4h"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2h4h","3c8h+","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly28_2b1a"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1a","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly28_3c4b"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","3c4b","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly27_2h3h"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2h3h","3c8h+","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly27_2h4h"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2h4h","3c8h+","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly26_2a1b"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a1b","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly26_2a3b"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a3b","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly25_2h3h"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2h3h","3c8h+","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly25_2h4h"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2h4h","3c8h+","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly24_2c2d"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","2c2d","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly24_3c2b"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3c2b","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly23_2a1a"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a1a","3c8h+","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly23_2a2b"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a2b","3c8h+","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly22_2c2d"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","2c2d","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly22_3a2b"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a2b","N*4c"]),
+    (("Start", "Early3eBlitz_Melee_DevPly21_2a1a"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","2a1a","1h2h","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly21_2a3a"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","2a3a","1h2h","S*4b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly20_1g2h"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g2h","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly20_1g2g"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g2g","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly19_1a1b"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a1b","1g2h","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly19_1i1h"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1i1h","1g2h","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly18_2e1g"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly18_2e3g+"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e3g+","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly17_1b2b"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b2b","3c8h+","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly17_2i1g"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","2i1g","3c8h+","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly16_2b1a"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b1a","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly16_2b1c"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b1c","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly15_1c2b"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c2b","3a2b","B*6b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly15_2i1g"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","2i1g","2b8h+","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly14_1a1c"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1c","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly14_2b1c"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","2b1c","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly13_2i1g"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","2i1g","2b8h+","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly13_8h4d"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","8h4d","2b4d","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly12_2b6f"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","2b6f","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly12_2b7g+"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","2b7g+","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly11_8h4d"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","8h4d","2b4d","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly11_8h2b+"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","3a2b","B*6b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly10_1a1d"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","1a1d","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly10_1a1e"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","1a1e","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly09_8h4d"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","8h4d","2b4d","1f1e","4d9i+","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly09_8h3c+"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","8h3c+","2a3c","1f1e","1a1e","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly08_2b6f"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","2b6f","6g6f","1a1b","B*6b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly08_2b7g+"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","2b7g+","8h7g","1a1b","B*6b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly07_8h4d"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i","P*5b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly07_8h3c+"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","8h3c+","2a3c","1g1f","B*3g","2i3g","1a1b","B*6b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly06_2b6f"), ["7g7f","3c3d","2g2f","8c8d","3g3f","2b6f","6g6f","1c1d","B*6b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly06_2b7g+"), ["7g7f","3c3d","2g2f","8c8d","3g3f","2b7g+","8h7g","1c1d","B*6b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly05_8h4d"), ["7g7f","3c3d","2g2f","8c8d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "Early3eBlitz_Melee_DevPly05_8h3c+"), ["7g7f","3c3d","2g2f","8c8d","8h3c+","2a3c","1g1f","B*4h","2h4h","1a1b","B*6b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly04_2b6f"), ["7g7f","3c3d","2g2f","2b6f","6g6f","1c1d","B*6b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly04_2b7g+"), ["7g7f","3c3d","2g2f","2b7g+","8h7g","1c1d","B*6b"]),
+    (("Start", "Early3eBlitz_Melee_DevPly03_8h4d"), ["7g7f","3c3d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "Early3eBlitz_Melee_DevPly03_8h3c+"), ["7g7f","3c3d","8h3c+","2a3c","1g1f","B*4h","2h4h","1a1b","B*6b"]),
+    (("Start", "Early3eBlitz_Melee"), ["7g7f","3c3d","2g2f","8c8d","3g3f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e1f","2a1a","3c8h+","N*4c"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly36_2c2d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","S*4b","5a5b","2g2f","3d3e","2f2e","2c2d","P*5b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly36_3e3f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","S*4b","5a5b","2g2f","3d3e","2f2e","3e3f","P*5b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly35_4b5a+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","S*4b","5a5b","2g2f","3d3e","4b5a+","5b5a","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly35_4b5a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","S*4b","5a5b","2g2f","3d3e","4b5a","3i4i","P*5b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly34_3i4i"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","S*4b","5a5b","2g2f","3i4i","P*5b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly34_3i3h"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","S*4b","5a5b","2g2f","3i3h","P*5b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly33_4b5a+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","S*4b","5a5b","4b5a+","5b5a","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly33_4b5a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","S*4b","5a5b","4b5a","3i4i","P*5b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly32_8b4b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","S*4b","8b4b","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly31_3b4b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","3b4b","5a4b","P*4b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly31_4g4f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","4g4f","3i4i","S*4b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly29_3a4a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","3a4a","4b4a","G*4b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly29_3a3b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","3a3b","4b3b","P*3b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly27_3a4a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3a4a","5a4a","S*3b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly27_3c2d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c2d","2c2d","S*4b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly26_N*4b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","N*4b","S*4b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly25_2b4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b4d","4c4d","S*4b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly25_2b3b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3b","4a3b","S*4b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly24_2i2h"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i2h","S*4b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly24_4a3b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","4a3b","S*4b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly23_2b3a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2b3a","4a3a","S*4b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly23_2b4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2b4d","4c4d","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly22_1i1h"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i1h","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly22_3a2b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","3a2b","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly21_2b3a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","2b3a","4a3a","S*4b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly21_2b4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","2b4d","4c4d","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly20_1h2h"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h2h","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly20_1h1g"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1g","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly19_2b3a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","2b3a","4a3a","S*4b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly19_2b4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","2b4d","4c4d","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly18_1g2h"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g2h","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly18_3a2b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","3a2b","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly17_1i1h"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1i1h","3a2b","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly17_2b3a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","2b3a","4a3a","S*4b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly16_1a1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1c","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly16_1g1h"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1g1h","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly15_1i1h"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1i1h","3a2b","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly15_2b1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","2b1c","1a1c","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly14_1a1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","1a1b","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly14_1a1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","1a1c","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly13_2b1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","2b1c","1a1c","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly13_2b3a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","2b3a","4a3a","S*4b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly12_1a1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1a1b","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly11_8h4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h4d","2b4d","P*5b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly11_8h2b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b","3a2b","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly10_1a1d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","1a1d","P*5b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly10_1a1e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","1a1e","P*5b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly09_8h4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","8h4d","2b4d","1f1e","4d9i+","P*5b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly09_8h3c+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","8h3c+","2a3c","1f1e","1a1e","P*5b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly08_2b5e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","2b5e","5f5e","1a1b","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly08_2b6f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","2b6f","6g6f","1a1b","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly07_8h4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i","P*5b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly07_8h3c+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","8h3c+","2a3c","1g1f","B*4h","3i4h","1a1b","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly06_2b5e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","2b5e","5f5e","1c1d","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly06_2b6f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","2b6f","6g6f","1c1d","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly05_8h4d"), ["7g7f","3c3d","5g5f","8c8d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly05_8h3c+"), ["7g7f","3c3d","5g5f","8c8d","8h3c+","2a3c","1g1f","B*4h","2h4h","1a1b","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly04_2b5e"), ["7g7f","3c3d","5g5f","2b5e","5f5e","1c1d","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly04_2b6f"), ["7g7f","3c3d","5g5f","2b6f","6g6f","1c1d","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly03_8h4d"), ["7g7f","3c3d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "AggressiveCentralRook_Melee_DevPly03_8h3c+"), ["7g7f","3c3d","8h3c+","2a3c","1g1f","B*4h","2h4h","1a1b","B*6b"]),
+    (("Start", "AggressiveCentralRook_Melee"), ["7g7f","3c3d","5g5f","8c8d","2h5h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","1c2e","1e1d","2e1g+","1d1c+","1a1b","1c1b","1g1h","1b1a","1h1i","1a2a","1i2i","2a3a","2i3i","2b3c","4a4b","3c4b","5a4b","G*3b","4b5a","S*4b","5a5b","2g2f","3d3e","2f2e","3i4i","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly36_1f1g+"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e1f","2a1a","1f1g+","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly36_1f1g"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e1f","2a1a","1f1g","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly35_1h1g"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e1f","1h1g","3c8h+","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly35_2a2b"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e1f","2a2b","3c8h+","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly34_1e2f"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e2f","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly34_1e2d"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e2d","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly33_1h1g"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","1h1g","3c8h+","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly33_1h1f"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","1h1f","3c8h+","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly32_1d2e"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d2e","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly32_1d2c"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d2c","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly31_1h1g"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","1h1g","3c8h+","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly31_1h1f"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","1h1f","3c8h+","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly30_3c2b"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","3c2b","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly30_3c2d"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","3c2d","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly29_2h2g"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2h2g","3c8h+","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly29_2h2f"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2h2f","3c8h+","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly28_2b1a"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1a","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly28_3c4b"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","3c4b","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly27_2h2g"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2h2g","3c8h+","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly27_2h2f"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2h2f","3c8h+","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly26_2a1b"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a1b","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly26_2a3b"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a3b","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly25_2h2g"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2h2g","3c8h+","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly25_2i1g"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2i1g","3c8h+","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly24_2c2d"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","2c2d","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly24_3c2b"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3c2b","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly23_2a1a"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a1a","3c8h+","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly23_2a2b"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a2b","3c8h+","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly22_2c2d"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","2c2d","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly22_3a2b"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a2b","N*4c"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly21_2a1a"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","2a1a","1h2h","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly21_2a3a"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","2a3a","1h2h","S*4b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly20_1g2g"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g2g","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly20_3c2b"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","3c2b","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly19_1a1b"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a1b","1g2h","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly19_1i1h"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1i1h","1g2h","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly18_2e1g"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly18_2e3g+"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e3g+","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly17_1b2b"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b2b","3c8h+","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly17_2i1g"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","2i1g","3c8h+","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly16_2b1a"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b1a","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly16_2b1c"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b1c","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly15_1c2b"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c2b","3a2b","B*6b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly15_2i1g"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","2i1g","2b8h+","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly14_1a1c"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1c","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly14_2b1c"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","2b1c","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly13_2i1g"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","2i1g","2b8h+","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly13_8h4d"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","8h4d","2b4d","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly12_2b6f"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","2b6f","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly12_2b7g+"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","2b7g+","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly11_8h4d"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","8h4d","2b4d","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly11_8h2b+"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","3a2b","B*6b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly10_1a1d"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","1a1d","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly10_1a1e"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","1a1e","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly09_8h4d"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","8h4d","2b4d","1f1e","4d9i+","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly09_8h3c+"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","8h3c+","2a3c","1f1e","1a1e","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly08_2b6f"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","2b6f","6g6f","1a1b","B*6b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly08_2b7g+"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","2b7g+","8h7g","1a1b","B*6b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly07_8h4d"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i","P*5b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly07_8h3c+"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","8h3c+","2a3c","1g1f","B*4h","4i4h","1a1b","B*6b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly06_2b6f"), ["7g7f","3c3d","2g2f","8c8d","3i3h","2b6f","6g6f","1c1d","B*6b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly06_2b7g+"), ["7g7f","3c3d","2g2f","8c8d","3i3h","2b7g+","8h7g","1c1d","B*6b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly05_8h4d"), ["7g7f","3c3d","2g2f","8c8d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly05_8h3c+"), ["7g7f","3c3d","2g2f","8c8d","8h3c+","2a3c","1g1f","B*4h","2h4h","1a1b","B*6b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly04_2b6f"), ["7g7f","3c3d","2g2f","2b6f","6g6f","1c1d","B*6b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly04_2b7g+"), ["7g7f","3c3d","2g2f","2b7g+","8h7g","1c1d","B*6b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly03_8h4d"), ["7g7f","3c3d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly03_8h3c+"), ["7g7f","3c3d","8h3c+","2a3c","1g1f","B*4h","2h4h","1a1b","B*6b"]),
+    (("Start", "EarlyClimbingSilver_Melee"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e1f","2a1a","3c8h+","N*4c"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly36_3h2i"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a3a","3c4b","2f2e","3d3e","2e2d","3e3f","2d2c+","3f3g+","2c2b","3g3h","2b2a","3h2i","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly36_3h3i"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a3a","3c4b","2f2e","3d3e","2e2d","3e3f","2d2c+","3f3g+","2c2b","3g3h","2b2a","3h3i","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly35_3a4a"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a3a","3c4b","2f2e","3d3e","2e2d","3e3f","2d2c+","3f3g+","2c2b","3g3h","3a4a","5a4a","G*4b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly35_3i2h"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a3a","3c4b","2f2e","3d3e","2e2d","3e3f","2d2c+","3f3g+","2c2b","3g3h","3i2h","3h4h","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly34_3g2h"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a3a","3c4b","2f2e","3d3e","2e2d","3e3f","2d2c+","3f3g+","2c2b","3g2h","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly34_3g4h"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a3a","3c4b","2f2e","3d3e","2e2d","3e3f","2d2c+","3f3g+","2c2b","3g4h","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly33_2c3c"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a3a","3c4b","2f2e","3d3e","2e2d","3e3f","2d2c+","3f3g+","2c3c","3g4h","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly33_2c2d"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a3a","3c4b","2f2e","3d3e","2e2d","3e3f","2d2c+","3f3g+","2c2d","3g4h","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly32_4b3c"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a3a","3c4b","2f2e","3d3e","2e2d","3e3f","2d2c+","4b3c","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly32_4b2d"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a3a","3c4b","2f2e","3d3e","2e2d","3e3f","2d2c+","4b2d","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly31_3a4a"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a3a","3c4b","2f2e","3d3e","2e2d","3e3f","3a4a","5a4a","G*4b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly31_3a3b"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a3a","3c4b","2f2e","3d3e","2e2d","3e3f","3a3b","4a3b","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly30_N*1a"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a3a","3c4b","2f2e","3d3e","2e2d","N*1a","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly30_N*1b"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a3a","3c4b","2f2e","3d3e","2e2d","N*1b","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly29_3a4a"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a3a","3c4b","2f2e","3d3e","3a4a","5a4a","G*4b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly29_3a3b"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a3a","3c4b","2f2e","3d3e","3a3b","4a3b","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly28_4b2d"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a3a","3c4b","2f2e","4b2d","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly28_4b1e"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a3a","3c4b","2f2e","4b1e","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly27_3a4a"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a3a","3c4b","3a4a","5a4a","G*4b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly27_3a3b"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a3a","3c4b","3a3b","4a3b","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly26_3c1a"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a3a","3c1a","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly26_3c1e"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a3a","3c1e","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly25_2a1a"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a1a","3c1a","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly25_2a2b"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a2b","3c2b","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly23_2a1a"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a1a","3c1a","N*4c"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly23_2a3a"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","4a3a","N*4c"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly22_2c2d"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","2c2d","N*4c"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly22_3a2b"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a2b","N*4c"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly21_2a1a"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","2a1a","3c1a","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly21_2a3a"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","2a3a","4a3a","S*4b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly20_1g2h"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g2h","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly20_3c2b"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","3c2b","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly19_1a1b"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a1b","8b1b","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly19_1i1h"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1i1h","3c1a","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly18_2e1g"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly18_2e3g+"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e3g+","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly17_1b2b"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b2b","3a2b","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly17_2i1g"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","2i1g","8b1b","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly16_2b1a"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b1a","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly16_2b1c"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b1c","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly15_1c2b"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c2b","3a2b","B*6b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly15_2i1g"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","2i1g","1b1c","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly14_1a1c"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1c","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly14_2b1c"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","2b1c","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly13_2i1g"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","2i1g","2e1g+","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly10_1a1d"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","1a1d","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly10_1a1e"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","1a1e","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly09_8h4d"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","8h4d","2b4d","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly07_8h4d"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","8h4d","2b4d","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly05_8h4d"), ["7g7f","3c3d","2g2f","4c4d","8h4d","2b4d","P*5b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly04_2b6f"), ["7g7f","3c3d","2g2f","2b6f","6g6f","1c1d","B*6b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly04_2b7g+"), ["7g7f","3c3d","2g2f","2b7g+","8h7g","1c1d","B*6b"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly03_8h4d"), ["7g7f","3c3d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "MigiShikenBlitz_Melee_DevPly03_8h3c+"), ["7g7f","3c3d","8h3c+","2a3c","1g1f","B*4h","2h4h","1a1b","B*6b"]),
+    (("Start", "MigiShikenBlitz_Melee"), ["7g7f","3c3d","2g2f","4c4d","2h4h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","N*4c","3b4c","2a3a","3c4b","2f2e","3d3e","2e2d","3e3f","2d2c+","3f3g+","2c2b","3g3h","2b2a","3h4h","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly36_1f1g+"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e1f","2a1a","1f1g+","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly36_1f1g"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e1f","2a1a","1f1g","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly35_1h1g"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e1f","1h1g","3c8h+","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly35_2a2b"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e1f","2a2b","3c8h+","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly34_1e2f"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e2f","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly34_1e2d"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e2d","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly33_1h1g"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","1h1g","3c8h+","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly33_1h1f"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","1h1f","3c8h+","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly32_1d2e"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d2e","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly32_1d2c"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d2c","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly31_1h1g"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","1h1g","3c8h+","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly31_1h1f"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","1h1f","3c8h+","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly30_3c2b"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","3c2b","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly30_3c2d"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","3c2d","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly29_2i1g"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2i1g","3c8h+","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly29_3a2a"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","3a2a","3c8h+","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly28_2b1a"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1a","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly28_3c4b"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","3c4b","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly27_2i1g"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2i1g","3c8h+","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly27_3a2a"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","3a2a","3c8h+","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly26_2a1b"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a1b","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly26_2a3b"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a3b","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly25_2i1g"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2i1g","3c8h+","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly25_3a4a"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","3a4a","5a4a","G*4b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly24_2c2d"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","2c2d","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly24_3c2b"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3c2b","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly23_2a1a"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a1a","3c8h+","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly23_2a2b"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a2b","3c8h+","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly22_2c2d"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","2c2d","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly22_3a2b"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a2b","N*4c"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly21_2a1a"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","2a1a","3c8h+","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly21_2a3a"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","2a3a","3c8h+","S*4b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly20_1g2h"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g2h","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly20_3c2b"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","3c2b","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly19_1a1b"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a1b","3c8h+","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly19_1i1h"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1i1h","3c8h+","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly18_2e1g"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly18_2e3g+"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e3g+","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly17_1b2b"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b2b","3c8h+","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly17_2i1g"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","2i1g","3c8h+","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly16_2b1a"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b1a","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly16_2b1c"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b1c","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly15_1c2b"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c2b","3a2b","B*6b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly15_2i1g"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","2i1g","2b8h+","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly14_1a1c"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1c","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly14_2b1c"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","2b1c","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly13_2i1g"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","2i1g","2b8h+","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly13_8h4d"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","8h4d","2b4d","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly12_2b6f"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","2b6f","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly12_2b7g+"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","2b7g+","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly11_8h4d"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","8h4d","2b4d","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly11_8h2b+"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","3a2b","B*6b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly10_1a1d"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","1a1d","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly10_1a1e"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","1a1e","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly09_8h4d"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","8h4d","2b4d","1f1e","4d9i+","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly09_8h3c+"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","8h3c+","2a3c","1f1e","1a1e","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly08_2b6f"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","2b6f","6g6f","1a1b","B*6b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly08_2b7g+"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","2b7g+","8h7g","1a1b","B*6b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly07_8h4d"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i","P*5b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly07_8h3c+"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","8h3c+","2a3c","1g1f","B*4h","3h4h","1a1b","B*6b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly06_2b6f"), ["7g7f","3c3d","2g2f","8c8d","2h3h","2b6f","6g6f","1c1d","B*6b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly06_2b7g+"), ["7g7f","3c3d","2g2f","8c8d","2h3h","2b7g+","8h7g","1c1d","B*6b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly05_8h4d"), ["7g7f","3c3d","2g2f","8c8d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly05_8h3c+"), ["7g7f","3c3d","2g2f","8c8d","8h3c+","2a3c","1g1f","B*4h","2h4h","1a1b","B*6b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly04_2b6f"), ["7g7f","3c3d","2g2f","2b6f","6g6f","1c1d","B*6b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly04_2b7g+"), ["7g7f","3c3d","2g2f","2b7g+","8h7g","1c1d","B*6b"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly03_8h4d"), ["7g7f","3c3d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "SodebishaBlitz_Melee_DevPly03_8h3c+"), ["7g7f","3c3d","8h3c+","2a3c","1g1f","B*4h","2h4h","1a1b","B*6b"]),
+    (("Start", "SodebishaBlitz_Melee"), ["7g7f","3c3d","2g2f","8c8d","2h3h","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2f2e","2a2b","2e2d","2b1c","2d2c+","1c1d","2c2b","1d1e","2b2a","1e1f","2a1a","3c8h+","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly36_1f1g+"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2g2f","2a2b","2f2e","2b1c","2e2d","1c1d","2d2c+","1d1e","2c2b","1e1f","2b2a","1f1g+","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly36_1f1g"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2g2f","2a2b","2f2e","2b1c","2e2d","1c1d","2d2c+","1d1e","2c2b","1e1f","2b2a","1f1g","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly35_1h1g"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2g2f","2a2b","2f2e","2b1c","2e2d","1c1d","2d2c+","1d1e","2c2b","1e1f","1h1g","3c8h+","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly35_2b1a"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2g2f","2a2b","2f2e","2b1c","2e2d","1c1d","2d2c+","1d1e","2c2b","1e1f","2b1a","3c8h+","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly34_1e2f"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2g2f","2a2b","2f2e","2b1c","2e2d","1c1d","2d2c+","1d1e","2c2b","1e2f","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly34_1e2d"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2g2f","2a2b","2f2e","2b1c","2e2d","1c1d","2d2c+","1d1e","2c2b","1e2d","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly33_1h1g"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2g2f","2a2b","2f2e","2b1c","2e2d","1c1d","2d2c+","1d1e","1h1g","3c8h+","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly33_1h1f"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2g2f","2a2b","2f2e","2b1c","2e2d","1c1d","2d2c+","1d1e","1h1f","3c8h+","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly32_1d2e"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2g2f","2a2b","2f2e","2b1c","2e2d","1c1d","2d2c+","1d2e","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly32_3c2b"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2g2f","2a2b","2f2e","2b1c","2e2d","1c1d","2d2c+","3c2b","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly31_1h1g"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2g2f","2a2b","2f2e","2b1c","2e2d","1c1d","1h1g","3c8h+","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly31_1h1f"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2g2f","2a2b","2f2e","2b1c","2e2d","1c1d","1h1f","3c8h+","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly30_3c6f"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2g2f","2a2b","2f2e","2b1c","2e2d","3c6f","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly30_3c7g+"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2g2f","2a2b","2f2e","2b1c","2e2d","3c7g+","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly29_2h3h"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2g2f","2a2b","2f2e","2b1c","2h3h","3c8h+","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly29_2h4h"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2g2f","2a2b","2f2e","2b1c","2h4h","3c8h+","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly28_2b1a"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2g2f","2a2b","2f2e","2b1a","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly28_2c2d"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2g2f","2a2b","2f2e","2c2d","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly27_2h3h"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2g2f","2a2b","2h3h","3c8h+","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly27_2h4h"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2g2f","2a2b","2h4h","3c8h+","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly26_2a1b"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2g2f","2a1b","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly26_2a3b"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2g2f","2a3b","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly25_2h3h"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2h3h","3c8h+","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly25_2h4h"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2h4h","3c8h+","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly24_2c2d"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","2c2d","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly24_3c2b"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3c2b","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly23_2a1a"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a1a","3c8h+","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly23_2a2b"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a2b","3c8h+","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly22_2c2d"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","2c2d","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly22_3a2b"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a2b","N*4c"]),
+    (("Start", "EarlyIshidaMelee_DevPly21_2a1a"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","2a1a","1h2h","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly21_2a3a"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","2a3a","1h2h","S*4b"]),
+    (("Start", "EarlyIshidaMelee_DevPly20_1g2h"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g2h","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly20_1g2g"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g2g","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly19_1a1b"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a1b","1g2h","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly19_1i1h"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1i1h","1g2h","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly18_2e1g"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly18_2e3g+"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e3g+","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly17_1b2b"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b2b","3c8h+","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly17_2i1g"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","2i1g","3c8h+","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly16_2b1a"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b1a","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly16_2b1c"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b1c","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly15_1c2b"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c2b","3a2b","B*6b"]),
+    (("Start", "EarlyIshidaMelee_DevPly15_2i1g"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","2i1g","2b8h+","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly14_1a1c"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1c","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly14_2b1c"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","2b1c","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly13_2i1g"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","2i1g","2b8h+","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly13_7f8e"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","7f8e","2b8h+","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly12_2b6f"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","2b6f","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly12_2b7g+"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","2b7g+","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly11_7f8e"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","7f8e","2b8h+","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly11_8h4d"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","8h4d","2b4d","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly10_1a1d"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","1a1d","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly10_1a1e"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","1a1e","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly09_7f8e"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","7f8e","2b8h+","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly09_8h4d"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","8h4d","2b4d","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly08_2b6f"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","2b6f","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly08_2b7g+"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","2b7g+","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly07_7f8e"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","7f8e","2b8h+","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly07_8h4d"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","8h4d","2b4d","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly06_2b6f"), ["7g7f","3c3d","7i7h","8c8d","7h7f","2b6f","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly06_2b7g+"), ["7g7f","3c3d","7i7h","8c8d","7h7f","2b7g+","P*5b"]),
+    (("Start", "EarlyIshidaMelee_DevPly05_8h4d"), ["7g7f","3c3d","7i7h","8c8d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","7h8i","L*5h","B*6b"]),
+    (("Start", "EarlyIshidaMelee_DevPly05_8h3c+"), ["7g7f","3c3d","7i7h","8c8d","8h3c+","2a3c","1g1f","B*4h","2h4h","1a1b","B*6b"]),
+    (("Start", "EarlyIshidaMelee_DevPly04_2b6f"), ["7g7f","3c3d","7i7h","2b6f","6g6f","1c1d","B*6b"]),
+    (("Start", "EarlyIshidaMelee_DevPly04_2b7g+"), ["7g7f","3c3d","7i7h","2b7g+","7h7g","1c1d","B*6b"]),
+    (("Start", "EarlyIshidaMelee_DevPly03_8h4d"), ["7g7f","3c3d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7i"]),
+    (("Start", "EarlyIshidaMelee_DevPly03_8h3c+"), ["7g7f","3c3d","8h3c+","2a3c","1g1f","B*4h","2h4h","1a1b","B*6b"]),
+    (("Start", "EarlyIshidaMelee"), ["7g7f","3c3d","7i7h","8c8d","7h7f","1c1d","1g1f","1d1e","1f1e","2a1c","1e1d","1c2e","1d1c+","1a1b","1c1b","2b3c","1b1a","2e1g+","1a2a","1g1h","1i1h","3a3b","2a3a","3b2a","2g2f","2a2b","2f2e","2b1c","2e2d","1c1d","2d2c+","1d1e","2c2b","1e1f","2b2a","3c8h+","N*4c"]),
+    (("Start", "UreshinoMelee_DevPly36_1g1h"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b2a","3b2c","2a3a","2c1d","2h2i","1d1e","2i2h","1e1f","2h2i","1f1g+","2i2h","1g1h","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly36_1g2g"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b2a","3b2c","2a3a","2c1d","2h2i","1d1e","2i2h","1e1f","2h2i","1f1g+","2i2h","1g2g","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly35_2i2g"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b2a","3b2c","2a3a","2c1d","2h2i","1d1e","2i2h","1e1f","2h2i","1f1g+","2i2g","1g2g","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly35_2i2e"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b2a","3b2c","2a3a","2c1d","2h2i","1d1e","2i2h","1e1f","2h2i","1f1g+","2i2e","3c2e","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly34_1f2g+"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b2a","3b2c","2a3a","2c1d","2h2i","1d1e","2i2h","1e1f","2h2i","1f2g+","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly34_1f2g"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b2a","3b2c","2a3a","2c1d","2h2i","1d1e","2i2h","1e1f","2h2i","1f2g","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly33_2h3h"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b2a","3b2c","2a3a","2c1d","2h2i","1d1e","2i2h","1e1f","2h3h","3i3h","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly33_2h4h"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b2a","3b2c","2a3a","2c1d","2h2i","1d1e","2i2h","1e1f","2h4h","3i4i","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly32_1e2f"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b2a","3b2c","2a3a","2c1d","2h2i","1d1e","2i2h","1e2f","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly32_3c2e"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b2a","3b2c","2a3a","2c1d","2h2i","1d1e","2i2h","3c2e","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly31_2i2f"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b2a","3b2c","2a3a","2c1d","2h2i","1d1e","2i2f","1e2f","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly31_2i2e"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b2a","3b2c","2a3a","2c1d","2h2i","1d1e","2i2e","3c2e","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly30_3c2e"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b2a","3b2c","2a3a","2c1d","2h2i","3c2e","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly30_3i4i"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b2a","3b2c","2a3a","2c1d","2h2i","3i4i","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly29_2h3h"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b2a","3b2c","2a3a","2c1d","2h3h","3i3h","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly29_2h4h"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b2a","3b2c","2a3a","2c1d","2h4h","3i4i","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly28_3c2e"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b2a","3b2c","2a3a","3c2e","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly28_3i2i"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b2a","3b2c","2a3a","3i2i","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly27_2a2b"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b2a","3b2c","2a2b","3i4i","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly27_2h1h"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b2a","3b2c","2h1h","3i4i","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly26_3b2a"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b2a","3b2a","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly26_3c2e"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b2a","3c2e","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly25_2b3a"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b3a","3i4i","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly25_2b1b"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b1b","3i4i","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly24_3c2e"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3c2e","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly24_3i2i"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3i2i","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly23_2c1b"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c1b","3i4i","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly23_2c3b"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c3b","3i4i","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly22_2i2h"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i2h","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly22_3c2e"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","3c2e","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly21_2h1h"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2h1h","2i3i","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly21_2h4h"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2h4h","2i3i","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly20_1i1h"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i1h","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly20_3c2e"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","3c2e","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly19_2h1h"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2h1h","1i1h","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly19_2i1g"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2i1g","3c2e","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly18_1h2i"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h2i","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly18_1h2h"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h2h","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly17_2h1h"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2h1h","L*5h","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly17_2i1g"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2i1g","1h2h","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly16_1g2h"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g2h","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly16_1g2g"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g2g","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly15_1i1g"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1g","B*4h","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly15_2h1h"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","2h1h","1g1h","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly14_3c2e"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","3c2e","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly14_5a4b"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","5a4b","1i1f","1a1f","P*4b"]),
+    (("Start", "UreshinoMelee_DevPly13_1i1g"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","1i1g","1f1g+","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly13_1i1f"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","1i1f","1a1f","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly12_5a5b"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","5a5b","3c1a","1f1g+","1i1g","2a1c","P*5b"]),
+    (("Start", "UreshinoMelee_DevPly12_5a6b"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","5a6b","3c1a","1f1g+","1i1g","2a1c","P*6b"]),
+    (("Start", "UreshinoMelee_DevPly11_1i1g"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","1i1g","3a2b","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly11_1i1f"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","1i1f","3a2b","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly10_1a1b"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1a1b","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly10_1a1c"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1a1c","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly09_1f1e"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","1f1e","2b8h+","P*5b"]),
+    (("Start", "UreshinoMelee_DevPly09_8h4d"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h4d","2b4d","1f1e","4d9i+","P*5b"]),
+    (("Start", "UreshinoMelee_DevPly08_2b6f"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","2b6f","6g6f","1a1b","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly08_2b7g+"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","2b7g+","6h7g","1a1b","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly07_8h4d"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7h","P*5b"]),
+    (("Start", "UreshinoMelee_DevPly07_8h3c+"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","8h3c+","2a3c","1g1f","B*4h","2h4h","1a1b","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly06_2b6f"), ["6i7h","3c3d","7g7f","8c8d","7i6h","2b6f","6g6f","1c1d","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly06_2b7g+"), ["6i7h","3c3d","7g7f","8c8d","7i6h","2b7g+","6h7g","1c1d","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly05_8h4d"), ["6i7h","3c3d","7g7f","8c8d","8h4d","2b4d","1g1f","4d9i+","1f1e","9i8i","1e1d","8i7h"]),
+    (("Start", "UreshinoMelee_DevPly05_8h3c+"), ["6i7h","3c3d","7g7f","8c8d","8h3c+","2a3c","1g1f","B*4h","2h4h","1a1b","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly04_2b6f"), ["6i7h","3c3d","7g7f","2b6f","6g6f","1c1d","B*6b"]),
+    (("Start", "UreshinoMelee_DevPly04_2b7g+"), ["6i7h","3c3d","7g7f","2b7g+","7h7g","1c1d","B*6b"]),
+    (("Start", "UreshinoMelee"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1h","1g1h","2f2e","1h1i","2e2d","1i2i","2d2c+","2i3i","2c2b","3a3b","2b2a","3b2c","2a3a","2c1d","2h2i","1d1e","2i2h","1e1f","2h2i","1f1g+","2i2h","1g2h","B*6b"])
   ]

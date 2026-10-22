@@ -1582,12 +1582,17 @@ searchAlphaBeta weights depth alpha beta st =
                    -- 3. 飛び駒を敵玉と同じライン（筋・段・斜め）に据える手、または桂馬の急襲
                    potentialAlignBonus = case m of
                      NormalMove _ to _ ->
-                       case findKing opp (board st) of
-                         Just (ekx, eky) ->
-                           let (tx, ty) = to
-                               isAligned = tx == ekx || ty == eky || abs (tx - ekx) == abs (ty - eky)
-                           in if isAligned then 180.0 else 0.0
-                         Nothing -> 0.0
+                       if ptMoved `elem` [Rook, PRook, Bishop, PBishop, Lance, Knight]
+                       then case findKing opp (board st) of
+                              Just (ekx, eky) ->
+                                let (tx, ty) = to
+                                    isAligned = (ptMoved `elem` [Rook, PRook, Lance] && tx == ekx) ||
+                                                (ptMoved `elem` [Rook, PRook] && ty == eky) ||
+                                                (ptMoved `elem` [Bishop, PBishop] && abs (tx - ekx) == abs (ty - eky)) ||
+                                                (ptMoved == Knight && abs (tx - ekx) <= 2 && abs (ty - eky) <= 2)
+                                in if isAligned then 180.0 else 0.0
+                              Nothing -> 0.0
+                       else 0.0
                      DropMove pt to ->
                        case findKing opp (board st) of
                          Just (ekx, eky) ->

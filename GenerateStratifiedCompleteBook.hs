@@ -84,6 +84,30 @@ baseBookMoves =
       , "8g8f", "8b8f", "P*8g", "8f8b", "3g3f", "8d7c", "S*7h"
       ]
     )
+  , ( "SujichigaiBishop_Melee"
+    , [ "7g7f", "3c3d", "8h2b+", "3a2b", "B*4e", "1c1d", "1g1f", "1d1e", "1f1e", "2a1c", "4e6c+", "1c2e", "6c4a", "5a4a", "G*4b", "8b4b", "1e1d", "G*5h", "2h5h", "2b3c", "1d1c+", "1a1b", "1c1b", "2e1g+", "1b1a", "1g1h", "1a2a", "1h1i", "G*3a", "4a5a", "2a1a", "1i2i", "1a2a", "2i3i", "2a1a" ]
+    )
+  , ( "Early3eBlitz_Melee"
+    , [ "7g7f", "3c3d", "2g2f", "8c8d", "3g3f", "1c1d", "1g1f", "1d1e", "1f1e", "2a1c", "1e1d", "1c2e", "1d1c+", "1a1b", "1c1b", "2b3c", "1b1a", "2e1g+", "1a2a", "1g1h", "1i1h", "3a3b", "2a3a", "3b2a", "2f2e", "2a2b", "2e2d", "2b1c", "2d2c+", "1c1d", "2c2b", "1d1e", "2b2a", "1e1f", "2a1a" ]
+    )
+  , ( "AggressiveCentralRook_Melee"
+    , [ "7g7f", "3c3d", "5g5f", "8c8d", "2h5h", "1c1d", "1g1f", "1d1e", "1f1e", "2a1c", "8h2b+", "1c2e", "1e1d", "2e1g+", "1d1c+", "1a1b", "1c1b", "1g1h", "1b1a", "1h1i", "1a2a", "1i2i", "2a3a", "2i3i", "2b3c", "4a4b", "3c4b", "5a4b", "G*3b", "4b5a", "S*4b", "5a5b", "2g2f", "3d3e", "2f2e" ]
+    )
+  , ( "EarlyClimbingSilver_Melee"
+    , [ "7g7f", "3c3d", "2g2f", "8c8d", "3i3h", "1c1d", "1g1f", "1d1e", "1f1e", "2a1c", "1e1d", "1c2e", "1d1c+", "1a1b", "1c1b", "2b3c", "1b1a", "2e1g+", "1a2a", "1g1h", "1i1h", "3a3b", "2a3a", "3b2a", "2f2e", "2a2b", "2e2d", "2b1c", "2d2c+", "1c1d", "2c2b", "1d1e", "2b2a", "1e1f", "2a1a" ]
+    )
+  , ( "MigiShikenBlitz_Melee"
+    , [ "7g7f", "3c3d", "2g2f", "4c4d", "2h4h", "1c1d", "1g1f", "1d1e", "1f1e", "2a1c", "1e1d", "1c2e", "1d1c+", "1a1b", "1c1b", "2b3c", "1b1a", "2e1g+", "1a2a", "1g1h", "1i1h", "3a3b", "N*4c", "3b4c", "2a3a", "3c4b", "2f2e", "3d3e", "2e2d", "3e3f", "2d2c+", "3f3g+", "2c2b", "3g3h", "2b2a" ]
+    )
+  , ( "SodebishaBlitz_Melee"
+    , [ "7g7f", "3c3d", "2g2f", "8c8d", "2h3h", "1c1d", "1g1f", "1d1e", "1f1e", "2a1c", "1e1d", "1c2e", "1d1c+", "1a1b", "1c1b", "2b3c", "1b1a", "2e1g+", "1a2a", "1g1h", "1i1h", "3a3b", "2a3a", "3b2a", "2f2e", "2a2b", "2e2d", "2b1c", "2d2c+", "1c1d", "2c2b", "1d1e", "2b2a", "1e1f", "2a1a" ]
+    )
+  , ( "EarlyIshidaMelee"
+    , [ "7g7f", "3c3d", "7i7h", "8c8d", "7h7f", "1c1d", "1g1f", "1d1e", "1f1e", "2a1c", "1e1d", "1c2e", "1d1c+", "1a1b", "1c1b", "2b3c", "1b1a", "2e1g+", "1a2a", "1g1h", "1i1h", "3a3b", "2a3a", "3b2a", "2g2f", "2a2b", "2f2e", "2b1c", "2e2d", "1c1d", "2d2c+", "1d1e", "2c2b", "1e1f", "2b2a" ]
+    )
+  , ( "UreshinoMelee"
+    , [ "6i7h", "3c3d", "7g7f", "8c8d", "7i6h", "1c1d", "1g1f", "1d1e", "8h2b+", "1e1f", "2b3c", "2a3c", "2g2f", "1f1g+", "1i1h", "1g1h", "2f2e", "1h1i", "2e2d", "1i2i", "2d2c+", "2i3i", "2c2b", "3a3b", "2b2a", "3b2c", "2a3a", "2c1d", "2h2i", "1d1e", "2i2h", "1e1f", "2h2i", "1f1g+", "2i2h" ]
+    )
   ]
 
 -- ============================================================================
