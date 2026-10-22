@@ -954,12 +954,46 @@ isBlunderMove st m
                     null (getPiecesCovering opp curFrom bd) &&
                     not (Map.member curTo bd) &&
                     (case Map.lookup curFrom bd of
-                       Just (Piece _ pt) -> pt `elem` [Rook, PRook, Gold, Silver]
+                       Just (Piece _ pt) -> pt `elem` [Rook, PRook, Gold, Silver, King]
                        Nothing           -> False)
                   _ -> False
               _ -> False
-      in if isMajorSuicideCheck || isMajorCheapTradeCheck || isSelfSuicideQegtb || isShufflingBlunder
-         then True -- 大駒のただ捨て王手・大損交換王手・自爆QEGTB・飛車金うろうろ往復は100%絶対大悪手！
+              
+          -- 7. 相手の手持ち角による「8八・2八（先手）/ 2二・8二（後手）への角打ち・香車取り馬作り」の隙を自ら生み出す大失着の完全排除
+          isExposingCornerBishopBlunder =
+            let oppHand = Map.findWithDefault Map.empty opp (hands st)
+                hasOppBishopInHand = Map.findWithDefault 0 Bishop oppHand > 0
+                targets = if plr == Sente
+                          then [ ((8, 8), (9, 9)), ((2, 8), (1, 9)) ]
+                          else [ ((2, 2), (1, 1)), ((8, 2), (9, 1)) ]
+                hasSolidDefender cornerSq bd =
+                  not (null [ sq | (sq, Piece p pt) <- Map.toList bd
+                                 , p == plr && pt `elem` [Gold, Silver, King, Rook]
+                                 , canPieceReachTarget sq (Piece p pt) cornerSq bd ])
+                isTrapExposed cornerSq lanceSq bd =
+                  let isCornerEmpty = not (Map.member cornerSq bd)
+                      isCornerUnguarded = not (hasSolidDefender cornerSq bd)
+                      isLanceTarget = case Map.lookup lanceSq bd of
+                        Just (Piece ppt pt) -> ppt == plr && pt == Lance
+                        Nothing             -> False
+                  in isCornerEmpty && isCornerUnguarded && isLanceTarget
+                -- 元々安全だったマスに、今回の着手で新たに隙を作ってしまった
+                createsNewTrap = any (\(c, l) -> not (isTrapExposed c l bd) && isTrapExposed c l nextBd) targets
+            in hasOppBishopInHand && createsNewTrap && not isCheck && not isCapturingValuable
+            
+          -- 8. 玉の目的のない危険な中央ふらふら移動（Wandering King Blunder）
+          isWanderingKingBlunder =
+            case m of
+              NormalMove from to _ ->
+                case Map.lookup from bd of
+                  Just (Piece p King) | p == plr ->
+                    let isMovingToCenter = snd to == 5 || (plr == Sente && snd to == 6) || (plr == Gote && snd to == 4)
+                        hasNoThreat = null (getPiecesCovering opp from bd)
+                    in isMovingToCenter && hasNoThreat && not isCheck
+                  _ -> False
+              _ -> False
+      in if isMajorSuicideCheck || isMajorCheapTradeCheck || isSelfSuicideQegtb || isShufflingBlunder || isExposingCornerBishopBlunder || isWanderingKingBlunder
+         then True -- 大駒ただ捨て王手・大損交換・自爆QEGTB・飛車金玉うろうろ往復・88角打ち隙放置は100%絶対大悪手！
          else if isPawnFodder
          then True -- 「桂馬の高跳び歩の餌食」等は絶対タダ捨て大悪手！
          else if isCheck || isCapturingValuable || (isMajorPromotion && not (null friendlyDefenders)) || isNumericalSuperiority
@@ -1579,11 +1613,29 @@ searchAlphaBeta weights depth alpha beta st =
                    
                    -- ★ プロ棋戦標準の「受けの筋（歩打ち・金銀引き受け・角打ち隙消去）」ボーナス
                    defensiveBonus = evalDefensiveTechnique st m
-                   
+                    
+                    -- ★ 大駒が敵の歩・香・桂・銀などの当たりに晒されている時の安全退避（引飛車等）ボーナス & 当たり放置大減点
+                   majorThreatBonus =
+                      let curBd = board st
+                          threatenedMajors = [ (sq, pt) | (sq, Piece p pt) <- Map.toList curBd
+                                                        , p == turn st, pt `elem` [Rook, PRook, Bishop, PBishop]
+                                                        , any (\(_, Piece _ opt) -> opt `elem` [Pawn, Lance, Knight, Silver]) (getPiecesCovering opp sq curBd) ]
+                      in case threatenedMajors of
+                           [] -> 0.0
+                           ((thSq, _):_) ->
+                             case m of
+                               NormalMove from to _ ->
+                                 if from == thSq
+                                 then
+                                   let isStillThreatened = any (\(_, Piece _ opt) -> opt `elem` [Pawn, Lance, Knight, Silver]) (getPiecesCovering opp to nextBd)
+                                   in if not isStillThreatened then 3500.0 else 0.0
+                                 else -4500.0
+                               DropMove _ _ -> -4500.0
+                    
                    s = evaluateState weights (turn st) nextSt
                in s + blunderPen + lancePen + checkBonus + forkBonus + tacticalBonus
                   + discoveredBonus + rayUnblockBonus + potentialAlignBonus + quotientEquivBonus
-                  + antiQuotientSafetyBonus + shufflingPen + defensiveBonus
+                  + antiQuotientSafetyBonus + shufflingPen + defensiveBonus + evalThicknessAndDominance st m + majorThreatBonus
              orderedMoves = sortBy (\m1 m2 -> compare (scoreMove m2) (scoreMove m1)) effectiveMoves
              -- 王手をかけられているときはすべての王手回避手を読み、それ以外は上位14手を深く読む
              topMoves = if inCheck then effectiveMoves else take (if depth >= 2 then 14 else 10) orderedMoves
@@ -2018,17 +2070,38 @@ evalPieceShuffling st m =
                        isRookOrGold = case pieceAtFrom of
                          Just (Piece _ pt) -> pt `elem` [Rook, PRook, Gold, PPawn, PSilver, PKnight, PLance]
                          Nothing           -> False
+                       isKing = case pieceAtFrom of
+                         Just (Piece _ King) -> True
+                         _                   -> False
                    in if isTargetUnderThreat || isCapture
                       then 0.0
-                      else if isRookOrGold
+                      else if isKing
+                           then -3500.0 -- 玉の無意味なうろうろ往復移動には超特大ペナルティ！
+                           else if isRookOrGold
                            then -2500.0 -- 飛車・金の無意味な往復移動（うろうろ）には特大ペナルティ！
                            else -1500.0 -- 一般駒の無意味な往復手損ペナルティ
                  else 0.0
                _ -> 0.0
            _ -> 0.0
          
-         -- 3. 金の彷徨い（Wandering Gold）検知：
-         --    金は玉の守り。敵玉攻めや駒取りでないのに自玉から離れる手、中段に浮く手を減点
+         -- 2.5 玉の彷徨い（Wandering King）防止と囲い入城（Castle Progress）ボーナス
+         kingMoveEval = case m of
+           NormalMove from to _ ->
+             case Map.lookup from curBd of
+               Just (Piece p King) | p == plr ->
+                 let isMovingToCenter = snd to == 5 || (plr == Sente && snd to == 6) || (plr == Gote && snd to == 4)
+                     wanderingPen = if isMovingToCenter then -2000.0 else 0.0
+                     
+                     -- 囲いの定位置（美濃・矢倉・雁木・エルモ・穴熊）
+                     castleSquares = if plr == Sente
+                                     then [(7, 8), (8, 8), (7, 9), (6, 8), (8, 9)]
+                                     else [(3, 2), (2, 2), (3, 1), (4, 2), (2, 1)]
+                     isEnteringCastle = to `elem` castleSquares
+                     castleBonus = if isEnteringCastle then 450.0 else 0.0
+                 in wanderingPen + castleBonus
+               _ -> 0.0
+           _ -> 0.0
+         
          wanderingGoldPen = case m of
            NormalMove from to _ ->
              case Map.lookup from curBd of
@@ -2069,7 +2142,7 @@ evalPieceShuffling st m =
                _ -> 0.0
            _ -> 0.0
            
-       in repeatPen + reversalPen + wanderingGoldPen + aimlessRookPen
+       in repeatPen + reversalPen + wanderingGoldPen + aimlessRookPen + kingMoveEval
 
 -- | プロ棋戦の手筋に基づく「受けの筋（Defensive Techniques）」の評価
 -- 1. 自陣への歩打ち受け（底歩、中合い、飛車先交換後の歩受け P*2c, P*8g 等）
@@ -2129,7 +2202,123 @@ evalDefensiveTechnique st m =
             in if isDefendingRear then 180.0 else 0.0
           Nothing -> 0.0
           
-  in pawnDropDefenseScore + solidDefenseScore + antiForkDefenseScore
+        -- 4. ★ 8八・2八（先手）/ 2二・8二（後手）への角打ち・香車取り馬作り筋の事前完全防御
+      antiCornerBishopDefenseScore =
+        let oppHand = Map.findWithDefault Map.empty opp (hands st)
+            hasOppBishopInHand = Map.findWithDefault 0 Bishop oppHand > 0
+            targets = if plr == Sente
+                      then [ ((8, 8), (9, 9)), ((2, 8), (1, 9)) ]
+                      else [ ((2, 2), (1, 1)), ((8, 2), (9, 1)) ]
+                      
+            hasSolidDefender cornerSq bd =
+              not (null [ sq | (sq, Piece p pt) <- Map.toList bd
+                             , p == plr && pt `elem` [Gold, Silver, King, Rook]
+                             , canPieceReachTarget sq (Piece p pt) cornerSq bd ])
+                             
+            isTrapExposed cornerSq lanceSq bd =
+              let isCornerEmpty = not (Map.member cornerSq bd)
+                  isCornerUnguarded = not (hasSolidDefender cornerSq bd)
+                  isLanceTarget = case Map.lookup lanceSq bd of
+                    Just (Piece ppt pt) -> ppt == plr && pt == Lance
+                    Nothing             -> False
+              in isCornerEmpty && isCornerUnguarded && isLanceTarget
+              
+            evalTarget (cornerSq, lanceSq) =
+              let wasExposed = isTrapExposed cornerSq lanceSq curBd
+                  isNowExposed = isTrapExposed cornerSq lanceSq nextBd
+              in if wasExposed && not isNowExposed
+                 then 2500.0 -- 既存の隙を埋めて完璧に防衛した！
+                 else if not wasExposed && isNowExposed
+                 then -5000.0 -- 自ら隙を作り出した！
+                 else 0.0
+                 
+            -- 飛車が敵の歩などの当たりを受けて安全に自陣（2八/8二）へ引く手（引飛車手筋）への加点
+            rookRetreatBonus = case m of
+              NormalMove from to _ ->
+                case Map.lookup from curBd of
+                  Just (Piece p Rook) | p == plr ->
+                    let isUnderAttack = isSquareUnderAttack opp from curBd
+                        isRetreatToHome = if plr == Sente then to == (2, 8) else to == (8, 2)
+                    in if isUnderAttack && isRetreatToHome then 1200.0
+                       else if isRetreatToHome then 600.0
+                       else 0.0
+                  _ -> 0.0
+              _ -> 0.0
+        in if hasOppBishopInHand
+           then sum (map evalTarget targets) + rookRetreatBonus
+           else rookRetreatBonus
+          
+  in pawnDropDefenseScore + solidDefenseScore + antiForkDefenseScore + antiCornerBishopDefenseScore
+
+-- | 厚み（Thick Formations）と位取り（Dominance / Territorial Control）、囲いと駒組みの評価
+-- 1. 中央（5筋・4筋・6筋）の位取り（歩の前進、相手を圧迫）
+-- 2. 歩越し銀（銀が歩の上に前進して厚みを構築）
+-- 3. 金銀のスクラム・連結（金と銀、銀と銀が互いに支え合って鉄壁を形成）
+-- 4. 堅陣囲い（玉の周囲に金銀が連結配置される美しい駒組み）
+evalThicknessAndDominance :: State -> Move -> Double
+evalThicknessAndDominance st m =
+  let plr = turn st
+      opp = opponent plr
+      curBd = board st
+      nextSt = applyMove m st
+      nextBd = board nextSt
+      
+      -- 1. 中央および要所の位取り（Territorial Control）
+      territoryScore = case m of
+        NormalMove _ (tx, ty) _ ->
+          let isVanguardPawn = case Map.lookup (tx, ty) nextBd of
+                Just (Piece p Pawn) -> p == plr
+                _                   -> False
+              isCenterRank = if plr == Sente
+                             then (tx == 5 && ty == 5) || (tx == 5 && ty == 6) || (tx `elem` [4, 6] && ty == 6)
+                             else (tx == 5 && ty == 5) || (tx == 5 && ty == 4) || (tx `elem` [4, 6] && ty == 4)
+              isDeepRank   = if plr == Sente then (tx == 5 && ty == 5) else (tx == 5 && ty == 5)
+          in if isVanguardPawn && isDeepRank then 380.0
+             else if isVanguardPawn && isCenterRank then 260.0
+             else 0.0
+        _ -> 0.0
+        
+      -- 2. 歩越し銀（Silver vanguard building thickness）
+      silverVanguardScore = case m of
+        NormalMove _ (tx, ty) _ ->
+          case Map.lookup (tx, ty) nextBd of
+            Just (Piece p Silver) | p == plr ->
+              let pawnBelow = if plr == Sente then (tx, ty + 1) else (tx, ty - 1)
+                  hasPawnBelow = Map.lookup pawnBelow nextBd == Just (Piece plr Pawn)
+                  isForwardRank = if plr == Sente then ty <= 6 else ty >= 4
+              in if hasPawnBelow && isForwardRank then 320.0 else 0.0
+            _ -> 0.0
+        _ -> 0.0
+        
+      -- 3. 金銀の連結・スクラム（Gold-Silver Connection）
+      scrumScore = case m of
+        NormalMove _ to _ ->
+          case Map.lookup to nextBd of
+            Just (Piece p pt) | p == plr && pt `elem` [Gold, Silver] ->
+              let (tx, ty) = to
+                  neighbors = [ (tx + dx, ty + dy) | dx <- [-1..1], dy <- [-1..1], (dx, dy) /= (0, 0) ]
+                  adjacentGenerals = length [ sq | sq <- neighbors
+                                                 , case Map.lookup sq nextBd of
+                                                     Just (Piece p2 pt2) -> p2 == plr && pt2 `elem` [Gold, Silver]
+                                                     _                   -> False ]
+              in fromIntegral adjacentGenerals * 150.0
+            _ -> 0.0
+        _ -> 0.0
+        
+      -- 4. 囲いの完成度・玉との連結度（Castle Formation & Coordination）
+      curKingSq = findKing plr curBd
+      nextKingSq = findKing plr nextBd
+      castleScore = case nextKingSq of
+        Just (kx, ky) ->
+          let neighbors = [ (kx + dx, ky + dy) | dx <- [-1..1], dy <- [-1..1], (dx, dy) /= (0, 0) ]
+              protectingGenerals = length [ sq | sq <- neighbors
+                                               , case Map.lookup sq nextBd of
+                                                   Just (Piece p pt) -> p == plr && pt `elem` [Gold, Silver]
+                                                   _                 -> False ]
+          in fromIntegral protectingGenerals * 160.0
+        Nothing -> 0.0
+        
+  in territoryScore + silverVanguardScore + scrumScore + castleScore
 
 calcTimeLimitMicros :: Player -> [String] -> Int
 calcTimeLimitMicros ply tokens =
@@ -2161,8 +2350,8 @@ calcTimeLimitMicros ply tokens =
       
       -- 思考上限ミリ秒
       timeMs = case (byo, movetime, myTime, myInc) of
-        -- 1. byoyomi 指定がある場合: byoyomi の秒数を上限とする
-        (Just b, _, _, _) -> max 100 (b - safetyMargin)
+        -- 1. byoyomi 指定がある場合: byoyomi の秒数を上限とする (0の場合は持ち時間制へフォールバック)
+        (Just b, _, _, _) | b > 0 -> max 100 (b - safetyMargin)
         -- 2. movetime 指定がある場合: movetime を上限とする
         (_, Just m, _, _) -> max 100 (m - safetyMargin)
         -- 3. フィッシャールール (inc 指定あり)
