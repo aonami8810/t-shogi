@@ -34,7 +34,7 @@ data MorseBook = MorseBook
   } deriving (Show)
 
 -- ============================================================================
--- 2. .mbook パーサー（デシリアライズ）
+-- 2. .mbook パーサー（デシリアライザー）
 -- ============================================================================
 
 parseMBook :: String -> MorseBook
@@ -82,10 +82,10 @@ parseMBook content = foldl' parseLine (MorseBook Map.empty []) (lines content)
             (x:xs) -> (c : x) : xs
 
 -- ============================================================================
--- 3. Haskell型レベルコード・ジェネレーター（トランスパイラ）
+-- 3. Haskell型レベルコード・ジェネレーター（512手型推論トランスパイラ）
 -- ============================================================================
 
--- | 入力されたMorseBookから、コンパイル時に100%安全な型レベル定跡モジュール（Haskellソース）を生成する
+-- | 入力されたMorseBookから、コンパイル時に100%安全な512手型推論定跡モジュール（Haskellソース）を生成する
 transpileToTypeLevelHaskell :: MorseBook -> String
 transpileToTypeLevelHaskell MorseBook{..} = unlines $
   [ "{-# LANGUAGE DataKinds #-}"
@@ -94,7 +94,10 @@ transpileToTypeLevelHaskell MorseBook{..} = unlines $
   , "{-# LANGUAGE TypeOperators #-}"
   , "{-# LANGUAGE UndecidableInstances #-}"
   , "{-# LANGUAGE FlexibleContexts #-}"
+  , "{-# LANGUAGE FlexibleInstances #-}"
   , "{-# LANGUAGE MultiParamTypeClasses #-}"
+  , "{-# LANGUAGE ScopedTypeVariables #-}"
+  , "{-# LANGUAGE AllowAmbiguousTypes #-}"
   , ""
   , "module CompiledMorseBook where"
   , ""
@@ -103,35 +106,78 @@ transpileToTypeLevelHaskell MorseBook{..} = unlines $
   , "import qualified Data.Map as Map"
   , ""
   , "-- ============================================================================"
-  , "-- 1. 収束した臨界ノードの定義（Type-Level Symbols）"
+  , "-- 1. 収束した臨界ノードの定義 (Type-Level Symbols)"
   , "-- ============================================================================"
   , ""
   ] ++ map generateNodeDoc (Map.elems bookNodes) ++
   [ ""
   , "-- ============================================================================"
-  , "-- 2. 勾配流（V-Path）の型レベル二項遷移関係の定義（Type Family）"
+  , "-- 2. 勾配流 (V-Path) の型レベル二項遷移関係の定義 (Type Family)"
   , "--    アクティブ・ラーニングで収束が確認されたパスのみが 'True と判定されます。"
   , "-- ============================================================================"
   , "type family ValidTransition (from :: Symbol) (to :: Symbol) :: Bool where"
   ] ++ map generateTransitionRule bookPaths ++
-  [ "  ValidTransition from to = 'False" -- デフォルトはすべての遷移を拒絶（コンパイルエラー化）
+  [ "  ValidTransition from to = 'False"
   , ""
   , "-- ============================================================================"
-  , "-- 3. 静的な型安全 Morse Chain（勾配流チェーン：GADT）"
-  , "--    コンパイル時安全が100%保証された一意な定跡パスの構築子です。"
+  , "-- 3. 最急降下モース勾配流の 512 手型推論エンジン (512-Ply Type Inference Engine)"
   , "-- ============================================================================"
+  , ""
+  , "-- | 最大許容手数制約（512手まで型レベルで有界・型推論保証）"
+  , "type MaxMorseGradientFlowPlies = 512"
+  , ""
+  , "-- | 型レベル自然数による 512 手以内の型推論制約述語"
+  , "type family WithinMaxMorseFlow (ply :: Nat) :: Bool where"
+  , "  WithinMaxMorseFlow ply = ply <=? MaxMorseGradientFlowPlies"
+  , ""
+  , "-- | 各勾配流 V-Path の手数を型レベル自然数として推論する型族"
+  , "type family FlowLength (from :: Symbol) (to :: Symbol) :: Nat where"
+  ] ++ map generateFlowLengthRule bookPaths ++
+  [ "  FlowLength from to = 0"
+  , ""
+  , "-- | 512手までの最急降下モース勾配流ステップを型推論する型クラス"
+  , "class (KnownNat ply, KnownSymbol from, KnownSymbol to) =>"
+  , "      SteepestDescentMorseFlow (ply :: Nat) (from :: Symbol) (to :: Symbol) where"
+  , "  morseFlowStep  :: Proxy ply -> Proxy from -> Proxy to -> (Integer, String, String)"
+  , ""
+  ] ++ map generateFlowInstance bookPaths ++
+  [ ""
+  , "-- ============================================================================"
+  , "-- 4. 512手型推論モース勾配流チェーン GADT (Steepest Descent Morse Flow Chain)"
+  , "-- ============================================================================"
+  , ""
+  , "-- | コンパイル時型推論により、各遷移が最急降下流であり、"
+  , "--   かつ累積手数が 512 手以内であることを GHC が自動証明する GADT"
+  , "data MorseGradientChain (currentPly :: Nat) (nodes :: [Symbol]) where"
+  , "  NilGradient   :: MorseGradientChain 0 '[]"
+  , "  StartGradient :: KnownSymbol start => Proxy start -> MorseGradientChain 0 '[start]"
+  , "  StepGradient  :: ( KnownSymbol to"
+  , "                   , KnownSymbol from"
+  , "                   , ValidTransition from to ~ 'True"
+  , "                   , WithinMaxMorseFlow (currentPly + 1) ~ 'True"
+  , "                   ) => MorseGradientChain currentPly (from : rest)"
+  , "                     -> Proxy to"
+  , "                     -> MorseGradientChain (currentPly + 1) (to : from : rest)"
+  , ""
+  , "-- | 後方互換用：静的な型安全 MorseChain GADT"
   , "data MorseChain (nodes :: [Symbol]) where"
   , "  Nil     :: MorseChain '[]"
   , "  StartAt :: KnownSymbol start => Proxy start -> MorseChain '[start]"
   , "  Connect :: ( KnownSymbol to"
   , "             , KnownSymbol from"
-  , "             , ValidTransition from to ~ 'True" -- 遷移関係がTrueの場合のみ結合を許可
+  , "             , ValidTransition from to ~ 'True"
   , "             ) => MorseChain (from : rest)"
   , "               -> Proxy to"
   , "               -> MorseChain (to : from : rest)"
   , ""
+  , "-- | 512手型推論チェーンの検証関数（証明項）"
+  , "verifyMorseGradientFlow512 :: MorseGradientChain ply nodes -> Integer"
+  , "verifyMorseGradientFlow512 NilGradient = 0"
+  , "verifyMorseGradientFlow512 (StartGradient _) = 0"
+  , "verifyMorseGradientFlow512 (StepGradient rest _) = 1 + verifyMorseGradientFlow512 rest"
+  , ""
   , "-- ============================================================================"
-  , "-- 4. 実行時（Runtime）高速展開用のV-Path定義マップ"
+  , "-- 5. 実行時（Runtime）高速展開用のV-Path定義マップ"
   , "-- ============================================================================"
   , "vpathLookup :: String -> String -> Maybe [String]"
   , "vpathLookup from to = Map.lookup (from, to) runtimePaths"
@@ -150,17 +196,27 @@ transpileToTypeLevelHaskell MorseBook{..} = unlines $
 
     generateTransitionRule :: VPath -> String
     generateTransitionRule VPath{..} =
-      "  ValidTransition \"" ++ fromNode ++ "\" \"" ++ toNode ++ "\" = 'True"
+      concat ["  ValidTransition ", show fromNode, " ", show toNode, " = 'True"]
+
+    generateFlowLengthRule :: VPath -> String
+    generateFlowLengthRule VPath{..} =
+      concat ["  FlowLength ", show fromNode, " ", show toNode, " = ", show (length moves)]
+
+    generateFlowInstance :: VPath -> String
+    generateFlowInstance VPath{..} =
+      unlines
+        [ concat ["instance SteepestDescentMorseFlow ", show (min 512 (length moves)), " ", show fromNode, " ", show toNode, " where"]
+        , concat ["  morseFlowStep _ _ _ = (", show (length moves), ", ", show fromNode, ", ", show toNode, ")"]
+        ]
 
     genRuntimeTuple :: VPath -> String
     genRuntimeTuple VPath{..} =
-      "((\"" ++ fromNode ++ "\", \"" ++ toNode ++ "\"), " ++ show moves ++ ")"
+      concat ["((", show fromNode, ", ", show toNode, "), ", show moves, ")"]
 
 -- ============================================================================
 -- 4. メイン（テストコンパイラジェネレータドライバ）
 -- ============================================================================
 
--- テスト用の収束した.mbook生データ
 sampleMBookData :: String
 sampleMBookData = unlines
   [ "NODE:Start,Saddle,0.0"
@@ -175,7 +231,7 @@ sampleMBookData = unlines
 main :: IO ()
 main = do
   args <- System.Environment.getArgs
-  putStrLn "=== Shogi Morse-Contraction Compiler-Generator ==="
+  putStrLn "=== Shogi Morse-Contraction Compiler-Generator (512-Ply Inference) ==="
   mbookContent <- case args of
     (filePath:_) -> do
       putStrLn $ "Reading Morse Book file from: " ++ filePath
@@ -189,11 +245,9 @@ main = do
   putStrLn $ "  Total Nodes (Critical Points): " ++ show (Map.size (bookNodes parsedBook))
   putStrLn $ "  Total V-Paths (Gradient Flows): " ++ show (length (bookPaths parsedBook))
   
-  putStrLn "Transpiling and generating type-level safe Haskell code (CompiledMorseBook.hs)..."
+  putStrLn "Transpiling and generating 512-ply type-inference Haskell code (CompiledMorseBook.hs)..."
   let generatedHaskell = transpileToTypeLevelHaskell parsedBook
   
-  -- カレントディレクトリに出力
   writeFile "CompiledMorseBook.hs" generatedHaskell
-  putStrLn "Compile-time safe Haskell file generated successfully at ./CompiledMorseBook.hs"
-  
+  putStrLn "Compile-time safe 512-ply Haskell file generated successfully at ./CompiledMorseBook.hs"
   exitSuccess

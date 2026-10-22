@@ -10,6 +10,7 @@ module ShogiStratifiedMidgame
   , Square
   , Board
   , Hand
+  , PositionKey
   , Move(..)
   , State(..)
   , positionKey

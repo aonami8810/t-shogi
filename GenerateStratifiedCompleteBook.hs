@@ -340,9 +340,10 @@ searchPunishmentIDS512 st initQ maxDepth =
 -- ============================================================================
 
 -- | 最急降下法により、本筋局面から最近傍イデアル（QEGTB/詰み/詰めろ）まで 1次元的に延伸 (超高速)
-extendEquilibriumToIdeal :: State -> DynamicQEGTB -> Int -> [Move] -> ([Move], Bool, DynamicQEGTB)
-extendEquilibriumToIdeal s q 0 acc = (reverse acc, False, q)
-extendEquilibriumToIdeal s q remSteps acc
+-- | 最急降下モース勾配流により、自己対局で本筋局面から終局・最近傍イデアル（QEGTB/詰み/詰めろ）まで最大512手まで延伸
+extendEquilibriumToIdeal512 :: State -> DynamicQEGTB -> Int -> Map.Map PositionKey Int -> [Move] -> ([Move], Bool, DynamicQEGTB)
+extendEquilibriumToIdeal512 s q 0 _ acc = (reverse acc, False, q)
+extendEquilibriumToIdeal512 s q remSteps visited acc
   | isCheckmatePosition s =
       let dummyMv = DropMove Gold (5, 2)
           newQ = extractAndBackpropagateQEGTB s dummyMv 0 q
@@ -354,18 +355,25 @@ extendEquilibriumToIdeal s q remSteps acc
           case detectMidgameTsumero (turn s) s q of
             Just (_, tsumeroM) ->
               let nextSt = applyMove tsumeroM s
-              in extendEquilibriumToIdeal nextSt q (remSteps - 1) (tsumeroM : acc)
+                  nextVis = Map.insertWith (+) (positionKey nextSt) 1 visited
+              in extendEquilibriumToIdeal512 nextSt q (remSteps - 1) nextVis (tsumeroM : acc)
             Nothing ->
               let rawLegalMoves = f5SyzygyFilter s (generateMoves s)
                   filteredMoves = filter (not . isTempoLossMove s) rawLegalMoves
                   legalMoves = if null filteredMoves then rawLegalMoves else filteredMoves
-              in case legalMoves of
+                  nonLoopMoves = filter (\m ->
+                    let k = positionKey (applyMove m s)
+                    in Map.findWithDefault 0 k visited < 1
+                    ) legalMoves
+                  candidateMoves = if null nonLoopMoves then legalMoves else nonLoopMoves
+              in case candidateMoves of
                    [] -> (reverse acc, False, q)
                    _  ->
-                     let scored = sortBy (\m1 m2 -> compare (scoreMoveStrategic s m2) (scoreMoveStrategic s m1)) legalMoves
+                     let scored = sortBy (\m1 m2 -> compare (scoreMoveStrategic s m2) (scoreMoveStrategic s m1)) candidateMoves
                          bestM = head scored
                          nextSt = applyMove bestM s
-                     in extendEquilibriumToIdeal nextSt q (remSteps - 1) (bestM : acc)
+                         nextVis = Map.insertWith (+) (positionKey nextSt) 1 visited
+                     in extendEquilibriumToIdeal512 nextSt q (remSteps - 1) nextVis (bestM : acc)
 
 runStratifiedBookGeneration :: IO ([BFSPath], DynamicQEGTB)
 runStratifiedBookGeneration = do
@@ -413,7 +421,7 @@ runStratifiedBookGeneration = do
           let branchBudget = 2
           let (branchPaths, finalQEGTB) = foldl' (\(bP, qAcc) devM ->
                 let devSt = applyMove devM st
-                    (refutedMvSeq, qegtbHit, newQ) = searchPunishmentIDS512 devSt qAcc 7
+                    (refutedMvSeq, qegtbHit, newQ) = searchPunishmentIDS512 devSt qAcc 512
                     fullSeq = take idx moves ++ [devM] ++ refutedMvSeq
                     branchName = printf "%s_DevPly%02d_%s" pathName (idx + 1) (showMove devM)
                     stratumAtDev = showStratumKey (stratifyState devSt)
@@ -426,8 +434,10 @@ runStratifiedBookGeneration = do
         
         -- ★ 本筋自身を30手目以降〜終局・最近傍イデアル（QEGTB詰み）まで完全延伸！
         let lastSt = last states
+            totalBaseMoves = length moves
+            remStepsTo512 = max 0 (512 - totalBaseMoves)
             (extendedMoves, isEquilClosed, qegtbAfterEquil) =
-              extendEquilibriumToIdeal lastSt updatedQEGTB 15 []
+              extendEquilibriumToIdeal512 lastSt updatedQEGTB remStepsTo512 Map.empty []
             fullEquilibriumMoves = moves ++ extendedMoves
             equilibriumPath = BFSPath pathName fullEquilibriumMoves isEquilClosed (length extendedMoves) sampleStratum
         

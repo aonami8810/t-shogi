@@ -4,7 +4,10 @@
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE AllowAmbiguousTypes #-}
 
 module CompiledMorseBook where
 
@@ -13,7 +16,7 @@ import Data.Proxy
 import qualified Data.Map as Map
 
 -- ============================================================================
--- 1. 収束した臨界ノードの定義（Type-Level Symbols）
+-- 1. 収束した臨界ノードの定義 (Type-Level Symbols)
 -- ============================================================================
 
 -- | Node ID: Aigakari_StratifiedEquilibrium (Type: Saddle, Potential: 0.0)
@@ -62,17 +65,17 @@ import qualified Data.Map as Map
 -- | Node ID: Aigakari_StratifiedEquilibrium_DevPly24_2b6f (Type: Saddle, Potential: 0.0)
 -- | Node ID: Aigakari_StratifiedEquilibrium_DevPly24_2b7g+ (Type: Saddle, Potential: 0.0)
 -- | Node ID: Aigakari_StratifiedEquilibrium_DevPly25_2h2c+ (Type: Saddle, Potential: 0.0)
--- | Node ID: Aigakari_StratifiedEquilibrium_DevPly25_2h2d (Type: Saddle, Potential: 50.0)
+-- | Node ID: Aigakari_StratifiedEquilibrium_DevPly25_2h2d (Type: Saddle, Potential: 0.0)
 -- | Node ID: Aigakari_StratifiedEquilibrium_DevPly27_2h2c+ (Type: Saddle, Potential: 0.0)
--- | Node ID: Aigakari_StratifiedEquilibrium_DevPly27_2h2d (Type: Saddle, Potential: 50.0)
--- | Node ID: Aigakari_StratifiedEquilibrium_DevPly29_6g6f (Type: Saddle, Potential: 50.0)
--- | Node ID: Aigakari_StratifiedEquilibrium_DevPly29_7h7g (Type: Saddle, Potential: 50.0)
--- | Node ID: Aigakari_StratifiedEquilibrium_DevPly31_2f2d (Type: Saddle, Potential: 50.0)
--- | Node ID: Aigakari_StratifiedEquilibrium_DevPly31_2f6f (Type: Saddle, Potential: 50.0)
+-- | Node ID: Aigakari_StratifiedEquilibrium_DevPly27_2h2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: Aigakari_StratifiedEquilibrium_DevPly29_6g6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: Aigakari_StratifiedEquilibrium_DevPly29_7h7g (Type: Saddle, Potential: 0.0)
+-- | Node ID: Aigakari_StratifiedEquilibrium_DevPly31_2f2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: Aigakari_StratifiedEquilibrium_DevPly31_2f6f (Type: Saddle, Potential: 0.0)
 -- | Node ID: Aigakari_StratifiedEquilibrium_DevPly33_2e3e (Type: Saddle, Potential: 0.0)
 -- | Node ID: Aigakari_StratifiedEquilibrium_DevPly33_2e5e (Type: Saddle, Potential: 0.0)
--- | Node ID: Aigakari_StratifiedEquilibrium_DevPly35_2f2d (Type: Saddle, Potential: 50.0)
--- | Node ID: Aigakari_StratifiedEquilibrium_DevPly35_2f6f (Type: Saddle, Potential: 50.0)
+-- | Node ID: Aigakari_StratifiedEquilibrium_DevPly35_2f2d (Type: Saddle, Potential: 0.0)
+-- | Node ID: Aigakari_StratifiedEquilibrium_DevPly35_2f6f (Type: Saddle, Potential: 0.0)
 -- | Node ID: Early3eBlitz_Melee (Type: Saddle, Potential: 0.0)
 -- | Node ID: Early3eBlitz_Melee_DevPly03_8h3c+ (Type: Saddle, Potential: 0.0)
 -- | Node ID: Early3eBlitz_Melee_DevPly03_8h4d (Type: Saddle, Potential: 0.0)
@@ -151,12 +154,12 @@ import qualified Data.Map as Map
 -- | Node ID: EarlyClimbingSilver_Melee_DevPly05_8h4d (Type: Saddle, Potential: 0.0)
 -- | Node ID: EarlyClimbingSilver_Melee_DevPly06_2b6f (Type: Saddle, Potential: 0.0)
 -- | Node ID: EarlyClimbingSilver_Melee_DevPly06_2b7g+ (Type: Saddle, Potential: 0.0)
--- | Node ID: EarlyClimbingSilver_Melee_DevPly07_8h3c+ (Type: Saddle, Potential: 50.0)
--- | Node ID: EarlyClimbingSilver_Melee_DevPly07_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly07_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly07_8h4d (Type: Saddle, Potential: 0.0)
 -- | Node ID: EarlyClimbingSilver_Melee_DevPly08_2b6f (Type: Saddle, Potential: 0.0)
 -- | Node ID: EarlyClimbingSilver_Melee_DevPly08_2b7g+ (Type: Saddle, Potential: 0.0)
--- | Node ID: EarlyClimbingSilver_Melee_DevPly09_8h3c+ (Type: Saddle, Potential: 50.0)
--- | Node ID: EarlyClimbingSilver_Melee_DevPly09_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly09_8h3c+ (Type: Saddle, Potential: 0.0)
+-- | Node ID: EarlyClimbingSilver_Melee_DevPly09_8h4d (Type: Saddle, Potential: 0.0)
 -- | Node ID: EarlyClimbingSilver_Melee_DevPly10_1a1d (Type: Saddle, Potential: 0.0)
 -- | Node ID: EarlyClimbingSilver_Melee_DevPly10_1a1e (Type: Saddle, Potential: 0.0)
 -- | Node ID: EarlyClimbingSilver_Melee_DevPly11_8h2b+ (Type: Saddle, Potential: 0.0)
@@ -290,14 +293,14 @@ import qualified Data.Map as Map
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly06_2b6f (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly06_2b7g+ (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly07_8h4d (Type: Saddle, Potential: 0.0)
--- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly07_8h5e (Type: Saddle, Potential: 50.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly07_8h5e (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly08_2b6f (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly08_2b7g+ (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly09_8h4d (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly09_8h5e (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly10_2b6f (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly10_2b7g+ (Type: Saddle, Potential: 0.0)
--- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly11_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly11_8h4d (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly11_8h5e (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly12_2b6f (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly12_2b7g+ (Type: Saddle, Potential: 0.0)
@@ -337,22 +340,22 @@ import qualified Data.Map as Map
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly34_5e4e (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly35_2h2c+ (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly35_2h2d (Type: Saddle, Potential: 0.0)
--- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly36_1a1b (Type: Saddle, Potential: 50.0)
--- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly36_1a1c (Type: Saddle, Potential: 50.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly36_1a1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly36_1a1c (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly37_2h2c+ (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly37_2h2d (Type: Saddle, Potential: 0.0)
--- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly38_2b3a (Type: Saddle, Potential: 50.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly38_2b3a (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly38_S*1e (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly39_2h2c+ (Type: Saddle, Potential: 0.0)
--- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly39_2h2d (Type: Saddle, Potential: 50.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly39_2h2d (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly40_2a3c (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly40_2b3a (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly41_2h2c+ (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly41_2h2d (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly42_1a1b (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly42_3d3e (Type: Saddle, Potential: 0.0)
--- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly43_2a1b (Type: Saddle, Potential: 50.0)
--- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly43_2a2b (Type: Saddle, Potential: 50.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly43_2a1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly43_2a2b (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly44_1a1b (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly44_1a1c (Type: Saddle, Potential: 0.0)
 -- | Node ID: GoteGokigen_IronDefense_Equilibrium_DevPly45_2c1c (Type: Saddle, Potential: 0.0)
@@ -384,7 +387,7 @@ import qualified Data.Map as Map
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly09_8h3c+ (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly09_8h4d (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly10_3b3c (Type: Saddle, Potential: 0.0)
--- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly10_5a4b (Type: Saddle, Potential: 50.0)
+-- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly10_5a4b (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly11_B*1b (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly11_B*1d (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly12_5a5b (Type: Saddle, Potential: 0.0)
@@ -401,37 +404,37 @@ import qualified Data.Map as Map
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly17_B*1d (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly18_B*1f (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly18_B*1h (Type: Saddle, Potential: 0.0)
--- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly19_P*3c (Type: Saddle, Potential: 50.0)
+-- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly19_P*3c (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly19_P*3e (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly20_4b3c (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly20_B*1f (Type: Saddle, Potential: 0.0)
--- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly21_P*3c (Type: Saddle, Potential: 50.0)
+-- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly21_P*3c (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly21_P*3e (Type: Saddle, Potential: 0.0)
--- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly22_4b3c (Type: Saddle, Potential: 50.0)
+-- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly22_4b3c (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly22_B*1f (Type: Saddle, Potential: 0.0)
--- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly23_P*3c (Type: Saddle, Potential: 50.0)
+-- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly23_P*3c (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly23_P*3e (Type: Saddle, Potential: 0.0)
--- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly24_4b3c (Type: Saddle, Potential: 50.0)
+-- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly24_4b3c (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly24_B*1f (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly25_3e2d (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly25_3e4d (Type: Saddle, Potential: 0.0)
--- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly26_4b3c (Type: Saddle, Potential: 50.0)
+-- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly26_4b3c (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly26_B*1f (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly27_2h2e (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly27_3e4d (Type: Saddle, Potential: 0.0)
--- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly28_4b3c (Type: Saddle, Potential: 50.0)
+-- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly28_4b3c (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly28_B*1f (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly29_2d1d (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly29_2d2c+ (Type: Saddle, Potential: 0.0)
--- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly30_4b3c (Type: Saddle, Potential: 50.0)
+-- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly30_4b3c (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly30_B*1f (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly31_2h2c+ (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly31_2h2d (Type: Saddle, Potential: 0.0)
--- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly32_4b3c (Type: Saddle, Potential: 50.0)
+-- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly32_4b3c (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly32_S*1f (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly33_2h2c+ (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly33_2h2d (Type: Saddle, Potential: 0.0)
--- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly34_4b3c (Type: Saddle, Potential: 50.0)
+-- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly34_4b3c (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly34_B*1f (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly35_2h2c+ (Type: Saddle, Potential: 0.0)
 -- | Node ID: Kakugawari_StratifiedEquilibrium_DevPly35_2h2d (Type: Saddle, Potential: 0.0)
@@ -1026,24 +1029,24 @@ import qualified Data.Map as Map
 -- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly11_7g8f (Type: Saddle, Potential: 0.0)
 -- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly12_2a3c (Type: Saddle, Potential: 0.0)
 -- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly12_2b6f (Type: Saddle, Potential: 0.0)
--- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly13_7g4d (Type: Saddle, Potential: 50.0)
--- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly13_7g8f (Type: Saddle, Potential: 50.0)
--- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly14_2a3c (Type: Saddle, Potential: 50.0)
--- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly14_2b6f (Type: Saddle, Potential: 50.0)
--- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly15_7g4d (Type: Saddle, Potential: 50.0)
--- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly15_7g8f (Type: Saddle, Potential: 50.0)
--- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly16_2a3c (Type: Saddle, Potential: 50.0)
+-- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly13_7g4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly13_7g8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly14_2a3c (Type: Saddle, Potential: 0.0)
+-- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly14_2b6f (Type: Saddle, Potential: 0.0)
+-- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly15_7g4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly15_7g8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly16_2a3c (Type: Saddle, Potential: 0.0)
 -- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly16_4b3a (Type: Saddle, Potential: 0.0)
--- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly17_7g4d (Type: Saddle, Potential: 50.0)
--- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly17_7g8f (Type: Saddle, Potential: 50.0)
--- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly18_2a3c (Type: Saddle, Potential: 50.0)
+-- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly17_7g4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly17_7g8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly18_2a3c (Type: Saddle, Potential: 0.0)
 -- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly18_4b3a (Type: Saddle, Potential: 0.0)
--- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly19_7g4d (Type: Saddle, Potential: 50.0)
--- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly19_7g8f (Type: Saddle, Potential: 50.0)
--- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly20_2a3c (Type: Saddle, Potential: 50.0)
+-- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly19_7g4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly19_7g8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly20_2a3c (Type: Saddle, Potential: 0.0)
 -- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly20_4b3a (Type: Saddle, Potential: 0.0)
--- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly21_7g4d (Type: Saddle, Potential: 50.0)
--- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly21_7g8f (Type: Saddle, Potential: 50.0)
+-- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly21_7g4d (Type: Saddle, Potential: 0.0)
+-- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly21_7g8f (Type: Saddle, Potential: 0.0)
 -- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly22_B*1e (Type: Saddle, Potential: 0.0)
 -- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly22_B*1g (Type: Saddle, Potential: 0.0)
 -- | Node ID: Sankenbisha_StratifiedEquilibrium_DevPly23_7f7d (Type: Saddle, Potential: 0.0)
@@ -1081,54 +1084,54 @@ import qualified Data.Map as Map
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly12_2b6f (Type: Saddle, Potential: 0.0)
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly13_8h3c+ (Type: Saddle, Potential: 0.0)
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly13_8h4d (Type: Saddle, Potential: 0.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly14_5a4b (Type: Saddle, Potential: 50.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly14_5a5b (Type: Saddle, Potential: 50.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly15_B*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly15_B*1d (Type: Saddle, Potential: 50.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly16_5a5b (Type: Saddle, Potential: 50.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly16_5a6b (Type: Saddle, Potential: 50.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly17_B*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly17_B*1d (Type: Saddle, Potential: 50.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly18_5a5b (Type: Saddle, Potential: 50.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly14_5a4b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly14_5a5b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly15_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly15_B*1d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly16_5a5b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly16_5a6b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly17_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly17_B*1d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly18_5a5b (Type: Saddle, Potential: 0.0)
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly18_8b8f (Type: Saddle, Potential: 0.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly19_B*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly19_B*1d (Type: Saddle, Potential: 50.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly19_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly19_B*1d (Type: Saddle, Potential: 0.0)
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly20_2b3a (Type: Saddle, Potential: 0.0)
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly20_4b3a (Type: Saddle, Potential: 0.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly21_B*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly21_B*1d (Type: Saddle, Potential: 50.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly22_4b3c (Type: Saddle, Potential: 50.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly21_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly21_B*1d (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly22_4b3c (Type: Saddle, Potential: 0.0)
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly22_4b4a (Type: Saddle, Potential: 0.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly23_B*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly23_B*1d (Type: Saddle, Potential: 50.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly23_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly23_B*1d (Type: Saddle, Potential: 0.0)
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly24_8b8f (Type: Saddle, Potential: 0.0)
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly24_8b8g+ (Type: Saddle, Potential: 0.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly25_B*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly25_B*1d (Type: Saddle, Potential: 50.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly25_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly25_B*1d (Type: Saddle, Potential: 0.0)
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly26_8b8f (Type: Saddle, Potential: 0.0)
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly26_8b8g+ (Type: Saddle, Potential: 0.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly27_B*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly27_B*1d (Type: Saddle, Potential: 50.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly27_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly27_B*1d (Type: Saddle, Potential: 0.0)
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly28_8b8f (Type: Saddle, Potential: 0.0)
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly28_8b8g+ (Type: Saddle, Potential: 0.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly29_B*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly29_B*1c (Type: Saddle, Potential: 50.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly29_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly29_B*1c (Type: Saddle, Potential: 0.0)
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly30_8b8f (Type: Saddle, Potential: 0.0)
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly30_8b8g+ (Type: Saddle, Potential: 0.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly31_B*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly31_B*1c (Type: Saddle, Potential: 50.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly31_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly31_B*1c (Type: Saddle, Potential: 0.0)
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly32_8d8f (Type: Saddle, Potential: 0.0)
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly32_8d8g+ (Type: Saddle, Potential: 0.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly33_B*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly33_B*1c (Type: Saddle, Potential: 50.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly33_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly33_B*1c (Type: Saddle, Potential: 0.0)
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly34_7d7e (Type: Saddle, Potential: 0.0)
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly34_B*1e (Type: Saddle, Potential: 0.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly35_B*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly35_B*1c (Type: Saddle, Potential: 50.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly35_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly35_B*1c (Type: Saddle, Potential: 0.0)
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly36_1a1b (Type: Saddle, Potential: 0.0)
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly36_1a1c (Type: Saddle, Potential: 0.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly37_B*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly37_B*1c (Type: Saddle, Potential: 50.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly37_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly37_B*1c (Type: Saddle, Potential: 0.0)
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly38_8e7e (Type: Saddle, Potential: 0.0)
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly38_8e8f (Type: Saddle, Potential: 0.0)
 -- | Node ID: SenteKakuexchange_IronMino_Equilibrium_DevPly39_B*1b (Type: Saddle, Potential: 0.0)
@@ -1222,32 +1225,32 @@ import qualified Data.Map as Map
 -- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly09_7g8f (Type: Saddle, Potential: 0.0)
 -- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly11_7g8f (Type: Saddle, Potential: 0.0)
 -- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly13_7g8f (Type: Saddle, Potential: 0.0)
--- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly15_7g8f (Type: Saddle, Potential: 50.0)
--- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly15_G*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly16_4b3c (Type: Saddle, Potential: 50.0)
+-- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly15_7g8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly15_G*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly16_4b3c (Type: Saddle, Potential: 0.0)
 -- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly16_4b4a (Type: Saddle, Potential: 0.0)
--- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly17_7g8f (Type: Saddle, Potential: 50.0)
--- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly17_S*1b (Type: Saddle, Potential: 50.0)
+-- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly17_7g8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly17_S*1b (Type: Saddle, Potential: 0.0)
 -- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly18_4b3a (Type: Saddle, Potential: 0.0)
--- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly18_4b3c (Type: Saddle, Potential: 50.0)
--- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly19_7g8f (Type: Saddle, Potential: 50.0)
--- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly19_S*1b (Type: Saddle, Potential: 50.0)
+-- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly18_4b3c (Type: Saddle, Potential: 0.0)
+-- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly19_7g8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly19_S*1b (Type: Saddle, Potential: 0.0)
 -- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly20_4b3a (Type: Saddle, Potential: 0.0)
--- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly20_4b3c (Type: Saddle, Potential: 50.0)
--- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly21_7g8f (Type: Saddle, Potential: 50.0)
--- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly21_S*1b (Type: Saddle, Potential: 50.0)
+-- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly20_4b3c (Type: Saddle, Potential: 0.0)
+-- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly21_7g8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly21_S*1b (Type: Saddle, Potential: 0.0)
 -- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly22_4b3a (Type: Saddle, Potential: 0.0)
--- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly22_4b3c (Type: Saddle, Potential: 50.0)
--- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly23_7g8f (Type: Saddle, Potential: 50.0)
--- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly23_S*1b (Type: Saddle, Potential: 50.0)
+-- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly22_4b3c (Type: Saddle, Potential: 0.0)
+-- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly23_7g8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly23_S*1b (Type: Saddle, Potential: 0.0)
 -- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly24_4b3a (Type: Saddle, Potential: 0.0)
--- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly24_4b3c (Type: Saddle, Potential: 50.0)
--- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly25_7g8f (Type: Saddle, Potential: 50.0)
--- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly25_S*1b (Type: Saddle, Potential: 50.0)
+-- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly24_4b3c (Type: Saddle, Potential: 0.0)
+-- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly25_7g8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly25_S*1b (Type: Saddle, Potential: 0.0)
 -- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly26_4b3a (Type: Saddle, Potential: 0.0)
--- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly26_4b3c (Type: Saddle, Potential: 50.0)
--- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly27_7g8f (Type: Saddle, Potential: 50.0)
--- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly27_S*1b (Type: Saddle, Potential: 50.0)
+-- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly26_4b3c (Type: Saddle, Potential: 0.0)
+-- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly27_7g8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly27_S*1b (Type: Saddle, Potential: 0.0)
 -- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly28_4b3c (Type: Saddle, Potential: 0.0)
 -- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly28_4b4a (Type: Saddle, Potential: 0.0)
 -- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly29_7g8f (Type: Saddle, Potential: 0.0)
@@ -1256,7 +1259,7 @@ import qualified Data.Map as Map
 -- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly30_B*1g (Type: Saddle, Potential: 0.0)
 -- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly31_7g8f (Type: Saddle, Potential: 0.0)
 -- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly31_S*1b (Type: Saddle, Potential: 0.0)
--- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly32_3a2b (Type: Saddle, Potential: 50.0)
+-- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly32_3a2b (Type: Saddle, Potential: 0.0)
 -- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly32_3c2d (Type: Saddle, Potential: 0.0)
 -- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly33_6i5i (Type: Saddle, Potential: 0.0)
 -- | Node ID: Shikenbisha_StratifiedEquilibrium_DevPly33_7g8f (Type: Saddle, Potential: 0.0)
@@ -1343,14 +1346,14 @@ import qualified Data.Map as Map
 -- | Node ID: SujichigaiBishop_Melee (Type: Saddle, Potential: 0.0)
 -- | Node ID: SujichigaiBishop_Melee_DevPly03_8h3c+ (Type: Saddle, Potential: 0.0)
 -- | Node ID: SujichigaiBishop_Melee_DevPly03_8h4d (Type: Saddle, Potential: 0.0)
--- | Node ID: SujichigaiBishop_Melee_DevPly04_5a4b (Type: Saddle, Potential: 50.0)
--- | Node ID: SujichigaiBishop_Melee_DevPly04_5a5b (Type: Saddle, Potential: 50.0)
--- | Node ID: SujichigaiBishop_Melee_DevPly05_B*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: SujichigaiBishop_Melee_DevPly05_B*1d (Type: Saddle, Potential: 50.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly04_5a4b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly04_5a5b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly05_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly05_B*1d (Type: Saddle, Potential: 0.0)
 -- | Node ID: SujichigaiBishop_Melee_DevPly06_B*1f (Type: Saddle, Potential: 0.0)
 -- | Node ID: SujichigaiBishop_Melee_DevPly06_B*1h (Type: Saddle, Potential: 0.0)
 -- | Node ID: SujichigaiBishop_Melee_DevPly07_4e3d (Type: Saddle, Potential: 0.0)
--- | Node ID: SujichigaiBishop_Melee_DevPly07_4e5d (Type: Saddle, Potential: 50.0)
+-- | Node ID: SujichigaiBishop_Melee_DevPly07_4e5d (Type: Saddle, Potential: 0.0)
 -- | Node ID: SujichigaiBishop_Melee_DevPly08_B*1e (Type: Saddle, Potential: 0.0)
 -- | Node ID: SujichigaiBishop_Melee_DevPly08_B*1g (Type: Saddle, Potential: 0.0)
 -- | Node ID: SujichigaiBishop_Melee_DevPly09_4e3d (Type: Saddle, Potential: 0.0)
@@ -1416,12 +1419,12 @@ import qualified Data.Map as Map
 -- | Node ID: UreshinoMelee_DevPly10_1a1c (Type: Saddle, Potential: 0.0)
 -- | Node ID: UreshinoMelee_DevPly11_1i1f (Type: Saddle, Potential: 0.0)
 -- | Node ID: UreshinoMelee_DevPly11_1i1g (Type: Saddle, Potential: 0.0)
--- | Node ID: UreshinoMelee_DevPly12_5a5b (Type: Saddle, Potential: 50.0)
--- | Node ID: UreshinoMelee_DevPly12_5a6b (Type: Saddle, Potential: 50.0)
+-- | Node ID: UreshinoMelee_DevPly12_5a5b (Type: Saddle, Potential: 0.0)
+-- | Node ID: UreshinoMelee_DevPly12_5a6b (Type: Saddle, Potential: 0.0)
 -- | Node ID: UreshinoMelee_DevPly13_1i1f (Type: Saddle, Potential: 0.0)
 -- | Node ID: UreshinoMelee_DevPly13_1i1g (Type: Saddle, Potential: 0.0)
 -- | Node ID: UreshinoMelee_DevPly14_3c2e (Type: Saddle, Potential: 0.0)
--- | Node ID: UreshinoMelee_DevPly14_5a4b (Type: Saddle, Potential: 50.0)
+-- | Node ID: UreshinoMelee_DevPly14_5a4b (Type: Saddle, Potential: 0.0)
 -- | Node ID: UreshinoMelee_DevPly15_1i1g (Type: Saddle, Potential: 0.0)
 -- | Node ID: UreshinoMelee_DevPly15_2h1h (Type: Saddle, Potential: 0.0)
 -- | Node ID: UreshinoMelee_DevPly16_1g2g (Type: Saddle, Potential: 0.0)
@@ -1468,41 +1471,41 @@ import qualified Data.Map as Map
 -- | Node ID: UreshinoMelee_DevPly36_1g2g (Type: Saddle, Potential: 0.0)
 -- | Node ID: Yagura_StratifiedEquilibrium (Type: Saddle, Potential: 0.0)
 -- | Node ID: Yagura_StratifiedEquilibrium_DevPly03_8h3c+ (Type: Saddle, Potential: 0.0)
--- | Node ID: Yagura_StratifiedEquilibrium_DevPly03_8h4d (Type: Saddle, Potential: 50.0)
+-- | Node ID: Yagura_StratifiedEquilibrium_DevPly03_8h4d (Type: Saddle, Potential: 0.0)
 -- | Node ID: Yagura_StratifiedEquilibrium_DevPly08_2b6f (Type: Saddle, Potential: 0.0)
 -- | Node ID: Yagura_StratifiedEquilibrium_DevPly10_2b5e (Type: Saddle, Potential: 0.0)
 -- | Node ID: Yagura_StratifiedEquilibrium_DevPly10_2b6f (Type: Saddle, Potential: 0.0)
--- | Node ID: Yagura_StratifiedEquilibrium_DevPly12_2b5e (Type: Saddle, Potential: 50.0)
+-- | Node ID: Yagura_StratifiedEquilibrium_DevPly12_2b5e (Type: Saddle, Potential: 0.0)
 -- | Node ID: Yagura_StratifiedEquilibrium_DevPly12_2b6f (Type: Saddle, Potential: 0.0)
--- | Node ID: Yagura_StratifiedEquilibrium_DevPly14_2b5e (Type: Saddle, Potential: 50.0)
+-- | Node ID: Yagura_StratifiedEquilibrium_DevPly14_2b5e (Type: Saddle, Potential: 0.0)
 -- | Node ID: Yagura_StratifiedEquilibrium_DevPly14_2b6f (Type: Saddle, Potential: 0.0)
--- | Node ID: Yagura_StratifiedEquilibrium_DevPly19_B*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: Yagura_StratifiedEquilibrium_DevPly19_B*1d (Type: Saddle, Potential: 50.0)
--- | Node ID: Yagura_StratifiedEquilibrium_DevPly21_7g8f (Type: Saddle, Potential: 50.0)
--- | Node ID: Yagura_StratifiedEquilibrium_DevPly21_B*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: Yagura_StratifiedEquilibrium_DevPly23_7g8f (Type: Saddle, Potential: 50.0)
--- | Node ID: Yagura_StratifiedEquilibrium_DevPly23_B*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: Yagura_StratifiedEquilibrium_DevPly25_7g8f (Type: Saddle, Potential: 50.0)
--- | Node ID: Yagura_StratifiedEquilibrium_DevPly25_B*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: Yagura_StratifiedEquilibrium_DevPly27_B*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: Yagura_StratifiedEquilibrium_DevPly27_B*1d (Type: Saddle, Potential: 50.0)
+-- | Node ID: Yagura_StratifiedEquilibrium_DevPly19_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: Yagura_StratifiedEquilibrium_DevPly19_B*1d (Type: Saddle, Potential: 0.0)
+-- | Node ID: Yagura_StratifiedEquilibrium_DevPly21_7g8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: Yagura_StratifiedEquilibrium_DevPly21_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: Yagura_StratifiedEquilibrium_DevPly23_7g8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: Yagura_StratifiedEquilibrium_DevPly23_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: Yagura_StratifiedEquilibrium_DevPly25_7g8f (Type: Saddle, Potential: 0.0)
+-- | Node ID: Yagura_StratifiedEquilibrium_DevPly25_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: Yagura_StratifiedEquilibrium_DevPly27_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: Yagura_StratifiedEquilibrium_DevPly27_B*1d (Type: Saddle, Potential: 0.0)
 -- | Node ID: Yagura_StratifiedEquilibrium_DevPly28_8b8e (Type: Saddle, Potential: 0.0)
 -- | Node ID: Yagura_StratifiedEquilibrium_DevPly30_8f7f (Type: Saddle, Potential: 0.0)
 -- | Node ID: Yagura_StratifiedEquilibrium_DevPly30_8f9f (Type: Saddle, Potential: 0.0)
--- | Node ID: Yagura_StratifiedEquilibrium_DevPly31_B*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: Yagura_StratifiedEquilibrium_DevPly31_B*1d (Type: Saddle, Potential: 50.0)
+-- | Node ID: Yagura_StratifiedEquilibrium_DevPly31_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: Yagura_StratifiedEquilibrium_DevPly31_B*1d (Type: Saddle, Potential: 0.0)
 -- | Node ID: Yagura_StratifiedEquilibrium_DevPly32_8b8f (Type: Saddle, Potential: 0.0)
--- | Node ID: Yagura_StratifiedEquilibrium_DevPly33_B*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: Yagura_StratifiedEquilibrium_DevPly33_B*1d (Type: Saddle, Potential: 50.0)
+-- | Node ID: Yagura_StratifiedEquilibrium_DevPly33_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: Yagura_StratifiedEquilibrium_DevPly33_B*1d (Type: Saddle, Potential: 0.0)
 -- | Node ID: Yagura_StratifiedEquilibrium_DevPly34_8b8f (Type: Saddle, Potential: 0.0)
--- | Node ID: Yagura_StratifiedEquilibrium_DevPly35_B*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: Yagura_StratifiedEquilibrium_DevPly35_B*1d (Type: Saddle, Potential: 50.0)
+-- | Node ID: Yagura_StratifiedEquilibrium_DevPly35_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: Yagura_StratifiedEquilibrium_DevPly35_B*1d (Type: Saddle, Potential: 0.0)
 -- | Node ID: Yagura_StratifiedEquilibrium_DevPly36_8b8f (Type: Saddle, Potential: 0.0)
--- | Node ID: Yagura_StratifiedEquilibrium_DevPly37_B*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: Yagura_StratifiedEquilibrium_DevPly37_B*1d (Type: Saddle, Potential: 50.0)
+-- | Node ID: Yagura_StratifiedEquilibrium_DevPly37_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: Yagura_StratifiedEquilibrium_DevPly37_B*1d (Type: Saddle, Potential: 0.0)
 -- | Node ID: Yagura_StratifiedEquilibrium_DevPly38_8b8f (Type: Saddle, Potential: 0.0)
--- | Node ID: Yagura_StratifiedEquilibrium_DevPly39_B*1b (Type: Saddle, Potential: 50.0)
--- | Node ID: Yagura_StratifiedEquilibrium_DevPly39_B*1d (Type: Saddle, Potential: 50.0)
+-- | Node ID: Yagura_StratifiedEquilibrium_DevPly39_B*1b (Type: Saddle, Potential: 0.0)
+-- | Node ID: Yagura_StratifiedEquilibrium_DevPly39_B*1d (Type: Saddle, Potential: 0.0)
 -- | Node ID: Yagura_StratifiedEquilibrium_DevPly40_8b8f (Type: Saddle, Potential: 0.0)
 -- | Node ID: Yokofudori_StratifiedEquilibrium (Type: Saddle, Potential: 0.0)
 -- | Node ID: Yokofudori_StratifiedEquilibrium_DevPly03_8h3c+ (Type: Saddle, Potential: 0.0)
@@ -1559,7 +1562,7 @@ import qualified Data.Map as Map
 -- | Node ID: Yokofudori_StratifiedEquilibrium_DevPly29_3c2d+ (Type: Saddle, Potential: 0.0)
 
 -- ============================================================================
--- 2. 勾配流（V-Path）の型レベル二項遷移関係の定義（Type Family）
+-- 2. 勾配流 (V-Path) の型レベル二項遷移関係の定義 (Type Family)
 --    アクティブ・ラーニングで収束が確認されたパスのみが 'True と判定されます。
 -- ============================================================================
 type family ValidTransition (from :: Symbol) (to :: Symbol) :: Bool where
@@ -2593,9 +2596,4152 @@ type family ValidTransition (from :: Symbol) (to :: Symbol) :: Bool where
   ValidTransition from to = 'False
 
 -- ============================================================================
--- 3. 静的な型安全 Morse Chain（勾配流チェーン：GADT）
---    コンパイル時安全が100%保証された一意な定跡パスの構築子です。
+-- 3. 最急降下モース勾配流の 512 手型推論エンジン (512-Ply Type Inference Engine)
 -- ============================================================================
+
+-- | 最大許容手数制約（512手まで型レベルで有界・型推論保証）
+type MaxMorseGradientFlowPlies = 512
+
+-- | 型レベル自然数による 512 手以内の型推論制約述語
+type family WithinMaxMorseFlow (ply :: Nat) :: Bool where
+  WithinMaxMorseFlow ply = ply <=? MaxMorseGradientFlowPlies
+
+-- | 各勾配流 V-Path の手数を型レベル自然数として推論する型族
+type family FlowLength (from :: Symbol) (to :: Symbol) :: Nat where
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly35_2f6f" = 75
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly35_2f2d" = 143
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly33_2e3e" = 39
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly33_2e5e" = 37
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly31_2f6f" = 71
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly31_2f2d" = 139
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly29_6g6f" = 47
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly29_7h7g" = 41
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly27_2h2d" = 83
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly27_2h2c+" = 31
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly25_2h2d" = 83
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly25_2h2c+" = 29
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly24_2b6f" = 25
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly24_2b7g+" = 25
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly23_2h2d" = 25
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly23_2h2c+" = 25
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly22_2b6f" = 23
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly22_2b7g+" = 23
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly21_2h2d" = 23
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly21_2h2c+" = 23
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly20_2b6f" = 21
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly20_2b7g+" = 21
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly19_2h2d" = 21
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly19_2h2c+" = 21
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly18_2b6f" = 19
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly18_2b7g+" = 19
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly17_2h2d" = 19
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly17_2h2c+" = 19
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly16_2b6f" = 17
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly16_2b7g+" = 17
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly15_2h2d" = 17
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly15_2h2c+" = 17
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly14_2b6f" = 15
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly14_2b7g+" = 15
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly13_2d1d" = 15
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly13_2d2c+" = 15
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly12_2b6f" = 13
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly12_2b7g+" = 13
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly11_2h2e" = 17
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly11_8h4d" = 19
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly10_2b6f" = 13
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly10_2b7g+" = 13
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly09_8h4d" = 17
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly09_8h3c+" = 17
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly08_2b6f" = 11
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly08_2b7g+" = 11
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly07_8h4d" = 15
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly07_8h3c+" = 15
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly06_2b6f" = 9
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly06_2b7g+" = 9
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly05_8h4d" = 13
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly05_8h3c+" = 13
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly04_2b6f" = 7
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly04_2b7g+" = 7
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly03_8h4d" = 11
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium_DevPly03_8h3c+" = 11
+  FlowLength "Start" "Aigakari_StratifiedEquilibrium" = 35
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly36_1a1b" = 37
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly36_1c1d" = 37
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly35_2h2d" = 37
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly35_2h2c+" = 37
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly34_4b3c" = 49
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly34_B*1f" = 35
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly33_2h2d" = 35
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly33_2h2c+" = 35
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly32_4b3c" = 49
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly32_S*1f" = 33
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly31_2h2d" = 33
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly31_2h2c+" = 33
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly30_4b3c" = 49
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly30_B*1f" = 31
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly29_2d1d" = 31
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly29_2d2c+" = 31
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly28_4b3c" = 77
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly28_B*1f" = 29
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly27_2h2e" = 29
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly27_3e4d" = 29
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly26_4b3c" = 35
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly26_B*1f" = 27
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly25_3e2d" = 27
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly25_3e4d" = 27
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly24_4b3c" = 35
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly24_B*1f" = 25
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly23_P*3c" = 33
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly23_P*3e" = 31
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly22_4b3c" = 73
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly22_B*1f" = 23
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly21_P*3c" = 31
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly21_P*3e" = 29
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly20_4b3c" = 27
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly20_B*1f" = 21
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly19_P*3c" = 29
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly19_P*3e" = 27
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly18_B*1f" = 19
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly18_B*1h" = 19
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly17_B*1b" = 19
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly17_B*1d" = 19
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly16_B*1f" = 17
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly16_B*1h" = 17
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly15_B*1b" = 23
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly15_B*1d" = 23
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly14_5a5b" = 21
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly14_B*1f" = 15
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly13_B*1b" = 21
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly13_B*1d" = 21
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly12_5a5b" = 19
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly12_5a6b" = 19
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly11_B*1b" = 19
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly11_B*1d" = 19
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly10_3b3c" = 11
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly10_5a4b" = 19
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly09_8h4d" = 17
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly09_8h3c+" = 17
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly08_2b6f" = 11
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly08_2b7g+" = 11
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly07_8h4d" = 15
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly07_8h3c+" = 15
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly06_2b6f" = 9
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly06_2b7g+" = 9
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly05_8h4d" = 13
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly05_8h3c+" = 13
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly04_2b6f" = 7
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly04_2b7g+" = 7
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly03_8h4d" = 11
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium_DevPly03_8h3c+" = 11
+  FlowLength "Start" "Kakugawari_StratifiedEquilibrium" = 37
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly40_8b8f" = 43
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly39_B*1b" = 57
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly39_B*1d" = 57
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly38_8b8f" = 41
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly37_B*1b" = 51
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly37_B*1d" = 51
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly36_8b8f" = 39
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly35_B*1b" = 47
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly35_B*1d" = 47
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly34_8b8f" = 37
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly33_B*1b" = 45
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly33_B*1d" = 45
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly32_8b8f" = 35
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly31_B*1b" = 43
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly31_B*1d" = 43
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly30_8f7f" = 33
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly30_8f9f" = 33
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly28_8b8e" = 31
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly27_B*1b" = 61
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly27_B*1d" = 61
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly25_7g8f" = 41
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly25_B*1b" = 45
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly23_7g8f" = 39
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly23_B*1b" = 43
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly21_7g8f" = 35
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly21_B*1b" = 33
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly19_B*1b" = 345
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly19_B*1d" = 89
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly14_2b5e" = 35
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly14_2b6f" = 21
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly12_2b5e" = 21
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly12_2b6f" = 19
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly10_2b5e" = 13
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly10_2b6f" = 13
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly08_2b6f" = 11
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly03_8h4d" = 15
+  FlowLength "Start" "Yagura_StratifiedEquilibrium_DevPly03_8h3c+" = 5
+  FlowLength "Start" "Yagura_StratifiedEquilibrium" = 45
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly38_2a3c" = 39
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly38_2d1e" = 39
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly37_7g8f" = 39
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly37_7g5i" = 39
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly36_1a1b" = 37
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly36_1a1c" = 37
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly35_7g8f" = 37
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly35_7g5i" = 37
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly34_3a2b" = 39
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly34_3c2d" = 35
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly33_6i5i" = 35
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly33_7g8f" = 35
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly32_3a2b" = 55
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly32_3c2d" = 33
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly31_7g8f" = 33
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly31_S*1b" = 33
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly30_B*1e" = 31
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly30_B*1g" = 31
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly29_7g8f" = 31
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly29_S*1b" = 31
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly28_4b3c" = 35
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly28_4b4a" = 29
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly27_7g8f" = 39
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly27_S*1b" = 41
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly26_4b3a" = 27
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly26_4b3c" = 117
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly25_7g8f" = 37
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly25_S*1b" = 39
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly24_4b3a" = 25
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly24_4b3c" = 99
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly23_7g8f" = 35
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly23_S*1b" = 37
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly22_4b3a" = 23
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly22_4b3c" = 97
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly21_7g8f" = 51
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly21_S*1b" = 35
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly20_4b3a" = 21
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly20_4b3c" = 37
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly19_7g8f" = 33
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly19_S*1b" = 31
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly18_4b3a" = 19
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly18_4b3c" = 35
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly17_7g8f" = 31
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly17_S*1b" = 29
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly16_4b3c" = 111
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly16_4b4a" = 17
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly15_7g8f" = 37
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly15_G*1b" = 33
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly13_7g8f" = 17
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly11_7g8f" = 15
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly09_7g8f" = 13
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly03_8h4d" = 11
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium_DevPly03_8h3c+" = 11
+  FlowLength "Start" "Shikenbisha_StratifiedEquilibrium" = 39
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly29_3c2b" = 31
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly29_3c2d+" = 31
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly27_2i1g" = 29
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly27_3e2e" = 29
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly26_1f3h" = 27
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly26_1f4i" = 27
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly25_1i1g" = 27
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly25_2i1g" = 27
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly24_1g2h" = 25
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly24_1g3i" = 25
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly23_1i1h" = 25
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly23_3d4d" = 25
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly22_2b6f" = 23
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly22_2b7g+" = 23
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly21_3f3c+" = 23
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly21_3f3c" = 23
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly20_2b6f" = 21
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly20_2b7g+" = 21
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly19_3d4d" = 21
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly19_3d1d" = 21
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly18_2b6f" = 19
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly18_2b7g+" = 19
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly17_3d4d" = 19
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly17_3d1d" = 19
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly16_2b6f" = 17
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly16_2b7g+" = 17
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly15_2d1d" = 17
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly15_2d2c+" = 17
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly14_2b6f" = 15
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly14_2b7g+" = 15
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly13_2d1d" = 15
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly13_2d2c+" = 15
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly12_2b6f" = 13
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly12_2b7g+" = 13
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly11_2h2e" = 17
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly11_8h4d" = 19
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly10_2b6f" = 13
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly10_2b7g+" = 13
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly09_8h4d" = 17
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly09_8h3c+" = 17
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly08_2b6f" = 11
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly08_2b7g+" = 11
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly07_8h4d" = 15
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly07_8h3c+" = 15
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly06_2b6f" = 9
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly06_2b7g+" = 9
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly05_8h4d" = 13
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly05_8h3c+" = 13
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly04_2b6f" = 7
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly04_2b7g+" = 7
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly03_8h4d" = 11
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium_DevPly03_8h3c+" = 11
+  FlowLength "Start" "Yokofudori_StratifiedEquilibrium" = 29
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly28_B*1e" = 29
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly28_B*1g" = 29
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly27_7g4d" = 29
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly27_7g3c+" = 29
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly26_B*1e" = 27
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly26_B*1g" = 27
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly25_7f7d" = 27
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly25_7f7c+" = 27
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly24_B*1e" = 25
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly24_B*1g" = 25
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly23_7f8f" = 25
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly23_7f7d" = 25
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly22_B*1e" = 23
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly22_B*1g" = 23
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly21_7g8f" = 33
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly21_7g4d" = 33
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly20_2a3c" = 33
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly20_4b3a" = 21
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly19_7g8f" = 31
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly19_7g4d" = 31
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly18_2a3c" = 31
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly18_4b3a" = 19
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly17_7g8f" = 29
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly17_7g4d" = 29
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly16_2a3c" = 29
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly16_4b3a" = 17
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly15_7g8f" = 27
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly15_7g4d" = 27
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly14_2a3c" = 31
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly14_2b6f" = 89
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly13_7g8f" = 33
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly13_7g4d" = 33
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly12_2a3c" = 13
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly12_2b6f" = 13
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly11_7g8f" = 17
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly11_7g4d" = 17
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly10_2b6f" = 13
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly10_2b7g+" = 13
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly09_7g8f" = 15
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly09_7g4d" = 15
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly08_2b6f" = 11
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly08_2b7g+" = 11
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly07_8h4d" = 13
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly07_8h3c+" = 13
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly06_2b6f" = 9
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly06_2b7g+" = 9
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly05_8h4d" = 13
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly05_8h3c+" = 13
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly04_2b6f" = 7
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly04_2b7g+" = 7
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly03_8h4d" = 11
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium_DevPly03_8h3c+" = 11
+  FlowLength "Start" "Sankenbisha_StratifiedEquilibrium" = 29
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly44_2b5e" = 45
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly44_2b6f" = 45
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly43_4f6f" = 45
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly43_4f4d" = 45
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly42_2b6f" = 43
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly42_2b7g+" = 43
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly41_4f4e" = 43
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly41_4f4d" = 43
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly40_2c2d" = 41
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly40_4a5b" = 41
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly39_N*1c" = 45
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly39_N*1e" = 45
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly38_2c2d" = 39
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly38_4a5b" = 39
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly36_6c5d" = 39
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly36_6e5g+" = 39
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly35_8h7g" = 39
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly35_8i7g" = 39
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly34_6c5d" = 37
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly34_8b8f" = 37
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly32_6c5d" = 35
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly32_8b8f" = 35
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly30_6c5d" = 33
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly30_8b8f" = 33
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly28_6c5d" = 31
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly28_8b8f" = 31
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly26_6c5d" = 29
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly26_8f9f" = 29
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly24_6c5d" = 25
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly24_8b8e" = 25
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly22_6c5d" = 25
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly09_8h4d" = 15
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly09_8h3c+" = 15
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly08_2b5e" = 11
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly08_2b6f" = 11
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly07_8h4d" = 13
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly07_8h3c+" = 13
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly06_2b5e" = 9
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly06_2b6f" = 9
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly05_8h4d" = 13
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly05_8h3c+" = 13
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly04_2b5e" = 7
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly04_2b6f" = 7
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly03_8h4d" = 11
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly03_8h3c+" = 11
+  FlowLength "Start" "SenteNakabisha_IronMino_Equilibrium" = 45
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly48_5b4b" = 49
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly48_5b5a" = 49
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly47_P*2b" = 55
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly47_P*2c" = 55
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly46_1a1b" = 47
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly46_3a4b" = 47
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly45_2c1c" = 47
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly45_2c3c" = 47
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly44_1a1b" = 45
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly44_1a1c" = 45
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly43_2a2b" = 53
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly43_2a1b" = 53
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly42_1a1b" = 45
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly42_3d3e" = 45
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly41_2h2d" = 49
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly41_2h2c+" = 43
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly40_2a3c" = 43
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly40_2b3a" = 43
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly39_2h2d" = 59
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly39_2h2c+" = 41
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly38_2b3a" = 51
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly38_S*1e" = 45
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly37_2h2d" = 41
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly37_2h2c+" = 39
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly36_1a1b" = 45
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly36_1a1c" = 45
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly35_2h2d" = 41
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly35_2h2c+" = 37
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly34_5e4e" = 39
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly34_5e3e" = 39
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly33_2h2e" = 35
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly33_2h2d" = 35
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly32_2b4d" = 33
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly31_2h2d" = 33
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly31_2h2c+" = 33
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly30_4d3e" = 31
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly29_2h2d" = 31
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly29_2h2c+" = 31
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly28_4d3e" = 29
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly27_2h2d" = 29
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly27_2h2c+" = 29
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly26_4d3e" = 27
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly25_2h2d" = 27
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly25_2h2c+" = 27
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly24_4d3e" = 25
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly23_2h2d" = 25
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly23_2h2c+" = 25
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly22_4d3e" = 23
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly21_2h2d" = 23
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly21_2h2c+" = 23
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly20_4d3e" = 21
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly19_2d1d" = 21
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly19_2d2c+" = 21
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly18_4d3e" = 19
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly17_2h2e" = 21
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly17_4f3e" = 21
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly16_4d3e" = 19
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly15_4f3e" = 19
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly15_4f5e" = 19
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly14_4d3e" = 17
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly13_8h5e" = 21
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly13_8h4d" = 15
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly12_2b6f" = 15
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly12_2b7g+" = 15
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly11_8h5e" = 19
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly11_8h4d" = 21
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly10_2b6f" = 13
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly10_2b7g+" = 13
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly09_8h5e" = 17
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly09_8h4d" = 17
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly08_2b6f" = 11
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly08_2b7g+" = 11
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly07_8h5e" = 17
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly07_8h4d" = 15
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly06_2b6f" = 9
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly06_2b7g+" = 9
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly05_8h5e" = 13
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly05_8h4d" = 13
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly04_2b6f" = 7
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly04_2b7g+" = 7
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly03_8h4d" = 11
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly03_8h3c+" = 11
+  FlowLength "Start" "GoteGokigen_IronDefense_Equilibrium" = 49
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly46_4d3e" = 47
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly46_B*1e" = 47
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly45_5e4e" = 47
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly45_5e3e" = 47
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly43_5c4d+" = 45
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly43_5c4d" = 45
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly41_5e4e" = 43
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly41_5e3e" = 43
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly40_B*1e" = 41
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly40_B*1g" = 41
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly39_B*1b" = 43
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly39_B*1c" = 43
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly38_8e7e" = 39
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly38_8e8f" = 39
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly37_B*1b" = 57
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly37_B*1c" = 57
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly36_1a1b" = 37
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly36_1a1c" = 37
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly35_B*1b" = 55
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly35_B*1c" = 55
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly34_7d7e" = 35
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly34_B*1e" = 35
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly33_B*1b" = 53
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly33_B*1c" = 53
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly32_8d8f" = 33
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly32_8d8g+" = 33
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly31_B*1b" = 51
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly31_B*1c" = 51
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly30_8b8f" = 31
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly30_8b8g+" = 31
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly29_B*1b" = 51
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly29_B*1c" = 51
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly28_8b8f" = 29
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly28_8b8g+" = 29
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly27_B*1b" = 57
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly27_B*1d" = 55
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly26_8b8f" = 27
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly26_8b8g+" = 27
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly25_B*1b" = 55
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly25_B*1d" = 53
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly24_8b8f" = 25
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly24_8b8g+" = 25
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly23_B*1b" = 41
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly23_B*1d" = 37
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly22_4b3c" = 37
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly22_4b4a" = 23
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly21_B*1b" = 55
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly21_B*1d" = 55
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly20_2b3a" = 25
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly20_4b3a" = 21
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly19_B*1b" = 49
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly19_B*1d" = 49
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly18_5a5b" = 33
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly18_8b8f" = 19
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly17_B*1b" = 29
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly17_B*1d" = 29
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly16_5a5b" = 27
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly16_5a6b" = 27
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly15_B*1b" = 27
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly15_B*1d" = 27
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly14_5a4b" = 31
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly14_5a5b" = 31
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly13_8h4d" = 19
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly13_8h3c+" = 19
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly12_2b5e" = 15
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly12_2b6f" = 15
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly11_8h4d" = 13
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly11_8h3c+" = 13
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly10_2b5e" = 11
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly10_2b6f" = 11
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly09_8h4d" = 15
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly09_8h3c+" = 15
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly08_2b5e" = 11
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly08_2b6f" = 11
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly07_8h4d" = 13
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly07_8h3c+" = 13
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly06_2b5e" = 9
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly06_2b6f" = 9
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly05_8h4d" = 13
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly05_8h3c+" = 13
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly04_2b5e" = 7
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly04_2b6f" = 7
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly03_8h4d" = 11
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly03_8h3c+" = 11
+  FlowLength "Start" "SenteKakuexchange_IronMino_Equilibrium" = 47
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly18_2a3c" = 19
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly18_2b6f" = 19
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly17_5h5e" = 19
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly17_5h5c+" = 19
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly16_2a3c" = 17
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly16_2b6f" = 17
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly15_5h5c+" = 17
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly15_5h5c" = 17
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly13_5c5b" = 15
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly13_5c6b" = 15
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly12_2b6f" = 13
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly12_2b7g+" = 13
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly11_5d5c" = 13
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly11_8h4d" = 15
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly10_2b6f" = 13
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly10_2b7g+" = 13
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly07_8h4d" = 13
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly07_8h3c+" = 13
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly06_2b5e" = 9
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly06_2b6f" = 9
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly05_8h4d" = 13
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly05_8h3c+" = 13
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly04_2b5e" = 7
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly04_2b6f" = 7
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly03_8h4d" = 11
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly03_8h3c+" = 11
+  FlowLength "Start" "SenteNakabisha_TokinAssault_Equilibrium" = 19
+  FlowLength "Start" "GoteGokigen_TokinAssault_Equilibrium_DevPly12_5g4h" = 15
+  FlowLength "Start" "GoteGokigen_TokinAssault_Equilibrium_DevPly12_5g6h" = 15
+  FlowLength "Start" "GoteGokigen_TokinAssault_Equilibrium_DevPly11_4h5g" = 13
+  FlowLength "Start" "GoteGokigen_TokinAssault_Equilibrium_DevPly09_5g5f" = 11
+  FlowLength "Start" "GoteGokigen_TokinAssault_Equilibrium" = 12
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly36_2c2d" = 37
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly36_3c2d" = 37
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly35_2a2b" = 37
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly35_3a4a" = 37
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly34_2i2h" = 35
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly34_3c2b" = 35
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly33_1a1b" = 35
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly33_3a4a" = 35
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly32_1i1h" = 33
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly32_4b3b" = 33
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly31_2a2b" = 33
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly31_3a4a" = 33
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly29_2a3a" = 31
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly29_2a2b" = 31
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly28_1h2h" = 29
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly28_1h1g" = 29
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly27_1a1b" = 29
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly27_2i1g" = 29
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly26_1g2h" = 27
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly26_4b1b" = 27
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly25_1b2b" = 27
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly25_1i1h" = 27
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly24_2e1g" = 25
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly24_2e3g+" = 25
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly23_1c2b" = 25
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly23_2i1g" = 25
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly22_1a1c" = 23
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly22_2e1g+" = 23
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly21_2i1g" = 23
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly21_G*1b" = 23
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly20_1a1c" = 21
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly20_1a1d" = 21
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly18_1a1c" = 19
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly18_1a1d" = 19
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly17_2i1g" = 19
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly15_2i1g" = 17
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly15_G*1b" = 17
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly13_2i1g" = 15
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly13_6c5b" = 15
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly12_B*1d" = 13
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly12_B*1f" = 13
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly11_4e5d" = 13
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly10_1a1d" = 11
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly10_1a1e" = 11
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly09_4e3d" = 11
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly09_4e5d" = 17
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly08_B*1e" = 11
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly08_B*1g" = 11
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly07_4e3d" = 9
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly07_4e5d" = 21
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly06_B*1f" = 9
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly06_B*1h" = 9
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly05_B*1b" = 25
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly05_B*1d" = 25
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly04_5a4b" = 39
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly04_5a5b" = 49
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly03_8h4d" = 11
+  FlowLength "Start" "SujichigaiBishop_Melee_DevPly03_8h3c+" = 11
+  FlowLength "Start" "SujichigaiBishop_Melee" = 37
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly36_1f1g+" = 37
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly36_1f1g" = 37
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly35_1h1g" = 37
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly35_2a2b" = 37
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly34_1e2f" = 35
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly34_1e2d" = 35
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly33_1h1g" = 35
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly33_1h1f" = 35
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly32_1d2e" = 33
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly32_1d2c" = 33
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly31_1h1g" = 33
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly31_1h1f" = 33
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly30_3c2b" = 31
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly30_3c2d" = 31
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly29_2h3h" = 31
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly29_2h4h" = 31
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly28_2b1a" = 29
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly28_3c4b" = 29
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly27_2h3h" = 29
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly27_2h4h" = 29
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly26_2a1b" = 27
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly26_2a3b" = 27
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly25_2h3h" = 27
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly25_2h4h" = 27
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly24_2c2d" = 25
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly24_3c2b" = 25
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly23_2a1a" = 25
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly23_2a2b" = 25
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly22_2c2d" = 23
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly22_3a2b" = 23
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly21_2a1a" = 23
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly21_2a3a" = 23
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly20_1g2h" = 21
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly20_1g2g" = 21
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly19_1a1b" = 21
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly19_1i1h" = 21
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly18_2e1g" = 19
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly18_2e3g+" = 19
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly17_1b2b" = 19
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly17_2i1g" = 19
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly16_2b1a" = 17
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly16_2b1c" = 17
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly15_1c2b" = 17
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly15_2i1g" = 17
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly14_1a1c" = 15
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly14_2b1c" = 15
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly13_2i1g" = 15
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly13_8h4d" = 15
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly12_2b6f" = 13
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly12_2b7g+" = 13
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly11_8h4d" = 13
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly11_8h2b+" = 13
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly10_1a1d" = 11
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly10_1a1e" = 11
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly09_8h4d" = 17
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly09_8h3c+" = 17
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly08_2b6f" = 11
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly08_2b7g+" = 11
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly07_8h4d" = 15
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly07_8h3c+" = 15
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly06_2b6f" = 9
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly06_2b7g+" = 9
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly05_8h4d" = 13
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly05_8h3c+" = 13
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly04_2b6f" = 7
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly04_2b7g+" = 7
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly03_8h4d" = 11
+  FlowLength "Start" "Early3eBlitz_Melee_DevPly03_8h3c+" = 11
+  FlowLength "Start" "Early3eBlitz_Melee" = 37
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly36_1f1g+" = 37
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly36_1f1g" = 37
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly35_1h1g" = 37
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly35_2a2b" = 37
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly34_1e2f" = 35
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly34_1e2d" = 35
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly33_1h1g" = 35
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly33_1h1f" = 35
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly32_1d2e" = 33
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly32_1d2c" = 33
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly31_1h1g" = 33
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly31_1h1f" = 33
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly30_3c2b" = 31
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly30_3c2d" = 31
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly29_2h2g" = 31
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly29_2h2f" = 31
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly28_2b1a" = 29
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly28_3c4b" = 29
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly27_2h2g" = 29
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly27_2h2f" = 29
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly26_2a1b" = 27
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly26_2a3b" = 27
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly25_2h2g" = 27
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly25_2i1g" = 27
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly24_2c2d" = 25
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly24_3c2b" = 25
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly23_2a1a" = 25
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly23_2a2b" = 25
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly22_2c2d" = 23
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly22_3a2b" = 23
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly21_2a1a" = 23
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly21_2a3a" = 23
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly20_1g2g" = 21
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly20_3c2b" = 21
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly19_1a1b" = 21
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly19_1i1h" = 21
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly18_2e1g" = 19
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly18_2e3g+" = 19
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly17_1b2b" = 19
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly17_2i1g" = 19
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly16_2b1a" = 17
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly16_2b1c" = 17
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly15_1c2b" = 17
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly15_2i1g" = 17
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly14_1a1c" = 15
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly14_2b1c" = 15
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly13_2i1g" = 15
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly13_8h4d" = 15
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly12_2b6f" = 13
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly12_2b7g+" = 13
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly11_8h4d" = 13
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly11_8h2b+" = 13
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly10_1a1d" = 11
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly10_1a1e" = 11
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly09_8h4d" = 19
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly09_8h3c+" = 19
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly08_2b6f" = 11
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly08_2b7g+" = 11
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly07_8h4d" = 17
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly07_8h3c+" = 17
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly06_2b6f" = 9
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly06_2b7g+" = 9
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly05_8h4d" = 13
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly05_8h3c+" = 13
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly04_2b6f" = 7
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly04_2b7g+" = 7
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly03_8h4d" = 11
+  FlowLength "Start" "EarlyClimbingSilver_Melee_DevPly03_8h3c+" = 11
+  FlowLength "Start" "EarlyClimbingSilver_Melee" = 37
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly36_3h2i" = 37
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly36_3h3i" = 37
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly35_3a4a" = 37
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly35_3i2h" = 37
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly34_3g2h" = 35
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly34_3g4h" = 35
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly33_2c3c" = 35
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly33_2c2d" = 35
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly32_4b3c" = 33
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly32_4b2d" = 33
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly31_3a4a" = 33
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly31_3a3b" = 33
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly30_N*1a" = 31
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly30_N*1b" = 31
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly29_3a4a" = 31
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly29_3a3b" = 31
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly28_4b2d" = 29
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly28_4b1e" = 29
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly27_3a4a" = 29
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly27_3a3b" = 29
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly26_3c1a" = 27
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly26_3c1e" = 27
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly25_2a1a" = 27
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly25_2a2b" = 27
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly23_2a1a" = 25
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly23_2a3a" = 25
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly22_2c2d" = 23
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly22_3a2b" = 23
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly21_2a1a" = 23
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly21_2a3a" = 23
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly20_1g2h" = 21
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly20_3c2b" = 21
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly19_1a1b" = 21
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly19_1i1h" = 21
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly18_2e1g" = 19
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly18_2e3g+" = 19
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly17_1b2b" = 19
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly17_2i1g" = 19
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly16_2b1a" = 17
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly16_2b1c" = 17
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly15_1c2b" = 17
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly15_2i1g" = 17
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly14_1a1c" = 15
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly14_2b1c" = 15
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly13_2i1g" = 15
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly10_1a1d" = 11
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly10_1a1e" = 11
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly09_8h4d" = 11
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly07_8h4d" = 9
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly05_8h4d" = 7
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly04_2b6f" = 7
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly04_2b7g+" = 7
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly03_8h4d" = 11
+  FlowLength "Start" "MigiShikenBlitz_Melee_DevPly03_8h3c+" = 11
+  FlowLength "Start" "MigiShikenBlitz_Melee" = 37
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly36_1f1g+" = 37
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly36_1f1g" = 37
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly35_1h1g" = 37
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly35_2a2b" = 37
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly34_1e2f" = 35
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly34_1e2d" = 35
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly33_1h1g" = 35
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly33_1h1f" = 35
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly32_1d2e" = 33
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly32_1d2c" = 33
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly31_1h1g" = 33
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly31_1h1f" = 33
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly30_3c2b" = 31
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly30_3c2d" = 31
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly29_2i1g" = 31
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly29_3a2a" = 31
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly28_2b1a" = 29
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly28_3c4b" = 29
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly27_2i1g" = 29
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly27_3a2a" = 29
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly26_2a1b" = 27
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly26_2a3b" = 27
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly25_2i1g" = 27
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly25_3a4a" = 27
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly24_2c2d" = 25
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly24_3c2b" = 25
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly23_2a1a" = 25
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly23_2a2b" = 25
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly22_2c2d" = 23
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly22_3a2b" = 23
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly21_2a1a" = 23
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly21_2a3a" = 23
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly20_1g2h" = 21
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly20_3c2b" = 21
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly19_1a1b" = 21
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly19_1i1h" = 21
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly18_2e1g" = 19
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly18_2e3g+" = 19
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly17_1b2b" = 19
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly17_2i1g" = 19
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly16_2b1a" = 17
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly16_2b1c" = 17
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly15_1c2b" = 17
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly15_2i1g" = 17
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly14_1a1c" = 15
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly14_2b1c" = 15
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly13_2i1g" = 15
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly13_8h4d" = 15
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly12_2b6f" = 13
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly12_2b7g+" = 13
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly11_8h4d" = 13
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly11_8h2b+" = 13
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly10_1a1d" = 11
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly10_1a1e" = 11
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly09_8h4d" = 15
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly09_8h3c+" = 15
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly08_2b6f" = 11
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly08_2b7g+" = 11
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly07_8h4d" = 13
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly07_8h3c+" = 13
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly06_2b6f" = 9
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly06_2b7g+" = 9
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly05_8h4d" = 13
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly05_8h3c+" = 13
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly04_2b6f" = 7
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly04_2b7g+" = 7
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly03_8h4d" = 11
+  FlowLength "Start" "SodebishaBlitz_Melee_DevPly03_8h3c+" = 11
+  FlowLength "Start" "SodebishaBlitz_Melee" = 37
+  FlowLength "Start" "EarlyIshidaMelee_DevPly36_1f1g+" = 37
+  FlowLength "Start" "EarlyIshidaMelee_DevPly36_1f1g" = 37
+  FlowLength "Start" "EarlyIshidaMelee_DevPly35_1h1g" = 37
+  FlowLength "Start" "EarlyIshidaMelee_DevPly35_2b1a" = 37
+  FlowLength "Start" "EarlyIshidaMelee_DevPly34_1e2f" = 35
+  FlowLength "Start" "EarlyIshidaMelee_DevPly34_1e2d" = 35
+  FlowLength "Start" "EarlyIshidaMelee_DevPly33_1h1g" = 35
+  FlowLength "Start" "EarlyIshidaMelee_DevPly33_1h1f" = 35
+  FlowLength "Start" "EarlyIshidaMelee_DevPly32_1d2e" = 33
+  FlowLength "Start" "EarlyIshidaMelee_DevPly32_3c2b" = 33
+  FlowLength "Start" "EarlyIshidaMelee_DevPly31_1h1g" = 33
+  FlowLength "Start" "EarlyIshidaMelee_DevPly31_1h1f" = 33
+  FlowLength "Start" "EarlyIshidaMelee_DevPly30_3c6f" = 31
+  FlowLength "Start" "EarlyIshidaMelee_DevPly30_3c7g+" = 31
+  FlowLength "Start" "EarlyIshidaMelee_DevPly29_2h3h" = 31
+  FlowLength "Start" "EarlyIshidaMelee_DevPly29_2h4h" = 31
+  FlowLength "Start" "EarlyIshidaMelee_DevPly28_2b1a" = 29
+  FlowLength "Start" "EarlyIshidaMelee_DevPly28_2c2d" = 29
+  FlowLength "Start" "EarlyIshidaMelee_DevPly27_2h3h" = 29
+  FlowLength "Start" "EarlyIshidaMelee_DevPly27_2h4h" = 29
+  FlowLength "Start" "EarlyIshidaMelee_DevPly26_2a1b" = 27
+  FlowLength "Start" "EarlyIshidaMelee_DevPly26_2a3b" = 27
+  FlowLength "Start" "EarlyIshidaMelee_DevPly25_2h3h" = 27
+  FlowLength "Start" "EarlyIshidaMelee_DevPly25_2h4h" = 27
+  FlowLength "Start" "EarlyIshidaMelee_DevPly24_2c2d" = 25
+  FlowLength "Start" "EarlyIshidaMelee_DevPly24_3c2b" = 25
+  FlowLength "Start" "EarlyIshidaMelee_DevPly23_2a1a" = 25
+  FlowLength "Start" "EarlyIshidaMelee_DevPly23_2a2b" = 25
+  FlowLength "Start" "EarlyIshidaMelee_DevPly22_2c2d" = 23
+  FlowLength "Start" "EarlyIshidaMelee_DevPly22_3a2b" = 23
+  FlowLength "Start" "EarlyIshidaMelee_DevPly21_2a1a" = 23
+  FlowLength "Start" "EarlyIshidaMelee_DevPly21_2a3a" = 23
+  FlowLength "Start" "EarlyIshidaMelee_DevPly20_1g2h" = 21
+  FlowLength "Start" "EarlyIshidaMelee_DevPly20_1g2g" = 21
+  FlowLength "Start" "EarlyIshidaMelee_DevPly19_1a1b" = 21
+  FlowLength "Start" "EarlyIshidaMelee_DevPly19_1i1h" = 21
+  FlowLength "Start" "EarlyIshidaMelee_DevPly18_2e1g" = 19
+  FlowLength "Start" "EarlyIshidaMelee_DevPly18_2e3g+" = 19
+  FlowLength "Start" "EarlyIshidaMelee_DevPly17_1b2b" = 19
+  FlowLength "Start" "EarlyIshidaMelee_DevPly17_2i1g" = 19
+  FlowLength "Start" "EarlyIshidaMelee_DevPly16_2b1a" = 17
+  FlowLength "Start" "EarlyIshidaMelee_DevPly16_2b1c" = 17
+  FlowLength "Start" "EarlyIshidaMelee_DevPly15_1c2b" = 17
+  FlowLength "Start" "EarlyIshidaMelee_DevPly15_2i1g" = 17
+  FlowLength "Start" "EarlyIshidaMelee_DevPly14_1a1c" = 15
+  FlowLength "Start" "EarlyIshidaMelee_DevPly14_2b1c" = 15
+  FlowLength "Start" "EarlyIshidaMelee_DevPly13_2i1g" = 15
+  FlowLength "Start" "EarlyIshidaMelee_DevPly13_7f8e" = 15
+  FlowLength "Start" "EarlyIshidaMelee_DevPly12_2b6f" = 13
+  FlowLength "Start" "EarlyIshidaMelee_DevPly12_2b7g+" = 13
+  FlowLength "Start" "EarlyIshidaMelee_DevPly11_7f8e" = 13
+  FlowLength "Start" "EarlyIshidaMelee_DevPly11_8h4d" = 13
+  FlowLength "Start" "EarlyIshidaMelee_DevPly10_1a1d" = 11
+  FlowLength "Start" "EarlyIshidaMelee_DevPly10_1a1e" = 11
+  FlowLength "Start" "EarlyIshidaMelee_DevPly09_7f8e" = 11
+  FlowLength "Start" "EarlyIshidaMelee_DevPly09_8h4d" = 11
+  FlowLength "Start" "EarlyIshidaMelee_DevPly08_2b6f" = 9
+  FlowLength "Start" "EarlyIshidaMelee_DevPly08_2b7g+" = 9
+  FlowLength "Start" "EarlyIshidaMelee_DevPly07_7f8e" = 9
+  FlowLength "Start" "EarlyIshidaMelee_DevPly07_8h4d" = 9
+  FlowLength "Start" "EarlyIshidaMelee_DevPly06_2b6f" = 7
+  FlowLength "Start" "EarlyIshidaMelee_DevPly06_2b7g+" = 7
+  FlowLength "Start" "EarlyIshidaMelee_DevPly05_8h4d" = 13
+  FlowLength "Start" "EarlyIshidaMelee_DevPly05_8h3c+" = 13
+  FlowLength "Start" "EarlyIshidaMelee_DevPly04_2b6f" = 7
+  FlowLength "Start" "EarlyIshidaMelee_DevPly04_2b7g+" = 7
+  FlowLength "Start" "EarlyIshidaMelee_DevPly03_8h4d" = 11
+  FlowLength "Start" "EarlyIshidaMelee_DevPly03_8h3c+" = 11
+  FlowLength "Start" "EarlyIshidaMelee" = 37
+  FlowLength "Start" "UreshinoMelee_DevPly36_1g1h" = 37
+  FlowLength "Start" "UreshinoMelee_DevPly36_1g2g" = 37
+  FlowLength "Start" "UreshinoMelee_DevPly35_2i2g" = 37
+  FlowLength "Start" "UreshinoMelee_DevPly35_2i2e" = 37
+  FlowLength "Start" "UreshinoMelee_DevPly34_1f2g+" = 35
+  FlowLength "Start" "UreshinoMelee_DevPly34_1f2g" = 35
+  FlowLength "Start" "UreshinoMelee_DevPly33_2h3h" = 35
+  FlowLength "Start" "UreshinoMelee_DevPly33_2h4h" = 35
+  FlowLength "Start" "UreshinoMelee_DevPly32_1e2f" = 33
+  FlowLength "Start" "UreshinoMelee_DevPly32_3c2e" = 33
+  FlowLength "Start" "UreshinoMelee_DevPly31_2i2f" = 33
+  FlowLength "Start" "UreshinoMelee_DevPly31_2i2e" = 33
+  FlowLength "Start" "UreshinoMelee_DevPly30_3c2e" = 31
+  FlowLength "Start" "UreshinoMelee_DevPly30_3i4i" = 31
+  FlowLength "Start" "UreshinoMelee_DevPly29_2h3h" = 31
+  FlowLength "Start" "UreshinoMelee_DevPly29_2h4h" = 31
+  FlowLength "Start" "UreshinoMelee_DevPly28_3c2e" = 29
+  FlowLength "Start" "UreshinoMelee_DevPly28_3i2i" = 29
+  FlowLength "Start" "UreshinoMelee_DevPly27_2a2b" = 29
+  FlowLength "Start" "UreshinoMelee_DevPly27_2h1h" = 29
+  FlowLength "Start" "UreshinoMelee_DevPly26_3b2a" = 27
+  FlowLength "Start" "UreshinoMelee_DevPly26_3c2e" = 27
+  FlowLength "Start" "UreshinoMelee_DevPly25_2b3a" = 27
+  FlowLength "Start" "UreshinoMelee_DevPly25_2b1b" = 27
+  FlowLength "Start" "UreshinoMelee_DevPly24_3c2e" = 25
+  FlowLength "Start" "UreshinoMelee_DevPly24_3i2i" = 25
+  FlowLength "Start" "UreshinoMelee_DevPly23_2c1b" = 25
+  FlowLength "Start" "UreshinoMelee_DevPly23_2c3b" = 25
+  FlowLength "Start" "UreshinoMelee_DevPly22_2i2h" = 23
+  FlowLength "Start" "UreshinoMelee_DevPly22_3c2e" = 23
+  FlowLength "Start" "UreshinoMelee_DevPly21_2h1h" = 23
+  FlowLength "Start" "UreshinoMelee_DevPly21_2h4h" = 23
+  FlowLength "Start" "UreshinoMelee_DevPly20_1i1h" = 21
+  FlowLength "Start" "UreshinoMelee_DevPly20_3c2e" = 21
+  FlowLength "Start" "UreshinoMelee_DevPly19_2h1h" = 21
+  FlowLength "Start" "UreshinoMelee_DevPly19_2i1g" = 21
+  FlowLength "Start" "UreshinoMelee_DevPly18_1h2i" = 19
+  FlowLength "Start" "UreshinoMelee_DevPly18_1h2h" = 19
+  FlowLength "Start" "UreshinoMelee_DevPly17_2h1h" = 19
+  FlowLength "Start" "UreshinoMelee_DevPly17_2i1g" = 19
+  FlowLength "Start" "UreshinoMelee_DevPly16_1g2h" = 17
+  FlowLength "Start" "UreshinoMelee_DevPly16_1g2g" = 17
+  FlowLength "Start" "UreshinoMelee_DevPly15_1i1g" = 17
+  FlowLength "Start" "UreshinoMelee_DevPly15_2h1h" = 17
+  FlowLength "Start" "UreshinoMelee_DevPly14_3c2e" = 15
+  FlowLength "Start" "UreshinoMelee_DevPly14_5a4b" = 25
+  FlowLength "Start" "UreshinoMelee_DevPly13_1i1g" = 15
+  FlowLength "Start" "UreshinoMelee_DevPly13_1i1f" = 15
+  FlowLength "Start" "UreshinoMelee_DevPly12_5a5b" = 23
+  FlowLength "Start" "UreshinoMelee_DevPly12_5a6b" = 121
+  FlowLength "Start" "UreshinoMelee_DevPly11_1i1g" = 13
+  FlowLength "Start" "UreshinoMelee_DevPly11_1i1f" = 13
+  FlowLength "Start" "UreshinoMelee_DevPly10_1a1b" = 11
+  FlowLength "Start" "UreshinoMelee_DevPly10_1a1c" = 11
+  FlowLength "Start" "UreshinoMelee_DevPly09_1f1e" = 11
+  FlowLength "Start" "UreshinoMelee_DevPly09_8h4d" = 17
+  FlowLength "Start" "UreshinoMelee_DevPly08_2b6f" = 11
+  FlowLength "Start" "UreshinoMelee_DevPly08_2b7g+" = 11
+  FlowLength "Start" "UreshinoMelee_DevPly07_8h4d" = 15
+  FlowLength "Start" "UreshinoMelee_DevPly07_8h3c+" = 15
+  FlowLength "Start" "UreshinoMelee_DevPly06_2b6f" = 9
+  FlowLength "Start" "UreshinoMelee_DevPly06_2b7g+" = 9
+  FlowLength "Start" "UreshinoMelee_DevPly05_8h4d" = 13
+  FlowLength "Start" "UreshinoMelee_DevPly05_8h3c+" = 13
+  FlowLength "Start" "UreshinoMelee_DevPly04_2b6f" = 7
+  FlowLength "Start" "UreshinoMelee_DevPly04_2b7g+" = 7
+  FlowLength "Start" "UreshinoMelee" = 37
+  FlowLength from to = 0
+
+-- | 512手までの最急降下モース勾配流ステップを型推論する型クラス
+class (KnownNat ply, KnownSymbol from, KnownSymbol to) =>
+      SteepestDescentMorseFlow (ply :: Nat) (from :: Symbol) (to :: Symbol) where
+  morseFlowStep  :: Proxy ply -> Proxy from -> Proxy to -> (Integer, String, String)
+
+instance SteepestDescentMorseFlow 75 "Start" "Aigakari_StratifiedEquilibrium_DevPly35_2f6f" where
+  morseFlowStep _ _ _ = (75, "Start", "Aigakari_StratifiedEquilibrium_DevPly35_2f6f")
+
+instance SteepestDescentMorseFlow 143 "Start" "Aigakari_StratifiedEquilibrium_DevPly35_2f2d" where
+  morseFlowStep _ _ _ = (143, "Start", "Aigakari_StratifiedEquilibrium_DevPly35_2f2d")
+
+instance SteepestDescentMorseFlow 39 "Start" "Aigakari_StratifiedEquilibrium_DevPly33_2e3e" where
+  morseFlowStep _ _ _ = (39, "Start", "Aigakari_StratifiedEquilibrium_DevPly33_2e3e")
+
+instance SteepestDescentMorseFlow 37 "Start" "Aigakari_StratifiedEquilibrium_DevPly33_2e5e" where
+  morseFlowStep _ _ _ = (37, "Start", "Aigakari_StratifiedEquilibrium_DevPly33_2e5e")
+
+instance SteepestDescentMorseFlow 71 "Start" "Aigakari_StratifiedEquilibrium_DevPly31_2f6f" where
+  morseFlowStep _ _ _ = (71, "Start", "Aigakari_StratifiedEquilibrium_DevPly31_2f6f")
+
+instance SteepestDescentMorseFlow 139 "Start" "Aigakari_StratifiedEquilibrium_DevPly31_2f2d" where
+  morseFlowStep _ _ _ = (139, "Start", "Aigakari_StratifiedEquilibrium_DevPly31_2f2d")
+
+instance SteepestDescentMorseFlow 47 "Start" "Aigakari_StratifiedEquilibrium_DevPly29_6g6f" where
+  morseFlowStep _ _ _ = (47, "Start", "Aigakari_StratifiedEquilibrium_DevPly29_6g6f")
+
+instance SteepestDescentMorseFlow 41 "Start" "Aigakari_StratifiedEquilibrium_DevPly29_7h7g" where
+  morseFlowStep _ _ _ = (41, "Start", "Aigakari_StratifiedEquilibrium_DevPly29_7h7g")
+
+instance SteepestDescentMorseFlow 83 "Start" "Aigakari_StratifiedEquilibrium_DevPly27_2h2d" where
+  morseFlowStep _ _ _ = (83, "Start", "Aigakari_StratifiedEquilibrium_DevPly27_2h2d")
+
+instance SteepestDescentMorseFlow 31 "Start" "Aigakari_StratifiedEquilibrium_DevPly27_2h2c+" where
+  morseFlowStep _ _ _ = (31, "Start", "Aigakari_StratifiedEquilibrium_DevPly27_2h2c+")
+
+instance SteepestDescentMorseFlow 83 "Start" "Aigakari_StratifiedEquilibrium_DevPly25_2h2d" where
+  morseFlowStep _ _ _ = (83, "Start", "Aigakari_StratifiedEquilibrium_DevPly25_2h2d")
+
+instance SteepestDescentMorseFlow 29 "Start" "Aigakari_StratifiedEquilibrium_DevPly25_2h2c+" where
+  morseFlowStep _ _ _ = (29, "Start", "Aigakari_StratifiedEquilibrium_DevPly25_2h2c+")
+
+instance SteepestDescentMorseFlow 25 "Start" "Aigakari_StratifiedEquilibrium_DevPly24_2b6f" where
+  morseFlowStep _ _ _ = (25, "Start", "Aigakari_StratifiedEquilibrium_DevPly24_2b6f")
+
+instance SteepestDescentMorseFlow 25 "Start" "Aigakari_StratifiedEquilibrium_DevPly24_2b7g+" where
+  morseFlowStep _ _ _ = (25, "Start", "Aigakari_StratifiedEquilibrium_DevPly24_2b7g+")
+
+instance SteepestDescentMorseFlow 25 "Start" "Aigakari_StratifiedEquilibrium_DevPly23_2h2d" where
+  morseFlowStep _ _ _ = (25, "Start", "Aigakari_StratifiedEquilibrium_DevPly23_2h2d")
+
+instance SteepestDescentMorseFlow 25 "Start" "Aigakari_StratifiedEquilibrium_DevPly23_2h2c+" where
+  morseFlowStep _ _ _ = (25, "Start", "Aigakari_StratifiedEquilibrium_DevPly23_2h2c+")
+
+instance SteepestDescentMorseFlow 23 "Start" "Aigakari_StratifiedEquilibrium_DevPly22_2b6f" where
+  morseFlowStep _ _ _ = (23, "Start", "Aigakari_StratifiedEquilibrium_DevPly22_2b6f")
+
+instance SteepestDescentMorseFlow 23 "Start" "Aigakari_StratifiedEquilibrium_DevPly22_2b7g+" where
+  morseFlowStep _ _ _ = (23, "Start", "Aigakari_StratifiedEquilibrium_DevPly22_2b7g+")
+
+instance SteepestDescentMorseFlow 23 "Start" "Aigakari_StratifiedEquilibrium_DevPly21_2h2d" where
+  morseFlowStep _ _ _ = (23, "Start", "Aigakari_StratifiedEquilibrium_DevPly21_2h2d")
+
+instance SteepestDescentMorseFlow 23 "Start" "Aigakari_StratifiedEquilibrium_DevPly21_2h2c+" where
+  morseFlowStep _ _ _ = (23, "Start", "Aigakari_StratifiedEquilibrium_DevPly21_2h2c+")
+
+instance SteepestDescentMorseFlow 21 "Start" "Aigakari_StratifiedEquilibrium_DevPly20_2b6f" where
+  morseFlowStep _ _ _ = (21, "Start", "Aigakari_StratifiedEquilibrium_DevPly20_2b6f")
+
+instance SteepestDescentMorseFlow 21 "Start" "Aigakari_StratifiedEquilibrium_DevPly20_2b7g+" where
+  morseFlowStep _ _ _ = (21, "Start", "Aigakari_StratifiedEquilibrium_DevPly20_2b7g+")
+
+instance SteepestDescentMorseFlow 21 "Start" "Aigakari_StratifiedEquilibrium_DevPly19_2h2d" where
+  morseFlowStep _ _ _ = (21, "Start", "Aigakari_StratifiedEquilibrium_DevPly19_2h2d")
+
+instance SteepestDescentMorseFlow 21 "Start" "Aigakari_StratifiedEquilibrium_DevPly19_2h2c+" where
+  morseFlowStep _ _ _ = (21, "Start", "Aigakari_StratifiedEquilibrium_DevPly19_2h2c+")
+
+instance SteepestDescentMorseFlow 19 "Start" "Aigakari_StratifiedEquilibrium_DevPly18_2b6f" where
+  morseFlowStep _ _ _ = (19, "Start", "Aigakari_StratifiedEquilibrium_DevPly18_2b6f")
+
+instance SteepestDescentMorseFlow 19 "Start" "Aigakari_StratifiedEquilibrium_DevPly18_2b7g+" where
+  morseFlowStep _ _ _ = (19, "Start", "Aigakari_StratifiedEquilibrium_DevPly18_2b7g+")
+
+instance SteepestDescentMorseFlow 19 "Start" "Aigakari_StratifiedEquilibrium_DevPly17_2h2d" where
+  morseFlowStep _ _ _ = (19, "Start", "Aigakari_StratifiedEquilibrium_DevPly17_2h2d")
+
+instance SteepestDescentMorseFlow 19 "Start" "Aigakari_StratifiedEquilibrium_DevPly17_2h2c+" where
+  morseFlowStep _ _ _ = (19, "Start", "Aigakari_StratifiedEquilibrium_DevPly17_2h2c+")
+
+instance SteepestDescentMorseFlow 17 "Start" "Aigakari_StratifiedEquilibrium_DevPly16_2b6f" where
+  morseFlowStep _ _ _ = (17, "Start", "Aigakari_StratifiedEquilibrium_DevPly16_2b6f")
+
+instance SteepestDescentMorseFlow 17 "Start" "Aigakari_StratifiedEquilibrium_DevPly16_2b7g+" where
+  morseFlowStep _ _ _ = (17, "Start", "Aigakari_StratifiedEquilibrium_DevPly16_2b7g+")
+
+instance SteepestDescentMorseFlow 17 "Start" "Aigakari_StratifiedEquilibrium_DevPly15_2h2d" where
+  morseFlowStep _ _ _ = (17, "Start", "Aigakari_StratifiedEquilibrium_DevPly15_2h2d")
+
+instance SteepestDescentMorseFlow 17 "Start" "Aigakari_StratifiedEquilibrium_DevPly15_2h2c+" where
+  morseFlowStep _ _ _ = (17, "Start", "Aigakari_StratifiedEquilibrium_DevPly15_2h2c+")
+
+instance SteepestDescentMorseFlow 15 "Start" "Aigakari_StratifiedEquilibrium_DevPly14_2b6f" where
+  morseFlowStep _ _ _ = (15, "Start", "Aigakari_StratifiedEquilibrium_DevPly14_2b6f")
+
+instance SteepestDescentMorseFlow 15 "Start" "Aigakari_StratifiedEquilibrium_DevPly14_2b7g+" where
+  morseFlowStep _ _ _ = (15, "Start", "Aigakari_StratifiedEquilibrium_DevPly14_2b7g+")
+
+instance SteepestDescentMorseFlow 15 "Start" "Aigakari_StratifiedEquilibrium_DevPly13_2d1d" where
+  morseFlowStep _ _ _ = (15, "Start", "Aigakari_StratifiedEquilibrium_DevPly13_2d1d")
+
+instance SteepestDescentMorseFlow 15 "Start" "Aigakari_StratifiedEquilibrium_DevPly13_2d2c+" where
+  morseFlowStep _ _ _ = (15, "Start", "Aigakari_StratifiedEquilibrium_DevPly13_2d2c+")
+
+instance SteepestDescentMorseFlow 13 "Start" "Aigakari_StratifiedEquilibrium_DevPly12_2b6f" where
+  morseFlowStep _ _ _ = (13, "Start", "Aigakari_StratifiedEquilibrium_DevPly12_2b6f")
+
+instance SteepestDescentMorseFlow 13 "Start" "Aigakari_StratifiedEquilibrium_DevPly12_2b7g+" where
+  morseFlowStep _ _ _ = (13, "Start", "Aigakari_StratifiedEquilibrium_DevPly12_2b7g+")
+
+instance SteepestDescentMorseFlow 17 "Start" "Aigakari_StratifiedEquilibrium_DevPly11_2h2e" where
+  morseFlowStep _ _ _ = (17, "Start", "Aigakari_StratifiedEquilibrium_DevPly11_2h2e")
+
+instance SteepestDescentMorseFlow 19 "Start" "Aigakari_StratifiedEquilibrium_DevPly11_8h4d" where
+  morseFlowStep _ _ _ = (19, "Start", "Aigakari_StratifiedEquilibrium_DevPly11_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "Aigakari_StratifiedEquilibrium_DevPly10_2b6f" where
+  morseFlowStep _ _ _ = (13, "Start", "Aigakari_StratifiedEquilibrium_DevPly10_2b6f")
+
+instance SteepestDescentMorseFlow 13 "Start" "Aigakari_StratifiedEquilibrium_DevPly10_2b7g+" where
+  morseFlowStep _ _ _ = (13, "Start", "Aigakari_StratifiedEquilibrium_DevPly10_2b7g+")
+
+instance SteepestDescentMorseFlow 17 "Start" "Aigakari_StratifiedEquilibrium_DevPly09_8h4d" where
+  morseFlowStep _ _ _ = (17, "Start", "Aigakari_StratifiedEquilibrium_DevPly09_8h4d")
+
+instance SteepestDescentMorseFlow 17 "Start" "Aigakari_StratifiedEquilibrium_DevPly09_8h3c+" where
+  morseFlowStep _ _ _ = (17, "Start", "Aigakari_StratifiedEquilibrium_DevPly09_8h3c+")
+
+instance SteepestDescentMorseFlow 11 "Start" "Aigakari_StratifiedEquilibrium_DevPly08_2b6f" where
+  morseFlowStep _ _ _ = (11, "Start", "Aigakari_StratifiedEquilibrium_DevPly08_2b6f")
+
+instance SteepestDescentMorseFlow 11 "Start" "Aigakari_StratifiedEquilibrium_DevPly08_2b7g+" where
+  morseFlowStep _ _ _ = (11, "Start", "Aigakari_StratifiedEquilibrium_DevPly08_2b7g+")
+
+instance SteepestDescentMorseFlow 15 "Start" "Aigakari_StratifiedEquilibrium_DevPly07_8h4d" where
+  morseFlowStep _ _ _ = (15, "Start", "Aigakari_StratifiedEquilibrium_DevPly07_8h4d")
+
+instance SteepestDescentMorseFlow 15 "Start" "Aigakari_StratifiedEquilibrium_DevPly07_8h3c+" where
+  morseFlowStep _ _ _ = (15, "Start", "Aigakari_StratifiedEquilibrium_DevPly07_8h3c+")
+
+instance SteepestDescentMorseFlow 9 "Start" "Aigakari_StratifiedEquilibrium_DevPly06_2b6f" where
+  morseFlowStep _ _ _ = (9, "Start", "Aigakari_StratifiedEquilibrium_DevPly06_2b6f")
+
+instance SteepestDescentMorseFlow 9 "Start" "Aigakari_StratifiedEquilibrium_DevPly06_2b7g+" where
+  morseFlowStep _ _ _ = (9, "Start", "Aigakari_StratifiedEquilibrium_DevPly06_2b7g+")
+
+instance SteepestDescentMorseFlow 13 "Start" "Aigakari_StratifiedEquilibrium_DevPly05_8h4d" where
+  morseFlowStep _ _ _ = (13, "Start", "Aigakari_StratifiedEquilibrium_DevPly05_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "Aigakari_StratifiedEquilibrium_DevPly05_8h3c+" where
+  morseFlowStep _ _ _ = (13, "Start", "Aigakari_StratifiedEquilibrium_DevPly05_8h3c+")
+
+instance SteepestDescentMorseFlow 7 "Start" "Aigakari_StratifiedEquilibrium_DevPly04_2b6f" where
+  morseFlowStep _ _ _ = (7, "Start", "Aigakari_StratifiedEquilibrium_DevPly04_2b6f")
+
+instance SteepestDescentMorseFlow 7 "Start" "Aigakari_StratifiedEquilibrium_DevPly04_2b7g+" where
+  morseFlowStep _ _ _ = (7, "Start", "Aigakari_StratifiedEquilibrium_DevPly04_2b7g+")
+
+instance SteepestDescentMorseFlow 11 "Start" "Aigakari_StratifiedEquilibrium_DevPly03_8h4d" where
+  morseFlowStep _ _ _ = (11, "Start", "Aigakari_StratifiedEquilibrium_DevPly03_8h4d")
+
+instance SteepestDescentMorseFlow 11 "Start" "Aigakari_StratifiedEquilibrium_DevPly03_8h3c+" where
+  morseFlowStep _ _ _ = (11, "Start", "Aigakari_StratifiedEquilibrium_DevPly03_8h3c+")
+
+instance SteepestDescentMorseFlow 35 "Start" "Aigakari_StratifiedEquilibrium" where
+  morseFlowStep _ _ _ = (35, "Start", "Aigakari_StratifiedEquilibrium")
+
+instance SteepestDescentMorseFlow 37 "Start" "Kakugawari_StratifiedEquilibrium_DevPly36_1a1b" where
+  morseFlowStep _ _ _ = (37, "Start", "Kakugawari_StratifiedEquilibrium_DevPly36_1a1b")
+
+instance SteepestDescentMorseFlow 37 "Start" "Kakugawari_StratifiedEquilibrium_DevPly36_1c1d" where
+  morseFlowStep _ _ _ = (37, "Start", "Kakugawari_StratifiedEquilibrium_DevPly36_1c1d")
+
+instance SteepestDescentMorseFlow 37 "Start" "Kakugawari_StratifiedEquilibrium_DevPly35_2h2d" where
+  morseFlowStep _ _ _ = (37, "Start", "Kakugawari_StratifiedEquilibrium_DevPly35_2h2d")
+
+instance SteepestDescentMorseFlow 37 "Start" "Kakugawari_StratifiedEquilibrium_DevPly35_2h2c+" where
+  morseFlowStep _ _ _ = (37, "Start", "Kakugawari_StratifiedEquilibrium_DevPly35_2h2c+")
+
+instance SteepestDescentMorseFlow 49 "Start" "Kakugawari_StratifiedEquilibrium_DevPly34_4b3c" where
+  morseFlowStep _ _ _ = (49, "Start", "Kakugawari_StratifiedEquilibrium_DevPly34_4b3c")
+
+instance SteepestDescentMorseFlow 35 "Start" "Kakugawari_StratifiedEquilibrium_DevPly34_B*1f" where
+  morseFlowStep _ _ _ = (35, "Start", "Kakugawari_StratifiedEquilibrium_DevPly34_B*1f")
+
+instance SteepestDescentMorseFlow 35 "Start" "Kakugawari_StratifiedEquilibrium_DevPly33_2h2d" where
+  morseFlowStep _ _ _ = (35, "Start", "Kakugawari_StratifiedEquilibrium_DevPly33_2h2d")
+
+instance SteepestDescentMorseFlow 35 "Start" "Kakugawari_StratifiedEquilibrium_DevPly33_2h2c+" where
+  morseFlowStep _ _ _ = (35, "Start", "Kakugawari_StratifiedEquilibrium_DevPly33_2h2c+")
+
+instance SteepestDescentMorseFlow 49 "Start" "Kakugawari_StratifiedEquilibrium_DevPly32_4b3c" where
+  morseFlowStep _ _ _ = (49, "Start", "Kakugawari_StratifiedEquilibrium_DevPly32_4b3c")
+
+instance SteepestDescentMorseFlow 33 "Start" "Kakugawari_StratifiedEquilibrium_DevPly32_S*1f" where
+  morseFlowStep _ _ _ = (33, "Start", "Kakugawari_StratifiedEquilibrium_DevPly32_S*1f")
+
+instance SteepestDescentMorseFlow 33 "Start" "Kakugawari_StratifiedEquilibrium_DevPly31_2h2d" where
+  morseFlowStep _ _ _ = (33, "Start", "Kakugawari_StratifiedEquilibrium_DevPly31_2h2d")
+
+instance SteepestDescentMorseFlow 33 "Start" "Kakugawari_StratifiedEquilibrium_DevPly31_2h2c+" where
+  morseFlowStep _ _ _ = (33, "Start", "Kakugawari_StratifiedEquilibrium_DevPly31_2h2c+")
+
+instance SteepestDescentMorseFlow 49 "Start" "Kakugawari_StratifiedEquilibrium_DevPly30_4b3c" where
+  morseFlowStep _ _ _ = (49, "Start", "Kakugawari_StratifiedEquilibrium_DevPly30_4b3c")
+
+instance SteepestDescentMorseFlow 31 "Start" "Kakugawari_StratifiedEquilibrium_DevPly30_B*1f" where
+  morseFlowStep _ _ _ = (31, "Start", "Kakugawari_StratifiedEquilibrium_DevPly30_B*1f")
+
+instance SteepestDescentMorseFlow 31 "Start" "Kakugawari_StratifiedEquilibrium_DevPly29_2d1d" where
+  morseFlowStep _ _ _ = (31, "Start", "Kakugawari_StratifiedEquilibrium_DevPly29_2d1d")
+
+instance SteepestDescentMorseFlow 31 "Start" "Kakugawari_StratifiedEquilibrium_DevPly29_2d2c+" where
+  morseFlowStep _ _ _ = (31, "Start", "Kakugawari_StratifiedEquilibrium_DevPly29_2d2c+")
+
+instance SteepestDescentMorseFlow 77 "Start" "Kakugawari_StratifiedEquilibrium_DevPly28_4b3c" where
+  morseFlowStep _ _ _ = (77, "Start", "Kakugawari_StratifiedEquilibrium_DevPly28_4b3c")
+
+instance SteepestDescentMorseFlow 29 "Start" "Kakugawari_StratifiedEquilibrium_DevPly28_B*1f" where
+  morseFlowStep _ _ _ = (29, "Start", "Kakugawari_StratifiedEquilibrium_DevPly28_B*1f")
+
+instance SteepestDescentMorseFlow 29 "Start" "Kakugawari_StratifiedEquilibrium_DevPly27_2h2e" where
+  morseFlowStep _ _ _ = (29, "Start", "Kakugawari_StratifiedEquilibrium_DevPly27_2h2e")
+
+instance SteepestDescentMorseFlow 29 "Start" "Kakugawari_StratifiedEquilibrium_DevPly27_3e4d" where
+  morseFlowStep _ _ _ = (29, "Start", "Kakugawari_StratifiedEquilibrium_DevPly27_3e4d")
+
+instance SteepestDescentMorseFlow 35 "Start" "Kakugawari_StratifiedEquilibrium_DevPly26_4b3c" where
+  morseFlowStep _ _ _ = (35, "Start", "Kakugawari_StratifiedEquilibrium_DevPly26_4b3c")
+
+instance SteepestDescentMorseFlow 27 "Start" "Kakugawari_StratifiedEquilibrium_DevPly26_B*1f" where
+  morseFlowStep _ _ _ = (27, "Start", "Kakugawari_StratifiedEquilibrium_DevPly26_B*1f")
+
+instance SteepestDescentMorseFlow 27 "Start" "Kakugawari_StratifiedEquilibrium_DevPly25_3e2d" where
+  morseFlowStep _ _ _ = (27, "Start", "Kakugawari_StratifiedEquilibrium_DevPly25_3e2d")
+
+instance SteepestDescentMorseFlow 27 "Start" "Kakugawari_StratifiedEquilibrium_DevPly25_3e4d" where
+  morseFlowStep _ _ _ = (27, "Start", "Kakugawari_StratifiedEquilibrium_DevPly25_3e4d")
+
+instance SteepestDescentMorseFlow 35 "Start" "Kakugawari_StratifiedEquilibrium_DevPly24_4b3c" where
+  morseFlowStep _ _ _ = (35, "Start", "Kakugawari_StratifiedEquilibrium_DevPly24_4b3c")
+
+instance SteepestDescentMorseFlow 25 "Start" "Kakugawari_StratifiedEquilibrium_DevPly24_B*1f" where
+  morseFlowStep _ _ _ = (25, "Start", "Kakugawari_StratifiedEquilibrium_DevPly24_B*1f")
+
+instance SteepestDescentMorseFlow 33 "Start" "Kakugawari_StratifiedEquilibrium_DevPly23_P*3c" where
+  morseFlowStep _ _ _ = (33, "Start", "Kakugawari_StratifiedEquilibrium_DevPly23_P*3c")
+
+instance SteepestDescentMorseFlow 31 "Start" "Kakugawari_StratifiedEquilibrium_DevPly23_P*3e" where
+  morseFlowStep _ _ _ = (31, "Start", "Kakugawari_StratifiedEquilibrium_DevPly23_P*3e")
+
+instance SteepestDescentMorseFlow 73 "Start" "Kakugawari_StratifiedEquilibrium_DevPly22_4b3c" where
+  morseFlowStep _ _ _ = (73, "Start", "Kakugawari_StratifiedEquilibrium_DevPly22_4b3c")
+
+instance SteepestDescentMorseFlow 23 "Start" "Kakugawari_StratifiedEquilibrium_DevPly22_B*1f" where
+  morseFlowStep _ _ _ = (23, "Start", "Kakugawari_StratifiedEquilibrium_DevPly22_B*1f")
+
+instance SteepestDescentMorseFlow 31 "Start" "Kakugawari_StratifiedEquilibrium_DevPly21_P*3c" where
+  morseFlowStep _ _ _ = (31, "Start", "Kakugawari_StratifiedEquilibrium_DevPly21_P*3c")
+
+instance SteepestDescentMorseFlow 29 "Start" "Kakugawari_StratifiedEquilibrium_DevPly21_P*3e" where
+  morseFlowStep _ _ _ = (29, "Start", "Kakugawari_StratifiedEquilibrium_DevPly21_P*3e")
+
+instance SteepestDescentMorseFlow 27 "Start" "Kakugawari_StratifiedEquilibrium_DevPly20_4b3c" where
+  morseFlowStep _ _ _ = (27, "Start", "Kakugawari_StratifiedEquilibrium_DevPly20_4b3c")
+
+instance SteepestDescentMorseFlow 21 "Start" "Kakugawari_StratifiedEquilibrium_DevPly20_B*1f" where
+  morseFlowStep _ _ _ = (21, "Start", "Kakugawari_StratifiedEquilibrium_DevPly20_B*1f")
+
+instance SteepestDescentMorseFlow 29 "Start" "Kakugawari_StratifiedEquilibrium_DevPly19_P*3c" where
+  morseFlowStep _ _ _ = (29, "Start", "Kakugawari_StratifiedEquilibrium_DevPly19_P*3c")
+
+instance SteepestDescentMorseFlow 27 "Start" "Kakugawari_StratifiedEquilibrium_DevPly19_P*3e" where
+  morseFlowStep _ _ _ = (27, "Start", "Kakugawari_StratifiedEquilibrium_DevPly19_P*3e")
+
+instance SteepestDescentMorseFlow 19 "Start" "Kakugawari_StratifiedEquilibrium_DevPly18_B*1f" where
+  morseFlowStep _ _ _ = (19, "Start", "Kakugawari_StratifiedEquilibrium_DevPly18_B*1f")
+
+instance SteepestDescentMorseFlow 19 "Start" "Kakugawari_StratifiedEquilibrium_DevPly18_B*1h" where
+  morseFlowStep _ _ _ = (19, "Start", "Kakugawari_StratifiedEquilibrium_DevPly18_B*1h")
+
+instance SteepestDescentMorseFlow 19 "Start" "Kakugawari_StratifiedEquilibrium_DevPly17_B*1b" where
+  morseFlowStep _ _ _ = (19, "Start", "Kakugawari_StratifiedEquilibrium_DevPly17_B*1b")
+
+instance SteepestDescentMorseFlow 19 "Start" "Kakugawari_StratifiedEquilibrium_DevPly17_B*1d" where
+  morseFlowStep _ _ _ = (19, "Start", "Kakugawari_StratifiedEquilibrium_DevPly17_B*1d")
+
+instance SteepestDescentMorseFlow 17 "Start" "Kakugawari_StratifiedEquilibrium_DevPly16_B*1f" where
+  morseFlowStep _ _ _ = (17, "Start", "Kakugawari_StratifiedEquilibrium_DevPly16_B*1f")
+
+instance SteepestDescentMorseFlow 17 "Start" "Kakugawari_StratifiedEquilibrium_DevPly16_B*1h" where
+  morseFlowStep _ _ _ = (17, "Start", "Kakugawari_StratifiedEquilibrium_DevPly16_B*1h")
+
+instance SteepestDescentMorseFlow 23 "Start" "Kakugawari_StratifiedEquilibrium_DevPly15_B*1b" where
+  morseFlowStep _ _ _ = (23, "Start", "Kakugawari_StratifiedEquilibrium_DevPly15_B*1b")
+
+instance SteepestDescentMorseFlow 23 "Start" "Kakugawari_StratifiedEquilibrium_DevPly15_B*1d" where
+  morseFlowStep _ _ _ = (23, "Start", "Kakugawari_StratifiedEquilibrium_DevPly15_B*1d")
+
+instance SteepestDescentMorseFlow 21 "Start" "Kakugawari_StratifiedEquilibrium_DevPly14_5a5b" where
+  morseFlowStep _ _ _ = (21, "Start", "Kakugawari_StratifiedEquilibrium_DevPly14_5a5b")
+
+instance SteepestDescentMorseFlow 15 "Start" "Kakugawari_StratifiedEquilibrium_DevPly14_B*1f" where
+  morseFlowStep _ _ _ = (15, "Start", "Kakugawari_StratifiedEquilibrium_DevPly14_B*1f")
+
+instance SteepestDescentMorseFlow 21 "Start" "Kakugawari_StratifiedEquilibrium_DevPly13_B*1b" where
+  morseFlowStep _ _ _ = (21, "Start", "Kakugawari_StratifiedEquilibrium_DevPly13_B*1b")
+
+instance SteepestDescentMorseFlow 21 "Start" "Kakugawari_StratifiedEquilibrium_DevPly13_B*1d" where
+  morseFlowStep _ _ _ = (21, "Start", "Kakugawari_StratifiedEquilibrium_DevPly13_B*1d")
+
+instance SteepestDescentMorseFlow 19 "Start" "Kakugawari_StratifiedEquilibrium_DevPly12_5a5b" where
+  morseFlowStep _ _ _ = (19, "Start", "Kakugawari_StratifiedEquilibrium_DevPly12_5a5b")
+
+instance SteepestDescentMorseFlow 19 "Start" "Kakugawari_StratifiedEquilibrium_DevPly12_5a6b" where
+  morseFlowStep _ _ _ = (19, "Start", "Kakugawari_StratifiedEquilibrium_DevPly12_5a6b")
+
+instance SteepestDescentMorseFlow 19 "Start" "Kakugawari_StratifiedEquilibrium_DevPly11_B*1b" where
+  morseFlowStep _ _ _ = (19, "Start", "Kakugawari_StratifiedEquilibrium_DevPly11_B*1b")
+
+instance SteepestDescentMorseFlow 19 "Start" "Kakugawari_StratifiedEquilibrium_DevPly11_B*1d" where
+  morseFlowStep _ _ _ = (19, "Start", "Kakugawari_StratifiedEquilibrium_DevPly11_B*1d")
+
+instance SteepestDescentMorseFlow 11 "Start" "Kakugawari_StratifiedEquilibrium_DevPly10_3b3c" where
+  morseFlowStep _ _ _ = (11, "Start", "Kakugawari_StratifiedEquilibrium_DevPly10_3b3c")
+
+instance SteepestDescentMorseFlow 19 "Start" "Kakugawari_StratifiedEquilibrium_DevPly10_5a4b" where
+  morseFlowStep _ _ _ = (19, "Start", "Kakugawari_StratifiedEquilibrium_DevPly10_5a4b")
+
+instance SteepestDescentMorseFlow 17 "Start" "Kakugawari_StratifiedEquilibrium_DevPly09_8h4d" where
+  morseFlowStep _ _ _ = (17, "Start", "Kakugawari_StratifiedEquilibrium_DevPly09_8h4d")
+
+instance SteepestDescentMorseFlow 17 "Start" "Kakugawari_StratifiedEquilibrium_DevPly09_8h3c+" where
+  morseFlowStep _ _ _ = (17, "Start", "Kakugawari_StratifiedEquilibrium_DevPly09_8h3c+")
+
+instance SteepestDescentMorseFlow 11 "Start" "Kakugawari_StratifiedEquilibrium_DevPly08_2b6f" where
+  morseFlowStep _ _ _ = (11, "Start", "Kakugawari_StratifiedEquilibrium_DevPly08_2b6f")
+
+instance SteepestDescentMorseFlow 11 "Start" "Kakugawari_StratifiedEquilibrium_DevPly08_2b7g+" where
+  morseFlowStep _ _ _ = (11, "Start", "Kakugawari_StratifiedEquilibrium_DevPly08_2b7g+")
+
+instance SteepestDescentMorseFlow 15 "Start" "Kakugawari_StratifiedEquilibrium_DevPly07_8h4d" where
+  morseFlowStep _ _ _ = (15, "Start", "Kakugawari_StratifiedEquilibrium_DevPly07_8h4d")
+
+instance SteepestDescentMorseFlow 15 "Start" "Kakugawari_StratifiedEquilibrium_DevPly07_8h3c+" where
+  morseFlowStep _ _ _ = (15, "Start", "Kakugawari_StratifiedEquilibrium_DevPly07_8h3c+")
+
+instance SteepestDescentMorseFlow 9 "Start" "Kakugawari_StratifiedEquilibrium_DevPly06_2b6f" where
+  morseFlowStep _ _ _ = (9, "Start", "Kakugawari_StratifiedEquilibrium_DevPly06_2b6f")
+
+instance SteepestDescentMorseFlow 9 "Start" "Kakugawari_StratifiedEquilibrium_DevPly06_2b7g+" where
+  morseFlowStep _ _ _ = (9, "Start", "Kakugawari_StratifiedEquilibrium_DevPly06_2b7g+")
+
+instance SteepestDescentMorseFlow 13 "Start" "Kakugawari_StratifiedEquilibrium_DevPly05_8h4d" where
+  morseFlowStep _ _ _ = (13, "Start", "Kakugawari_StratifiedEquilibrium_DevPly05_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "Kakugawari_StratifiedEquilibrium_DevPly05_8h3c+" where
+  morseFlowStep _ _ _ = (13, "Start", "Kakugawari_StratifiedEquilibrium_DevPly05_8h3c+")
+
+instance SteepestDescentMorseFlow 7 "Start" "Kakugawari_StratifiedEquilibrium_DevPly04_2b6f" where
+  morseFlowStep _ _ _ = (7, "Start", "Kakugawari_StratifiedEquilibrium_DevPly04_2b6f")
+
+instance SteepestDescentMorseFlow 7 "Start" "Kakugawari_StratifiedEquilibrium_DevPly04_2b7g+" where
+  morseFlowStep _ _ _ = (7, "Start", "Kakugawari_StratifiedEquilibrium_DevPly04_2b7g+")
+
+instance SteepestDescentMorseFlow 11 "Start" "Kakugawari_StratifiedEquilibrium_DevPly03_8h4d" where
+  morseFlowStep _ _ _ = (11, "Start", "Kakugawari_StratifiedEquilibrium_DevPly03_8h4d")
+
+instance SteepestDescentMorseFlow 11 "Start" "Kakugawari_StratifiedEquilibrium_DevPly03_8h3c+" where
+  morseFlowStep _ _ _ = (11, "Start", "Kakugawari_StratifiedEquilibrium_DevPly03_8h3c+")
+
+instance SteepestDescentMorseFlow 37 "Start" "Kakugawari_StratifiedEquilibrium" where
+  morseFlowStep _ _ _ = (37, "Start", "Kakugawari_StratifiedEquilibrium")
+
+instance SteepestDescentMorseFlow 43 "Start" "Yagura_StratifiedEquilibrium_DevPly40_8b8f" where
+  morseFlowStep _ _ _ = (43, "Start", "Yagura_StratifiedEquilibrium_DevPly40_8b8f")
+
+instance SteepestDescentMorseFlow 57 "Start" "Yagura_StratifiedEquilibrium_DevPly39_B*1b" where
+  morseFlowStep _ _ _ = (57, "Start", "Yagura_StratifiedEquilibrium_DevPly39_B*1b")
+
+instance SteepestDescentMorseFlow 57 "Start" "Yagura_StratifiedEquilibrium_DevPly39_B*1d" where
+  morseFlowStep _ _ _ = (57, "Start", "Yagura_StratifiedEquilibrium_DevPly39_B*1d")
+
+instance SteepestDescentMorseFlow 41 "Start" "Yagura_StratifiedEquilibrium_DevPly38_8b8f" where
+  morseFlowStep _ _ _ = (41, "Start", "Yagura_StratifiedEquilibrium_DevPly38_8b8f")
+
+instance SteepestDescentMorseFlow 51 "Start" "Yagura_StratifiedEquilibrium_DevPly37_B*1b" where
+  morseFlowStep _ _ _ = (51, "Start", "Yagura_StratifiedEquilibrium_DevPly37_B*1b")
+
+instance SteepestDescentMorseFlow 51 "Start" "Yagura_StratifiedEquilibrium_DevPly37_B*1d" where
+  morseFlowStep _ _ _ = (51, "Start", "Yagura_StratifiedEquilibrium_DevPly37_B*1d")
+
+instance SteepestDescentMorseFlow 39 "Start" "Yagura_StratifiedEquilibrium_DevPly36_8b8f" where
+  morseFlowStep _ _ _ = (39, "Start", "Yagura_StratifiedEquilibrium_DevPly36_8b8f")
+
+instance SteepestDescentMorseFlow 47 "Start" "Yagura_StratifiedEquilibrium_DevPly35_B*1b" where
+  morseFlowStep _ _ _ = (47, "Start", "Yagura_StratifiedEquilibrium_DevPly35_B*1b")
+
+instance SteepestDescentMorseFlow 47 "Start" "Yagura_StratifiedEquilibrium_DevPly35_B*1d" where
+  morseFlowStep _ _ _ = (47, "Start", "Yagura_StratifiedEquilibrium_DevPly35_B*1d")
+
+instance SteepestDescentMorseFlow 37 "Start" "Yagura_StratifiedEquilibrium_DevPly34_8b8f" where
+  morseFlowStep _ _ _ = (37, "Start", "Yagura_StratifiedEquilibrium_DevPly34_8b8f")
+
+instance SteepestDescentMorseFlow 45 "Start" "Yagura_StratifiedEquilibrium_DevPly33_B*1b" where
+  morseFlowStep _ _ _ = (45, "Start", "Yagura_StratifiedEquilibrium_DevPly33_B*1b")
+
+instance SteepestDescentMorseFlow 45 "Start" "Yagura_StratifiedEquilibrium_DevPly33_B*1d" where
+  morseFlowStep _ _ _ = (45, "Start", "Yagura_StratifiedEquilibrium_DevPly33_B*1d")
+
+instance SteepestDescentMorseFlow 35 "Start" "Yagura_StratifiedEquilibrium_DevPly32_8b8f" where
+  morseFlowStep _ _ _ = (35, "Start", "Yagura_StratifiedEquilibrium_DevPly32_8b8f")
+
+instance SteepestDescentMorseFlow 43 "Start" "Yagura_StratifiedEquilibrium_DevPly31_B*1b" where
+  morseFlowStep _ _ _ = (43, "Start", "Yagura_StratifiedEquilibrium_DevPly31_B*1b")
+
+instance SteepestDescentMorseFlow 43 "Start" "Yagura_StratifiedEquilibrium_DevPly31_B*1d" where
+  morseFlowStep _ _ _ = (43, "Start", "Yagura_StratifiedEquilibrium_DevPly31_B*1d")
+
+instance SteepestDescentMorseFlow 33 "Start" "Yagura_StratifiedEquilibrium_DevPly30_8f7f" where
+  morseFlowStep _ _ _ = (33, "Start", "Yagura_StratifiedEquilibrium_DevPly30_8f7f")
+
+instance SteepestDescentMorseFlow 33 "Start" "Yagura_StratifiedEquilibrium_DevPly30_8f9f" where
+  morseFlowStep _ _ _ = (33, "Start", "Yagura_StratifiedEquilibrium_DevPly30_8f9f")
+
+instance SteepestDescentMorseFlow 31 "Start" "Yagura_StratifiedEquilibrium_DevPly28_8b8e" where
+  morseFlowStep _ _ _ = (31, "Start", "Yagura_StratifiedEquilibrium_DevPly28_8b8e")
+
+instance SteepestDescentMorseFlow 61 "Start" "Yagura_StratifiedEquilibrium_DevPly27_B*1b" where
+  morseFlowStep _ _ _ = (61, "Start", "Yagura_StratifiedEquilibrium_DevPly27_B*1b")
+
+instance SteepestDescentMorseFlow 61 "Start" "Yagura_StratifiedEquilibrium_DevPly27_B*1d" where
+  morseFlowStep _ _ _ = (61, "Start", "Yagura_StratifiedEquilibrium_DevPly27_B*1d")
+
+instance SteepestDescentMorseFlow 41 "Start" "Yagura_StratifiedEquilibrium_DevPly25_7g8f" where
+  morseFlowStep _ _ _ = (41, "Start", "Yagura_StratifiedEquilibrium_DevPly25_7g8f")
+
+instance SteepestDescentMorseFlow 45 "Start" "Yagura_StratifiedEquilibrium_DevPly25_B*1b" where
+  morseFlowStep _ _ _ = (45, "Start", "Yagura_StratifiedEquilibrium_DevPly25_B*1b")
+
+instance SteepestDescentMorseFlow 39 "Start" "Yagura_StratifiedEquilibrium_DevPly23_7g8f" where
+  morseFlowStep _ _ _ = (39, "Start", "Yagura_StratifiedEquilibrium_DevPly23_7g8f")
+
+instance SteepestDescentMorseFlow 43 "Start" "Yagura_StratifiedEquilibrium_DevPly23_B*1b" where
+  morseFlowStep _ _ _ = (43, "Start", "Yagura_StratifiedEquilibrium_DevPly23_B*1b")
+
+instance SteepestDescentMorseFlow 35 "Start" "Yagura_StratifiedEquilibrium_DevPly21_7g8f" where
+  morseFlowStep _ _ _ = (35, "Start", "Yagura_StratifiedEquilibrium_DevPly21_7g8f")
+
+instance SteepestDescentMorseFlow 33 "Start" "Yagura_StratifiedEquilibrium_DevPly21_B*1b" where
+  morseFlowStep _ _ _ = (33, "Start", "Yagura_StratifiedEquilibrium_DevPly21_B*1b")
+
+instance SteepestDescentMorseFlow 345 "Start" "Yagura_StratifiedEquilibrium_DevPly19_B*1b" where
+  morseFlowStep _ _ _ = (345, "Start", "Yagura_StratifiedEquilibrium_DevPly19_B*1b")
+
+instance SteepestDescentMorseFlow 89 "Start" "Yagura_StratifiedEquilibrium_DevPly19_B*1d" where
+  morseFlowStep _ _ _ = (89, "Start", "Yagura_StratifiedEquilibrium_DevPly19_B*1d")
+
+instance SteepestDescentMorseFlow 35 "Start" "Yagura_StratifiedEquilibrium_DevPly14_2b5e" where
+  morseFlowStep _ _ _ = (35, "Start", "Yagura_StratifiedEquilibrium_DevPly14_2b5e")
+
+instance SteepestDescentMorseFlow 21 "Start" "Yagura_StratifiedEquilibrium_DevPly14_2b6f" where
+  morseFlowStep _ _ _ = (21, "Start", "Yagura_StratifiedEquilibrium_DevPly14_2b6f")
+
+instance SteepestDescentMorseFlow 21 "Start" "Yagura_StratifiedEquilibrium_DevPly12_2b5e" where
+  morseFlowStep _ _ _ = (21, "Start", "Yagura_StratifiedEquilibrium_DevPly12_2b5e")
+
+instance SteepestDescentMorseFlow 19 "Start" "Yagura_StratifiedEquilibrium_DevPly12_2b6f" where
+  morseFlowStep _ _ _ = (19, "Start", "Yagura_StratifiedEquilibrium_DevPly12_2b6f")
+
+instance SteepestDescentMorseFlow 13 "Start" "Yagura_StratifiedEquilibrium_DevPly10_2b5e" where
+  morseFlowStep _ _ _ = (13, "Start", "Yagura_StratifiedEquilibrium_DevPly10_2b5e")
+
+instance SteepestDescentMorseFlow 13 "Start" "Yagura_StratifiedEquilibrium_DevPly10_2b6f" where
+  morseFlowStep _ _ _ = (13, "Start", "Yagura_StratifiedEquilibrium_DevPly10_2b6f")
+
+instance SteepestDescentMorseFlow 11 "Start" "Yagura_StratifiedEquilibrium_DevPly08_2b6f" where
+  morseFlowStep _ _ _ = (11, "Start", "Yagura_StratifiedEquilibrium_DevPly08_2b6f")
+
+instance SteepestDescentMorseFlow 15 "Start" "Yagura_StratifiedEquilibrium_DevPly03_8h4d" where
+  morseFlowStep _ _ _ = (15, "Start", "Yagura_StratifiedEquilibrium_DevPly03_8h4d")
+
+instance SteepestDescentMorseFlow 5 "Start" "Yagura_StratifiedEquilibrium_DevPly03_8h3c+" where
+  morseFlowStep _ _ _ = (5, "Start", "Yagura_StratifiedEquilibrium_DevPly03_8h3c+")
+
+instance SteepestDescentMorseFlow 45 "Start" "Yagura_StratifiedEquilibrium" where
+  morseFlowStep _ _ _ = (45, "Start", "Yagura_StratifiedEquilibrium")
+
+instance SteepestDescentMorseFlow 39 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly38_2a3c" where
+  morseFlowStep _ _ _ = (39, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly38_2a3c")
+
+instance SteepestDescentMorseFlow 39 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly38_2d1e" where
+  morseFlowStep _ _ _ = (39, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly38_2d1e")
+
+instance SteepestDescentMorseFlow 39 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly37_7g8f" where
+  morseFlowStep _ _ _ = (39, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly37_7g8f")
+
+instance SteepestDescentMorseFlow 39 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly37_7g5i" where
+  morseFlowStep _ _ _ = (39, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly37_7g5i")
+
+instance SteepestDescentMorseFlow 37 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly36_1a1b" where
+  morseFlowStep _ _ _ = (37, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly36_1a1b")
+
+instance SteepestDescentMorseFlow 37 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly36_1a1c" where
+  morseFlowStep _ _ _ = (37, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly36_1a1c")
+
+instance SteepestDescentMorseFlow 37 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly35_7g8f" where
+  morseFlowStep _ _ _ = (37, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly35_7g8f")
+
+instance SteepestDescentMorseFlow 37 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly35_7g5i" where
+  morseFlowStep _ _ _ = (37, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly35_7g5i")
+
+instance SteepestDescentMorseFlow 39 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly34_3a2b" where
+  morseFlowStep _ _ _ = (39, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly34_3a2b")
+
+instance SteepestDescentMorseFlow 35 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly34_3c2d" where
+  morseFlowStep _ _ _ = (35, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly34_3c2d")
+
+instance SteepestDescentMorseFlow 35 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly33_6i5i" where
+  morseFlowStep _ _ _ = (35, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly33_6i5i")
+
+instance SteepestDescentMorseFlow 35 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly33_7g8f" where
+  morseFlowStep _ _ _ = (35, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly33_7g8f")
+
+instance SteepestDescentMorseFlow 55 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly32_3a2b" where
+  morseFlowStep _ _ _ = (55, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly32_3a2b")
+
+instance SteepestDescentMorseFlow 33 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly32_3c2d" where
+  morseFlowStep _ _ _ = (33, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly32_3c2d")
+
+instance SteepestDescentMorseFlow 33 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly31_7g8f" where
+  morseFlowStep _ _ _ = (33, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly31_7g8f")
+
+instance SteepestDescentMorseFlow 33 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly31_S*1b" where
+  morseFlowStep _ _ _ = (33, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly31_S*1b")
+
+instance SteepestDescentMorseFlow 31 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly30_B*1e" where
+  morseFlowStep _ _ _ = (31, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly30_B*1e")
+
+instance SteepestDescentMorseFlow 31 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly30_B*1g" where
+  morseFlowStep _ _ _ = (31, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly30_B*1g")
+
+instance SteepestDescentMorseFlow 31 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly29_7g8f" where
+  morseFlowStep _ _ _ = (31, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly29_7g8f")
+
+instance SteepestDescentMorseFlow 31 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly29_S*1b" where
+  morseFlowStep _ _ _ = (31, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly29_S*1b")
+
+instance SteepestDescentMorseFlow 35 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly28_4b3c" where
+  morseFlowStep _ _ _ = (35, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly28_4b3c")
+
+instance SteepestDescentMorseFlow 29 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly28_4b4a" where
+  morseFlowStep _ _ _ = (29, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly28_4b4a")
+
+instance SteepestDescentMorseFlow 39 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly27_7g8f" where
+  morseFlowStep _ _ _ = (39, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly27_7g8f")
+
+instance SteepestDescentMorseFlow 41 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly27_S*1b" where
+  morseFlowStep _ _ _ = (41, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly27_S*1b")
+
+instance SteepestDescentMorseFlow 27 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly26_4b3a" where
+  morseFlowStep _ _ _ = (27, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly26_4b3a")
+
+instance SteepestDescentMorseFlow 117 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly26_4b3c" where
+  morseFlowStep _ _ _ = (117, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly26_4b3c")
+
+instance SteepestDescentMorseFlow 37 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly25_7g8f" where
+  morseFlowStep _ _ _ = (37, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly25_7g8f")
+
+instance SteepestDescentMorseFlow 39 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly25_S*1b" where
+  morseFlowStep _ _ _ = (39, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly25_S*1b")
+
+instance SteepestDescentMorseFlow 25 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly24_4b3a" where
+  morseFlowStep _ _ _ = (25, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly24_4b3a")
+
+instance SteepestDescentMorseFlow 99 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly24_4b3c" where
+  morseFlowStep _ _ _ = (99, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly24_4b3c")
+
+instance SteepestDescentMorseFlow 35 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly23_7g8f" where
+  morseFlowStep _ _ _ = (35, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly23_7g8f")
+
+instance SteepestDescentMorseFlow 37 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly23_S*1b" where
+  morseFlowStep _ _ _ = (37, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly23_S*1b")
+
+instance SteepestDescentMorseFlow 23 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly22_4b3a" where
+  morseFlowStep _ _ _ = (23, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly22_4b3a")
+
+instance SteepestDescentMorseFlow 97 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly22_4b3c" where
+  morseFlowStep _ _ _ = (97, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly22_4b3c")
+
+instance SteepestDescentMorseFlow 51 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly21_7g8f" where
+  morseFlowStep _ _ _ = (51, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly21_7g8f")
+
+instance SteepestDescentMorseFlow 35 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly21_S*1b" where
+  morseFlowStep _ _ _ = (35, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly21_S*1b")
+
+instance SteepestDescentMorseFlow 21 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly20_4b3a" where
+  morseFlowStep _ _ _ = (21, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly20_4b3a")
+
+instance SteepestDescentMorseFlow 37 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly20_4b3c" where
+  morseFlowStep _ _ _ = (37, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly20_4b3c")
+
+instance SteepestDescentMorseFlow 33 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly19_7g8f" where
+  morseFlowStep _ _ _ = (33, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly19_7g8f")
+
+instance SteepestDescentMorseFlow 31 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly19_S*1b" where
+  morseFlowStep _ _ _ = (31, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly19_S*1b")
+
+instance SteepestDescentMorseFlow 19 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly18_4b3a" where
+  morseFlowStep _ _ _ = (19, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly18_4b3a")
+
+instance SteepestDescentMorseFlow 35 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly18_4b3c" where
+  morseFlowStep _ _ _ = (35, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly18_4b3c")
+
+instance SteepestDescentMorseFlow 31 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly17_7g8f" where
+  morseFlowStep _ _ _ = (31, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly17_7g8f")
+
+instance SteepestDescentMorseFlow 29 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly17_S*1b" where
+  morseFlowStep _ _ _ = (29, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly17_S*1b")
+
+instance SteepestDescentMorseFlow 111 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly16_4b3c" where
+  morseFlowStep _ _ _ = (111, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly16_4b3c")
+
+instance SteepestDescentMorseFlow 17 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly16_4b4a" where
+  morseFlowStep _ _ _ = (17, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly16_4b4a")
+
+instance SteepestDescentMorseFlow 37 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly15_7g8f" where
+  morseFlowStep _ _ _ = (37, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly15_7g8f")
+
+instance SteepestDescentMorseFlow 33 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly15_G*1b" where
+  morseFlowStep _ _ _ = (33, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly15_G*1b")
+
+instance SteepestDescentMorseFlow 17 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly13_7g8f" where
+  morseFlowStep _ _ _ = (17, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly13_7g8f")
+
+instance SteepestDescentMorseFlow 15 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly11_7g8f" where
+  morseFlowStep _ _ _ = (15, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly11_7g8f")
+
+instance SteepestDescentMorseFlow 13 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly09_7g8f" where
+  morseFlowStep _ _ _ = (13, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly09_7g8f")
+
+instance SteepestDescentMorseFlow 11 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly03_8h4d" where
+  morseFlowStep _ _ _ = (11, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly03_8h4d")
+
+instance SteepestDescentMorseFlow 11 "Start" "Shikenbisha_StratifiedEquilibrium_DevPly03_8h3c+" where
+  morseFlowStep _ _ _ = (11, "Start", "Shikenbisha_StratifiedEquilibrium_DevPly03_8h3c+")
+
+instance SteepestDescentMorseFlow 39 "Start" "Shikenbisha_StratifiedEquilibrium" where
+  morseFlowStep _ _ _ = (39, "Start", "Shikenbisha_StratifiedEquilibrium")
+
+instance SteepestDescentMorseFlow 31 "Start" "Yokofudori_StratifiedEquilibrium_DevPly29_3c2b" where
+  morseFlowStep _ _ _ = (31, "Start", "Yokofudori_StratifiedEquilibrium_DevPly29_3c2b")
+
+instance SteepestDescentMorseFlow 31 "Start" "Yokofudori_StratifiedEquilibrium_DevPly29_3c2d+" where
+  morseFlowStep _ _ _ = (31, "Start", "Yokofudori_StratifiedEquilibrium_DevPly29_3c2d+")
+
+instance SteepestDescentMorseFlow 29 "Start" "Yokofudori_StratifiedEquilibrium_DevPly27_2i1g" where
+  morseFlowStep _ _ _ = (29, "Start", "Yokofudori_StratifiedEquilibrium_DevPly27_2i1g")
+
+instance SteepestDescentMorseFlow 29 "Start" "Yokofudori_StratifiedEquilibrium_DevPly27_3e2e" where
+  morseFlowStep _ _ _ = (29, "Start", "Yokofudori_StratifiedEquilibrium_DevPly27_3e2e")
+
+instance SteepestDescentMorseFlow 27 "Start" "Yokofudori_StratifiedEquilibrium_DevPly26_1f3h" where
+  morseFlowStep _ _ _ = (27, "Start", "Yokofudori_StratifiedEquilibrium_DevPly26_1f3h")
+
+instance SteepestDescentMorseFlow 27 "Start" "Yokofudori_StratifiedEquilibrium_DevPly26_1f4i" where
+  morseFlowStep _ _ _ = (27, "Start", "Yokofudori_StratifiedEquilibrium_DevPly26_1f4i")
+
+instance SteepestDescentMorseFlow 27 "Start" "Yokofudori_StratifiedEquilibrium_DevPly25_1i1g" where
+  morseFlowStep _ _ _ = (27, "Start", "Yokofudori_StratifiedEquilibrium_DevPly25_1i1g")
+
+instance SteepestDescentMorseFlow 27 "Start" "Yokofudori_StratifiedEquilibrium_DevPly25_2i1g" where
+  morseFlowStep _ _ _ = (27, "Start", "Yokofudori_StratifiedEquilibrium_DevPly25_2i1g")
+
+instance SteepestDescentMorseFlow 25 "Start" "Yokofudori_StratifiedEquilibrium_DevPly24_1g2h" where
+  morseFlowStep _ _ _ = (25, "Start", "Yokofudori_StratifiedEquilibrium_DevPly24_1g2h")
+
+instance SteepestDescentMorseFlow 25 "Start" "Yokofudori_StratifiedEquilibrium_DevPly24_1g3i" where
+  morseFlowStep _ _ _ = (25, "Start", "Yokofudori_StratifiedEquilibrium_DevPly24_1g3i")
+
+instance SteepestDescentMorseFlow 25 "Start" "Yokofudori_StratifiedEquilibrium_DevPly23_1i1h" where
+  morseFlowStep _ _ _ = (25, "Start", "Yokofudori_StratifiedEquilibrium_DevPly23_1i1h")
+
+instance SteepestDescentMorseFlow 25 "Start" "Yokofudori_StratifiedEquilibrium_DevPly23_3d4d" where
+  morseFlowStep _ _ _ = (25, "Start", "Yokofudori_StratifiedEquilibrium_DevPly23_3d4d")
+
+instance SteepestDescentMorseFlow 23 "Start" "Yokofudori_StratifiedEquilibrium_DevPly22_2b6f" where
+  morseFlowStep _ _ _ = (23, "Start", "Yokofudori_StratifiedEquilibrium_DevPly22_2b6f")
+
+instance SteepestDescentMorseFlow 23 "Start" "Yokofudori_StratifiedEquilibrium_DevPly22_2b7g+" where
+  morseFlowStep _ _ _ = (23, "Start", "Yokofudori_StratifiedEquilibrium_DevPly22_2b7g+")
+
+instance SteepestDescentMorseFlow 23 "Start" "Yokofudori_StratifiedEquilibrium_DevPly21_3f3c+" where
+  morseFlowStep _ _ _ = (23, "Start", "Yokofudori_StratifiedEquilibrium_DevPly21_3f3c+")
+
+instance SteepestDescentMorseFlow 23 "Start" "Yokofudori_StratifiedEquilibrium_DevPly21_3f3c" where
+  morseFlowStep _ _ _ = (23, "Start", "Yokofudori_StratifiedEquilibrium_DevPly21_3f3c")
+
+instance SteepestDescentMorseFlow 21 "Start" "Yokofudori_StratifiedEquilibrium_DevPly20_2b6f" where
+  morseFlowStep _ _ _ = (21, "Start", "Yokofudori_StratifiedEquilibrium_DevPly20_2b6f")
+
+instance SteepestDescentMorseFlow 21 "Start" "Yokofudori_StratifiedEquilibrium_DevPly20_2b7g+" where
+  morseFlowStep _ _ _ = (21, "Start", "Yokofudori_StratifiedEquilibrium_DevPly20_2b7g+")
+
+instance SteepestDescentMorseFlow 21 "Start" "Yokofudori_StratifiedEquilibrium_DevPly19_3d4d" where
+  morseFlowStep _ _ _ = (21, "Start", "Yokofudori_StratifiedEquilibrium_DevPly19_3d4d")
+
+instance SteepestDescentMorseFlow 21 "Start" "Yokofudori_StratifiedEquilibrium_DevPly19_3d1d" where
+  morseFlowStep _ _ _ = (21, "Start", "Yokofudori_StratifiedEquilibrium_DevPly19_3d1d")
+
+instance SteepestDescentMorseFlow 19 "Start" "Yokofudori_StratifiedEquilibrium_DevPly18_2b6f" where
+  morseFlowStep _ _ _ = (19, "Start", "Yokofudori_StratifiedEquilibrium_DevPly18_2b6f")
+
+instance SteepestDescentMorseFlow 19 "Start" "Yokofudori_StratifiedEquilibrium_DevPly18_2b7g+" where
+  morseFlowStep _ _ _ = (19, "Start", "Yokofudori_StratifiedEquilibrium_DevPly18_2b7g+")
+
+instance SteepestDescentMorseFlow 19 "Start" "Yokofudori_StratifiedEquilibrium_DevPly17_3d4d" where
+  morseFlowStep _ _ _ = (19, "Start", "Yokofudori_StratifiedEquilibrium_DevPly17_3d4d")
+
+instance SteepestDescentMorseFlow 19 "Start" "Yokofudori_StratifiedEquilibrium_DevPly17_3d1d" where
+  morseFlowStep _ _ _ = (19, "Start", "Yokofudori_StratifiedEquilibrium_DevPly17_3d1d")
+
+instance SteepestDescentMorseFlow 17 "Start" "Yokofudori_StratifiedEquilibrium_DevPly16_2b6f" where
+  morseFlowStep _ _ _ = (17, "Start", "Yokofudori_StratifiedEquilibrium_DevPly16_2b6f")
+
+instance SteepestDescentMorseFlow 17 "Start" "Yokofudori_StratifiedEquilibrium_DevPly16_2b7g+" where
+  morseFlowStep _ _ _ = (17, "Start", "Yokofudori_StratifiedEquilibrium_DevPly16_2b7g+")
+
+instance SteepestDescentMorseFlow 17 "Start" "Yokofudori_StratifiedEquilibrium_DevPly15_2d1d" where
+  morseFlowStep _ _ _ = (17, "Start", "Yokofudori_StratifiedEquilibrium_DevPly15_2d1d")
+
+instance SteepestDescentMorseFlow 17 "Start" "Yokofudori_StratifiedEquilibrium_DevPly15_2d2c+" where
+  morseFlowStep _ _ _ = (17, "Start", "Yokofudori_StratifiedEquilibrium_DevPly15_2d2c+")
+
+instance SteepestDescentMorseFlow 15 "Start" "Yokofudori_StratifiedEquilibrium_DevPly14_2b6f" where
+  morseFlowStep _ _ _ = (15, "Start", "Yokofudori_StratifiedEquilibrium_DevPly14_2b6f")
+
+instance SteepestDescentMorseFlow 15 "Start" "Yokofudori_StratifiedEquilibrium_DevPly14_2b7g+" where
+  morseFlowStep _ _ _ = (15, "Start", "Yokofudori_StratifiedEquilibrium_DevPly14_2b7g+")
+
+instance SteepestDescentMorseFlow 15 "Start" "Yokofudori_StratifiedEquilibrium_DevPly13_2d1d" where
+  morseFlowStep _ _ _ = (15, "Start", "Yokofudori_StratifiedEquilibrium_DevPly13_2d1d")
+
+instance SteepestDescentMorseFlow 15 "Start" "Yokofudori_StratifiedEquilibrium_DevPly13_2d2c+" where
+  morseFlowStep _ _ _ = (15, "Start", "Yokofudori_StratifiedEquilibrium_DevPly13_2d2c+")
+
+instance SteepestDescentMorseFlow 13 "Start" "Yokofudori_StratifiedEquilibrium_DevPly12_2b6f" where
+  morseFlowStep _ _ _ = (13, "Start", "Yokofudori_StratifiedEquilibrium_DevPly12_2b6f")
+
+instance SteepestDescentMorseFlow 13 "Start" "Yokofudori_StratifiedEquilibrium_DevPly12_2b7g+" where
+  morseFlowStep _ _ _ = (13, "Start", "Yokofudori_StratifiedEquilibrium_DevPly12_2b7g+")
+
+instance SteepestDescentMorseFlow 17 "Start" "Yokofudori_StratifiedEquilibrium_DevPly11_2h2e" where
+  morseFlowStep _ _ _ = (17, "Start", "Yokofudori_StratifiedEquilibrium_DevPly11_2h2e")
+
+instance SteepestDescentMorseFlow 19 "Start" "Yokofudori_StratifiedEquilibrium_DevPly11_8h4d" where
+  morseFlowStep _ _ _ = (19, "Start", "Yokofudori_StratifiedEquilibrium_DevPly11_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "Yokofudori_StratifiedEquilibrium_DevPly10_2b6f" where
+  morseFlowStep _ _ _ = (13, "Start", "Yokofudori_StratifiedEquilibrium_DevPly10_2b6f")
+
+instance SteepestDescentMorseFlow 13 "Start" "Yokofudori_StratifiedEquilibrium_DevPly10_2b7g+" where
+  morseFlowStep _ _ _ = (13, "Start", "Yokofudori_StratifiedEquilibrium_DevPly10_2b7g+")
+
+instance SteepestDescentMorseFlow 17 "Start" "Yokofudori_StratifiedEquilibrium_DevPly09_8h4d" where
+  morseFlowStep _ _ _ = (17, "Start", "Yokofudori_StratifiedEquilibrium_DevPly09_8h4d")
+
+instance SteepestDescentMorseFlow 17 "Start" "Yokofudori_StratifiedEquilibrium_DevPly09_8h3c+" where
+  morseFlowStep _ _ _ = (17, "Start", "Yokofudori_StratifiedEquilibrium_DevPly09_8h3c+")
+
+instance SteepestDescentMorseFlow 11 "Start" "Yokofudori_StratifiedEquilibrium_DevPly08_2b6f" where
+  morseFlowStep _ _ _ = (11, "Start", "Yokofudori_StratifiedEquilibrium_DevPly08_2b6f")
+
+instance SteepestDescentMorseFlow 11 "Start" "Yokofudori_StratifiedEquilibrium_DevPly08_2b7g+" where
+  morseFlowStep _ _ _ = (11, "Start", "Yokofudori_StratifiedEquilibrium_DevPly08_2b7g+")
+
+instance SteepestDescentMorseFlow 15 "Start" "Yokofudori_StratifiedEquilibrium_DevPly07_8h4d" where
+  morseFlowStep _ _ _ = (15, "Start", "Yokofudori_StratifiedEquilibrium_DevPly07_8h4d")
+
+instance SteepestDescentMorseFlow 15 "Start" "Yokofudori_StratifiedEquilibrium_DevPly07_8h3c+" where
+  morseFlowStep _ _ _ = (15, "Start", "Yokofudori_StratifiedEquilibrium_DevPly07_8h3c+")
+
+instance SteepestDescentMorseFlow 9 "Start" "Yokofudori_StratifiedEquilibrium_DevPly06_2b6f" where
+  morseFlowStep _ _ _ = (9, "Start", "Yokofudori_StratifiedEquilibrium_DevPly06_2b6f")
+
+instance SteepestDescentMorseFlow 9 "Start" "Yokofudori_StratifiedEquilibrium_DevPly06_2b7g+" where
+  morseFlowStep _ _ _ = (9, "Start", "Yokofudori_StratifiedEquilibrium_DevPly06_2b7g+")
+
+instance SteepestDescentMorseFlow 13 "Start" "Yokofudori_StratifiedEquilibrium_DevPly05_8h4d" where
+  morseFlowStep _ _ _ = (13, "Start", "Yokofudori_StratifiedEquilibrium_DevPly05_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "Yokofudori_StratifiedEquilibrium_DevPly05_8h3c+" where
+  morseFlowStep _ _ _ = (13, "Start", "Yokofudori_StratifiedEquilibrium_DevPly05_8h3c+")
+
+instance SteepestDescentMorseFlow 7 "Start" "Yokofudori_StratifiedEquilibrium_DevPly04_2b6f" where
+  morseFlowStep _ _ _ = (7, "Start", "Yokofudori_StratifiedEquilibrium_DevPly04_2b6f")
+
+instance SteepestDescentMorseFlow 7 "Start" "Yokofudori_StratifiedEquilibrium_DevPly04_2b7g+" where
+  morseFlowStep _ _ _ = (7, "Start", "Yokofudori_StratifiedEquilibrium_DevPly04_2b7g+")
+
+instance SteepestDescentMorseFlow 11 "Start" "Yokofudori_StratifiedEquilibrium_DevPly03_8h4d" where
+  morseFlowStep _ _ _ = (11, "Start", "Yokofudori_StratifiedEquilibrium_DevPly03_8h4d")
+
+instance SteepestDescentMorseFlow 11 "Start" "Yokofudori_StratifiedEquilibrium_DevPly03_8h3c+" where
+  morseFlowStep _ _ _ = (11, "Start", "Yokofudori_StratifiedEquilibrium_DevPly03_8h3c+")
+
+instance SteepestDescentMorseFlow 29 "Start" "Yokofudori_StratifiedEquilibrium" where
+  morseFlowStep _ _ _ = (29, "Start", "Yokofudori_StratifiedEquilibrium")
+
+instance SteepestDescentMorseFlow 29 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly28_B*1e" where
+  morseFlowStep _ _ _ = (29, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly28_B*1e")
+
+instance SteepestDescentMorseFlow 29 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly28_B*1g" where
+  morseFlowStep _ _ _ = (29, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly28_B*1g")
+
+instance SteepestDescentMorseFlow 29 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly27_7g4d" where
+  morseFlowStep _ _ _ = (29, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly27_7g4d")
+
+instance SteepestDescentMorseFlow 29 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly27_7g3c+" where
+  morseFlowStep _ _ _ = (29, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly27_7g3c+")
+
+instance SteepestDescentMorseFlow 27 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly26_B*1e" where
+  morseFlowStep _ _ _ = (27, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly26_B*1e")
+
+instance SteepestDescentMorseFlow 27 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly26_B*1g" where
+  morseFlowStep _ _ _ = (27, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly26_B*1g")
+
+instance SteepestDescentMorseFlow 27 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly25_7f7d" where
+  morseFlowStep _ _ _ = (27, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly25_7f7d")
+
+instance SteepestDescentMorseFlow 27 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly25_7f7c+" where
+  morseFlowStep _ _ _ = (27, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly25_7f7c+")
+
+instance SteepestDescentMorseFlow 25 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly24_B*1e" where
+  morseFlowStep _ _ _ = (25, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly24_B*1e")
+
+instance SteepestDescentMorseFlow 25 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly24_B*1g" where
+  morseFlowStep _ _ _ = (25, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly24_B*1g")
+
+instance SteepestDescentMorseFlow 25 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly23_7f8f" where
+  morseFlowStep _ _ _ = (25, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly23_7f8f")
+
+instance SteepestDescentMorseFlow 25 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly23_7f7d" where
+  morseFlowStep _ _ _ = (25, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly23_7f7d")
+
+instance SteepestDescentMorseFlow 23 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly22_B*1e" where
+  morseFlowStep _ _ _ = (23, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly22_B*1e")
+
+instance SteepestDescentMorseFlow 23 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly22_B*1g" where
+  morseFlowStep _ _ _ = (23, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly22_B*1g")
+
+instance SteepestDescentMorseFlow 33 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly21_7g8f" where
+  morseFlowStep _ _ _ = (33, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly21_7g8f")
+
+instance SteepestDescentMorseFlow 33 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly21_7g4d" where
+  morseFlowStep _ _ _ = (33, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly21_7g4d")
+
+instance SteepestDescentMorseFlow 33 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly20_2a3c" where
+  morseFlowStep _ _ _ = (33, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly20_2a3c")
+
+instance SteepestDescentMorseFlow 21 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly20_4b3a" where
+  morseFlowStep _ _ _ = (21, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly20_4b3a")
+
+instance SteepestDescentMorseFlow 31 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly19_7g8f" where
+  morseFlowStep _ _ _ = (31, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly19_7g8f")
+
+instance SteepestDescentMorseFlow 31 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly19_7g4d" where
+  morseFlowStep _ _ _ = (31, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly19_7g4d")
+
+instance SteepestDescentMorseFlow 31 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly18_2a3c" where
+  morseFlowStep _ _ _ = (31, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly18_2a3c")
+
+instance SteepestDescentMorseFlow 19 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly18_4b3a" where
+  morseFlowStep _ _ _ = (19, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly18_4b3a")
+
+instance SteepestDescentMorseFlow 29 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly17_7g8f" where
+  morseFlowStep _ _ _ = (29, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly17_7g8f")
+
+instance SteepestDescentMorseFlow 29 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly17_7g4d" where
+  morseFlowStep _ _ _ = (29, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly17_7g4d")
+
+instance SteepestDescentMorseFlow 29 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly16_2a3c" where
+  morseFlowStep _ _ _ = (29, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly16_2a3c")
+
+instance SteepestDescentMorseFlow 17 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly16_4b3a" where
+  morseFlowStep _ _ _ = (17, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly16_4b3a")
+
+instance SteepestDescentMorseFlow 27 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly15_7g8f" where
+  morseFlowStep _ _ _ = (27, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly15_7g8f")
+
+instance SteepestDescentMorseFlow 27 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly15_7g4d" where
+  morseFlowStep _ _ _ = (27, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly15_7g4d")
+
+instance SteepestDescentMorseFlow 31 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly14_2a3c" where
+  morseFlowStep _ _ _ = (31, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly14_2a3c")
+
+instance SteepestDescentMorseFlow 89 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly14_2b6f" where
+  morseFlowStep _ _ _ = (89, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly14_2b6f")
+
+instance SteepestDescentMorseFlow 33 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly13_7g8f" where
+  morseFlowStep _ _ _ = (33, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly13_7g8f")
+
+instance SteepestDescentMorseFlow 33 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly13_7g4d" where
+  morseFlowStep _ _ _ = (33, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly13_7g4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly12_2a3c" where
+  morseFlowStep _ _ _ = (13, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly12_2a3c")
+
+instance SteepestDescentMorseFlow 13 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly12_2b6f" where
+  morseFlowStep _ _ _ = (13, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly12_2b6f")
+
+instance SteepestDescentMorseFlow 17 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly11_7g8f" where
+  morseFlowStep _ _ _ = (17, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly11_7g8f")
+
+instance SteepestDescentMorseFlow 17 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly11_7g4d" where
+  morseFlowStep _ _ _ = (17, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly11_7g4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly10_2b6f" where
+  morseFlowStep _ _ _ = (13, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly10_2b6f")
+
+instance SteepestDescentMorseFlow 13 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly10_2b7g+" where
+  morseFlowStep _ _ _ = (13, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly10_2b7g+")
+
+instance SteepestDescentMorseFlow 15 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly09_7g8f" where
+  morseFlowStep _ _ _ = (15, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly09_7g8f")
+
+instance SteepestDescentMorseFlow 15 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly09_7g4d" where
+  morseFlowStep _ _ _ = (15, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly09_7g4d")
+
+instance SteepestDescentMorseFlow 11 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly08_2b6f" where
+  morseFlowStep _ _ _ = (11, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly08_2b6f")
+
+instance SteepestDescentMorseFlow 11 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly08_2b7g+" where
+  morseFlowStep _ _ _ = (11, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly08_2b7g+")
+
+instance SteepestDescentMorseFlow 13 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly07_8h4d" where
+  morseFlowStep _ _ _ = (13, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly07_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly07_8h3c+" where
+  morseFlowStep _ _ _ = (13, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly07_8h3c+")
+
+instance SteepestDescentMorseFlow 9 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly06_2b6f" where
+  morseFlowStep _ _ _ = (9, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly06_2b6f")
+
+instance SteepestDescentMorseFlow 9 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly06_2b7g+" where
+  morseFlowStep _ _ _ = (9, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly06_2b7g+")
+
+instance SteepestDescentMorseFlow 13 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly05_8h4d" where
+  morseFlowStep _ _ _ = (13, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly05_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly05_8h3c+" where
+  morseFlowStep _ _ _ = (13, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly05_8h3c+")
+
+instance SteepestDescentMorseFlow 7 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly04_2b6f" where
+  morseFlowStep _ _ _ = (7, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly04_2b6f")
+
+instance SteepestDescentMorseFlow 7 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly04_2b7g+" where
+  morseFlowStep _ _ _ = (7, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly04_2b7g+")
+
+instance SteepestDescentMorseFlow 11 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly03_8h4d" where
+  morseFlowStep _ _ _ = (11, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly03_8h4d")
+
+instance SteepestDescentMorseFlow 11 "Start" "Sankenbisha_StratifiedEquilibrium_DevPly03_8h3c+" where
+  morseFlowStep _ _ _ = (11, "Start", "Sankenbisha_StratifiedEquilibrium_DevPly03_8h3c+")
+
+instance SteepestDescentMorseFlow 29 "Start" "Sankenbisha_StratifiedEquilibrium" where
+  morseFlowStep _ _ _ = (29, "Start", "Sankenbisha_StratifiedEquilibrium")
+
+instance SteepestDescentMorseFlow 45 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly44_2b5e" where
+  morseFlowStep _ _ _ = (45, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly44_2b5e")
+
+instance SteepestDescentMorseFlow 45 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly44_2b6f" where
+  morseFlowStep _ _ _ = (45, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly44_2b6f")
+
+instance SteepestDescentMorseFlow 45 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly43_4f6f" where
+  morseFlowStep _ _ _ = (45, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly43_4f6f")
+
+instance SteepestDescentMorseFlow 45 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly43_4f4d" where
+  morseFlowStep _ _ _ = (45, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly43_4f4d")
+
+instance SteepestDescentMorseFlow 43 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly42_2b6f" where
+  morseFlowStep _ _ _ = (43, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly42_2b6f")
+
+instance SteepestDescentMorseFlow 43 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly42_2b7g+" where
+  morseFlowStep _ _ _ = (43, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly42_2b7g+")
+
+instance SteepestDescentMorseFlow 43 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly41_4f4e" where
+  morseFlowStep _ _ _ = (43, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly41_4f4e")
+
+instance SteepestDescentMorseFlow 43 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly41_4f4d" where
+  morseFlowStep _ _ _ = (43, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly41_4f4d")
+
+instance SteepestDescentMorseFlow 41 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly40_2c2d" where
+  morseFlowStep _ _ _ = (41, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly40_2c2d")
+
+instance SteepestDescentMorseFlow 41 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly40_4a5b" where
+  morseFlowStep _ _ _ = (41, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly40_4a5b")
+
+instance SteepestDescentMorseFlow 45 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly39_N*1c" where
+  morseFlowStep _ _ _ = (45, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly39_N*1c")
+
+instance SteepestDescentMorseFlow 45 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly39_N*1e" where
+  morseFlowStep _ _ _ = (45, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly39_N*1e")
+
+instance SteepestDescentMorseFlow 39 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly38_2c2d" where
+  morseFlowStep _ _ _ = (39, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly38_2c2d")
+
+instance SteepestDescentMorseFlow 39 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly38_4a5b" where
+  morseFlowStep _ _ _ = (39, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly38_4a5b")
+
+instance SteepestDescentMorseFlow 39 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly36_6c5d" where
+  morseFlowStep _ _ _ = (39, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly36_6c5d")
+
+instance SteepestDescentMorseFlow 39 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly36_6e5g+" where
+  morseFlowStep _ _ _ = (39, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly36_6e5g+")
+
+instance SteepestDescentMorseFlow 39 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly35_8h7g" where
+  morseFlowStep _ _ _ = (39, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly35_8h7g")
+
+instance SteepestDescentMorseFlow 39 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly35_8i7g" where
+  morseFlowStep _ _ _ = (39, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly35_8i7g")
+
+instance SteepestDescentMorseFlow 37 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly34_6c5d" where
+  morseFlowStep _ _ _ = (37, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly34_6c5d")
+
+instance SteepestDescentMorseFlow 37 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly34_8b8f" where
+  morseFlowStep _ _ _ = (37, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly34_8b8f")
+
+instance SteepestDescentMorseFlow 35 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly32_6c5d" where
+  morseFlowStep _ _ _ = (35, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly32_6c5d")
+
+instance SteepestDescentMorseFlow 35 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly32_8b8f" where
+  morseFlowStep _ _ _ = (35, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly32_8b8f")
+
+instance SteepestDescentMorseFlow 33 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly30_6c5d" where
+  morseFlowStep _ _ _ = (33, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly30_6c5d")
+
+instance SteepestDescentMorseFlow 33 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly30_8b8f" where
+  morseFlowStep _ _ _ = (33, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly30_8b8f")
+
+instance SteepestDescentMorseFlow 31 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly28_6c5d" where
+  morseFlowStep _ _ _ = (31, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly28_6c5d")
+
+instance SteepestDescentMorseFlow 31 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly28_8b8f" where
+  morseFlowStep _ _ _ = (31, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly28_8b8f")
+
+instance SteepestDescentMorseFlow 29 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly26_6c5d" where
+  morseFlowStep _ _ _ = (29, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly26_6c5d")
+
+instance SteepestDescentMorseFlow 29 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly26_8f9f" where
+  morseFlowStep _ _ _ = (29, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly26_8f9f")
+
+instance SteepestDescentMorseFlow 25 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly24_6c5d" where
+  morseFlowStep _ _ _ = (25, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly24_6c5d")
+
+instance SteepestDescentMorseFlow 25 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly24_8b8e" where
+  morseFlowStep _ _ _ = (25, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly24_8b8e")
+
+instance SteepestDescentMorseFlow 25 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly22_6c5d" where
+  morseFlowStep _ _ _ = (25, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly22_6c5d")
+
+instance SteepestDescentMorseFlow 15 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly09_8h4d" where
+  morseFlowStep _ _ _ = (15, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly09_8h4d")
+
+instance SteepestDescentMorseFlow 15 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly09_8h3c+" where
+  morseFlowStep _ _ _ = (15, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly09_8h3c+")
+
+instance SteepestDescentMorseFlow 11 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly08_2b5e" where
+  morseFlowStep _ _ _ = (11, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly08_2b5e")
+
+instance SteepestDescentMorseFlow 11 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly08_2b6f" where
+  morseFlowStep _ _ _ = (11, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly08_2b6f")
+
+instance SteepestDescentMorseFlow 13 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly07_8h4d" where
+  morseFlowStep _ _ _ = (13, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly07_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly07_8h3c+" where
+  morseFlowStep _ _ _ = (13, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly07_8h3c+")
+
+instance SteepestDescentMorseFlow 9 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly06_2b5e" where
+  morseFlowStep _ _ _ = (9, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly06_2b5e")
+
+instance SteepestDescentMorseFlow 9 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly06_2b6f" where
+  morseFlowStep _ _ _ = (9, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly06_2b6f")
+
+instance SteepestDescentMorseFlow 13 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly05_8h4d" where
+  morseFlowStep _ _ _ = (13, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly05_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly05_8h3c+" where
+  morseFlowStep _ _ _ = (13, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly05_8h3c+")
+
+instance SteepestDescentMorseFlow 7 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly04_2b5e" where
+  morseFlowStep _ _ _ = (7, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly04_2b5e")
+
+instance SteepestDescentMorseFlow 7 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly04_2b6f" where
+  morseFlowStep _ _ _ = (7, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly04_2b6f")
+
+instance SteepestDescentMorseFlow 11 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly03_8h4d" where
+  morseFlowStep _ _ _ = (11, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly03_8h4d")
+
+instance SteepestDescentMorseFlow 11 "Start" "SenteNakabisha_IronMino_Equilibrium_DevPly03_8h3c+" where
+  morseFlowStep _ _ _ = (11, "Start", "SenteNakabisha_IronMino_Equilibrium_DevPly03_8h3c+")
+
+instance SteepestDescentMorseFlow 45 "Start" "SenteNakabisha_IronMino_Equilibrium" where
+  morseFlowStep _ _ _ = (45, "Start", "SenteNakabisha_IronMino_Equilibrium")
+
+instance SteepestDescentMorseFlow 49 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly48_5b4b" where
+  morseFlowStep _ _ _ = (49, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly48_5b4b")
+
+instance SteepestDescentMorseFlow 49 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly48_5b5a" where
+  morseFlowStep _ _ _ = (49, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly48_5b5a")
+
+instance SteepestDescentMorseFlow 55 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly47_P*2b" where
+  morseFlowStep _ _ _ = (55, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly47_P*2b")
+
+instance SteepestDescentMorseFlow 55 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly47_P*2c" where
+  morseFlowStep _ _ _ = (55, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly47_P*2c")
+
+instance SteepestDescentMorseFlow 47 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly46_1a1b" where
+  morseFlowStep _ _ _ = (47, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly46_1a1b")
+
+instance SteepestDescentMorseFlow 47 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly46_3a4b" where
+  morseFlowStep _ _ _ = (47, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly46_3a4b")
+
+instance SteepestDescentMorseFlow 47 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly45_2c1c" where
+  morseFlowStep _ _ _ = (47, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly45_2c1c")
+
+instance SteepestDescentMorseFlow 47 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly45_2c3c" where
+  morseFlowStep _ _ _ = (47, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly45_2c3c")
+
+instance SteepestDescentMorseFlow 45 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly44_1a1b" where
+  morseFlowStep _ _ _ = (45, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly44_1a1b")
+
+instance SteepestDescentMorseFlow 45 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly44_1a1c" where
+  morseFlowStep _ _ _ = (45, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly44_1a1c")
+
+instance SteepestDescentMorseFlow 53 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly43_2a2b" where
+  morseFlowStep _ _ _ = (53, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly43_2a2b")
+
+instance SteepestDescentMorseFlow 53 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly43_2a1b" where
+  morseFlowStep _ _ _ = (53, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly43_2a1b")
+
+instance SteepestDescentMorseFlow 45 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly42_1a1b" where
+  morseFlowStep _ _ _ = (45, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly42_1a1b")
+
+instance SteepestDescentMorseFlow 45 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly42_3d3e" where
+  morseFlowStep _ _ _ = (45, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly42_3d3e")
+
+instance SteepestDescentMorseFlow 49 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly41_2h2d" where
+  morseFlowStep _ _ _ = (49, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly41_2h2d")
+
+instance SteepestDescentMorseFlow 43 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly41_2h2c+" where
+  morseFlowStep _ _ _ = (43, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly41_2h2c+")
+
+instance SteepestDescentMorseFlow 43 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly40_2a3c" where
+  morseFlowStep _ _ _ = (43, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly40_2a3c")
+
+instance SteepestDescentMorseFlow 43 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly40_2b3a" where
+  morseFlowStep _ _ _ = (43, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly40_2b3a")
+
+instance SteepestDescentMorseFlow 59 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly39_2h2d" where
+  morseFlowStep _ _ _ = (59, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly39_2h2d")
+
+instance SteepestDescentMorseFlow 41 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly39_2h2c+" where
+  morseFlowStep _ _ _ = (41, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly39_2h2c+")
+
+instance SteepestDescentMorseFlow 51 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly38_2b3a" where
+  morseFlowStep _ _ _ = (51, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly38_2b3a")
+
+instance SteepestDescentMorseFlow 45 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly38_S*1e" where
+  morseFlowStep _ _ _ = (45, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly38_S*1e")
+
+instance SteepestDescentMorseFlow 41 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly37_2h2d" where
+  morseFlowStep _ _ _ = (41, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly37_2h2d")
+
+instance SteepestDescentMorseFlow 39 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly37_2h2c+" where
+  morseFlowStep _ _ _ = (39, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly37_2h2c+")
+
+instance SteepestDescentMorseFlow 45 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly36_1a1b" where
+  morseFlowStep _ _ _ = (45, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly36_1a1b")
+
+instance SteepestDescentMorseFlow 45 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly36_1a1c" where
+  morseFlowStep _ _ _ = (45, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly36_1a1c")
+
+instance SteepestDescentMorseFlow 41 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly35_2h2d" where
+  morseFlowStep _ _ _ = (41, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly35_2h2d")
+
+instance SteepestDescentMorseFlow 37 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly35_2h2c+" where
+  morseFlowStep _ _ _ = (37, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly35_2h2c+")
+
+instance SteepestDescentMorseFlow 39 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly34_5e4e" where
+  morseFlowStep _ _ _ = (39, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly34_5e4e")
+
+instance SteepestDescentMorseFlow 39 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly34_5e3e" where
+  morseFlowStep _ _ _ = (39, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly34_5e3e")
+
+instance SteepestDescentMorseFlow 35 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly33_2h2e" where
+  morseFlowStep _ _ _ = (35, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly33_2h2e")
+
+instance SteepestDescentMorseFlow 35 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly33_2h2d" where
+  morseFlowStep _ _ _ = (35, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly33_2h2d")
+
+instance SteepestDescentMorseFlow 33 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly32_2b4d" where
+  morseFlowStep _ _ _ = (33, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly32_2b4d")
+
+instance SteepestDescentMorseFlow 33 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly31_2h2d" where
+  morseFlowStep _ _ _ = (33, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly31_2h2d")
+
+instance SteepestDescentMorseFlow 33 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly31_2h2c+" where
+  morseFlowStep _ _ _ = (33, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly31_2h2c+")
+
+instance SteepestDescentMorseFlow 31 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly30_4d3e" where
+  morseFlowStep _ _ _ = (31, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly30_4d3e")
+
+instance SteepestDescentMorseFlow 31 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly29_2h2d" where
+  morseFlowStep _ _ _ = (31, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly29_2h2d")
+
+instance SteepestDescentMorseFlow 31 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly29_2h2c+" where
+  morseFlowStep _ _ _ = (31, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly29_2h2c+")
+
+instance SteepestDescentMorseFlow 29 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly28_4d3e" where
+  morseFlowStep _ _ _ = (29, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly28_4d3e")
+
+instance SteepestDescentMorseFlow 29 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly27_2h2d" where
+  morseFlowStep _ _ _ = (29, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly27_2h2d")
+
+instance SteepestDescentMorseFlow 29 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly27_2h2c+" where
+  morseFlowStep _ _ _ = (29, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly27_2h2c+")
+
+instance SteepestDescentMorseFlow 27 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly26_4d3e" where
+  morseFlowStep _ _ _ = (27, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly26_4d3e")
+
+instance SteepestDescentMorseFlow 27 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly25_2h2d" where
+  morseFlowStep _ _ _ = (27, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly25_2h2d")
+
+instance SteepestDescentMorseFlow 27 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly25_2h2c+" where
+  morseFlowStep _ _ _ = (27, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly25_2h2c+")
+
+instance SteepestDescentMorseFlow 25 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly24_4d3e" where
+  morseFlowStep _ _ _ = (25, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly24_4d3e")
+
+instance SteepestDescentMorseFlow 25 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly23_2h2d" where
+  morseFlowStep _ _ _ = (25, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly23_2h2d")
+
+instance SteepestDescentMorseFlow 25 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly23_2h2c+" where
+  morseFlowStep _ _ _ = (25, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly23_2h2c+")
+
+instance SteepestDescentMorseFlow 23 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly22_4d3e" where
+  morseFlowStep _ _ _ = (23, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly22_4d3e")
+
+instance SteepestDescentMorseFlow 23 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly21_2h2d" where
+  morseFlowStep _ _ _ = (23, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly21_2h2d")
+
+instance SteepestDescentMorseFlow 23 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly21_2h2c+" where
+  morseFlowStep _ _ _ = (23, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly21_2h2c+")
+
+instance SteepestDescentMorseFlow 21 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly20_4d3e" where
+  morseFlowStep _ _ _ = (21, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly20_4d3e")
+
+instance SteepestDescentMorseFlow 21 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly19_2d1d" where
+  morseFlowStep _ _ _ = (21, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly19_2d1d")
+
+instance SteepestDescentMorseFlow 21 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly19_2d2c+" where
+  morseFlowStep _ _ _ = (21, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly19_2d2c+")
+
+instance SteepestDescentMorseFlow 19 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly18_4d3e" where
+  morseFlowStep _ _ _ = (19, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly18_4d3e")
+
+instance SteepestDescentMorseFlow 21 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly17_2h2e" where
+  morseFlowStep _ _ _ = (21, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly17_2h2e")
+
+instance SteepestDescentMorseFlow 21 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly17_4f3e" where
+  morseFlowStep _ _ _ = (21, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly17_4f3e")
+
+instance SteepestDescentMorseFlow 19 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly16_4d3e" where
+  morseFlowStep _ _ _ = (19, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly16_4d3e")
+
+instance SteepestDescentMorseFlow 19 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly15_4f3e" where
+  morseFlowStep _ _ _ = (19, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly15_4f3e")
+
+instance SteepestDescentMorseFlow 19 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly15_4f5e" where
+  morseFlowStep _ _ _ = (19, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly15_4f5e")
+
+instance SteepestDescentMorseFlow 17 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly14_4d3e" where
+  morseFlowStep _ _ _ = (17, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly14_4d3e")
+
+instance SteepestDescentMorseFlow 21 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly13_8h5e" where
+  morseFlowStep _ _ _ = (21, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly13_8h5e")
+
+instance SteepestDescentMorseFlow 15 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly13_8h4d" where
+  morseFlowStep _ _ _ = (15, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly13_8h4d")
+
+instance SteepestDescentMorseFlow 15 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly12_2b6f" where
+  morseFlowStep _ _ _ = (15, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly12_2b6f")
+
+instance SteepestDescentMorseFlow 15 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly12_2b7g+" where
+  morseFlowStep _ _ _ = (15, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly12_2b7g+")
+
+instance SteepestDescentMorseFlow 19 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly11_8h5e" where
+  morseFlowStep _ _ _ = (19, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly11_8h5e")
+
+instance SteepestDescentMorseFlow 21 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly11_8h4d" where
+  morseFlowStep _ _ _ = (21, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly11_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly10_2b6f" where
+  morseFlowStep _ _ _ = (13, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly10_2b6f")
+
+instance SteepestDescentMorseFlow 13 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly10_2b7g+" where
+  morseFlowStep _ _ _ = (13, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly10_2b7g+")
+
+instance SteepestDescentMorseFlow 17 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly09_8h5e" where
+  morseFlowStep _ _ _ = (17, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly09_8h5e")
+
+instance SteepestDescentMorseFlow 17 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly09_8h4d" where
+  morseFlowStep _ _ _ = (17, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly09_8h4d")
+
+instance SteepestDescentMorseFlow 11 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly08_2b6f" where
+  morseFlowStep _ _ _ = (11, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly08_2b6f")
+
+instance SteepestDescentMorseFlow 11 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly08_2b7g+" where
+  morseFlowStep _ _ _ = (11, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly08_2b7g+")
+
+instance SteepestDescentMorseFlow 17 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly07_8h5e" where
+  morseFlowStep _ _ _ = (17, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly07_8h5e")
+
+instance SteepestDescentMorseFlow 15 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly07_8h4d" where
+  morseFlowStep _ _ _ = (15, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly07_8h4d")
+
+instance SteepestDescentMorseFlow 9 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly06_2b6f" where
+  morseFlowStep _ _ _ = (9, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly06_2b6f")
+
+instance SteepestDescentMorseFlow 9 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly06_2b7g+" where
+  morseFlowStep _ _ _ = (9, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly06_2b7g+")
+
+instance SteepestDescentMorseFlow 13 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly05_8h5e" where
+  morseFlowStep _ _ _ = (13, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly05_8h5e")
+
+instance SteepestDescentMorseFlow 13 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly05_8h4d" where
+  morseFlowStep _ _ _ = (13, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly05_8h4d")
+
+instance SteepestDescentMorseFlow 7 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly04_2b6f" where
+  morseFlowStep _ _ _ = (7, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly04_2b6f")
+
+instance SteepestDescentMorseFlow 7 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly04_2b7g+" where
+  morseFlowStep _ _ _ = (7, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly04_2b7g+")
+
+instance SteepestDescentMorseFlow 11 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly03_8h4d" where
+  morseFlowStep _ _ _ = (11, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly03_8h4d")
+
+instance SteepestDescentMorseFlow 11 "Start" "GoteGokigen_IronDefense_Equilibrium_DevPly03_8h3c+" where
+  morseFlowStep _ _ _ = (11, "Start", "GoteGokigen_IronDefense_Equilibrium_DevPly03_8h3c+")
+
+instance SteepestDescentMorseFlow 49 "Start" "GoteGokigen_IronDefense_Equilibrium" where
+  morseFlowStep _ _ _ = (49, "Start", "GoteGokigen_IronDefense_Equilibrium")
+
+instance SteepestDescentMorseFlow 47 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly46_4d3e" where
+  morseFlowStep _ _ _ = (47, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly46_4d3e")
+
+instance SteepestDescentMorseFlow 47 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly46_B*1e" where
+  morseFlowStep _ _ _ = (47, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly46_B*1e")
+
+instance SteepestDescentMorseFlow 47 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly45_5e4e" where
+  morseFlowStep _ _ _ = (47, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly45_5e4e")
+
+instance SteepestDescentMorseFlow 47 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly45_5e3e" where
+  morseFlowStep _ _ _ = (47, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly45_5e3e")
+
+instance SteepestDescentMorseFlow 45 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly43_5c4d+" where
+  morseFlowStep _ _ _ = (45, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly43_5c4d+")
+
+instance SteepestDescentMorseFlow 45 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly43_5c4d" where
+  morseFlowStep _ _ _ = (45, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly43_5c4d")
+
+instance SteepestDescentMorseFlow 43 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly41_5e4e" where
+  morseFlowStep _ _ _ = (43, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly41_5e4e")
+
+instance SteepestDescentMorseFlow 43 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly41_5e3e" where
+  morseFlowStep _ _ _ = (43, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly41_5e3e")
+
+instance SteepestDescentMorseFlow 41 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly40_B*1e" where
+  morseFlowStep _ _ _ = (41, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly40_B*1e")
+
+instance SteepestDescentMorseFlow 41 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly40_B*1g" where
+  morseFlowStep _ _ _ = (41, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly40_B*1g")
+
+instance SteepestDescentMorseFlow 43 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly39_B*1b" where
+  morseFlowStep _ _ _ = (43, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly39_B*1b")
+
+instance SteepestDescentMorseFlow 43 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly39_B*1c" where
+  morseFlowStep _ _ _ = (43, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly39_B*1c")
+
+instance SteepestDescentMorseFlow 39 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly38_8e7e" where
+  morseFlowStep _ _ _ = (39, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly38_8e7e")
+
+instance SteepestDescentMorseFlow 39 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly38_8e8f" where
+  morseFlowStep _ _ _ = (39, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly38_8e8f")
+
+instance SteepestDescentMorseFlow 57 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly37_B*1b" where
+  morseFlowStep _ _ _ = (57, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly37_B*1b")
+
+instance SteepestDescentMorseFlow 57 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly37_B*1c" where
+  morseFlowStep _ _ _ = (57, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly37_B*1c")
+
+instance SteepestDescentMorseFlow 37 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly36_1a1b" where
+  morseFlowStep _ _ _ = (37, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly36_1a1b")
+
+instance SteepestDescentMorseFlow 37 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly36_1a1c" where
+  morseFlowStep _ _ _ = (37, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly36_1a1c")
+
+instance SteepestDescentMorseFlow 55 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly35_B*1b" where
+  morseFlowStep _ _ _ = (55, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly35_B*1b")
+
+instance SteepestDescentMorseFlow 55 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly35_B*1c" where
+  morseFlowStep _ _ _ = (55, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly35_B*1c")
+
+instance SteepestDescentMorseFlow 35 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly34_7d7e" where
+  morseFlowStep _ _ _ = (35, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly34_7d7e")
+
+instance SteepestDescentMorseFlow 35 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly34_B*1e" where
+  morseFlowStep _ _ _ = (35, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly34_B*1e")
+
+instance SteepestDescentMorseFlow 53 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly33_B*1b" where
+  morseFlowStep _ _ _ = (53, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly33_B*1b")
+
+instance SteepestDescentMorseFlow 53 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly33_B*1c" where
+  morseFlowStep _ _ _ = (53, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly33_B*1c")
+
+instance SteepestDescentMorseFlow 33 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly32_8d8f" where
+  morseFlowStep _ _ _ = (33, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly32_8d8f")
+
+instance SteepestDescentMorseFlow 33 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly32_8d8g+" where
+  morseFlowStep _ _ _ = (33, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly32_8d8g+")
+
+instance SteepestDescentMorseFlow 51 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly31_B*1b" where
+  morseFlowStep _ _ _ = (51, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly31_B*1b")
+
+instance SteepestDescentMorseFlow 51 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly31_B*1c" where
+  morseFlowStep _ _ _ = (51, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly31_B*1c")
+
+instance SteepestDescentMorseFlow 31 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly30_8b8f" where
+  morseFlowStep _ _ _ = (31, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly30_8b8f")
+
+instance SteepestDescentMorseFlow 31 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly30_8b8g+" where
+  morseFlowStep _ _ _ = (31, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly30_8b8g+")
+
+instance SteepestDescentMorseFlow 51 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly29_B*1b" where
+  morseFlowStep _ _ _ = (51, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly29_B*1b")
+
+instance SteepestDescentMorseFlow 51 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly29_B*1c" where
+  morseFlowStep _ _ _ = (51, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly29_B*1c")
+
+instance SteepestDescentMorseFlow 29 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly28_8b8f" where
+  morseFlowStep _ _ _ = (29, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly28_8b8f")
+
+instance SteepestDescentMorseFlow 29 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly28_8b8g+" where
+  morseFlowStep _ _ _ = (29, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly28_8b8g+")
+
+instance SteepestDescentMorseFlow 57 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly27_B*1b" where
+  morseFlowStep _ _ _ = (57, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly27_B*1b")
+
+instance SteepestDescentMorseFlow 55 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly27_B*1d" where
+  morseFlowStep _ _ _ = (55, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly27_B*1d")
+
+instance SteepestDescentMorseFlow 27 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly26_8b8f" where
+  morseFlowStep _ _ _ = (27, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly26_8b8f")
+
+instance SteepestDescentMorseFlow 27 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly26_8b8g+" where
+  morseFlowStep _ _ _ = (27, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly26_8b8g+")
+
+instance SteepestDescentMorseFlow 55 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly25_B*1b" where
+  morseFlowStep _ _ _ = (55, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly25_B*1b")
+
+instance SteepestDescentMorseFlow 53 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly25_B*1d" where
+  morseFlowStep _ _ _ = (53, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly25_B*1d")
+
+instance SteepestDescentMorseFlow 25 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly24_8b8f" where
+  morseFlowStep _ _ _ = (25, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly24_8b8f")
+
+instance SteepestDescentMorseFlow 25 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly24_8b8g+" where
+  morseFlowStep _ _ _ = (25, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly24_8b8g+")
+
+instance SteepestDescentMorseFlow 41 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly23_B*1b" where
+  morseFlowStep _ _ _ = (41, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly23_B*1b")
+
+instance SteepestDescentMorseFlow 37 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly23_B*1d" where
+  morseFlowStep _ _ _ = (37, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly23_B*1d")
+
+instance SteepestDescentMorseFlow 37 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly22_4b3c" where
+  morseFlowStep _ _ _ = (37, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly22_4b3c")
+
+instance SteepestDescentMorseFlow 23 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly22_4b4a" where
+  morseFlowStep _ _ _ = (23, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly22_4b4a")
+
+instance SteepestDescentMorseFlow 55 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly21_B*1b" where
+  morseFlowStep _ _ _ = (55, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly21_B*1b")
+
+instance SteepestDescentMorseFlow 55 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly21_B*1d" where
+  morseFlowStep _ _ _ = (55, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly21_B*1d")
+
+instance SteepestDescentMorseFlow 25 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly20_2b3a" where
+  morseFlowStep _ _ _ = (25, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly20_2b3a")
+
+instance SteepestDescentMorseFlow 21 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly20_4b3a" where
+  morseFlowStep _ _ _ = (21, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly20_4b3a")
+
+instance SteepestDescentMorseFlow 49 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly19_B*1b" where
+  morseFlowStep _ _ _ = (49, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly19_B*1b")
+
+instance SteepestDescentMorseFlow 49 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly19_B*1d" where
+  morseFlowStep _ _ _ = (49, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly19_B*1d")
+
+instance SteepestDescentMorseFlow 33 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly18_5a5b" where
+  morseFlowStep _ _ _ = (33, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly18_5a5b")
+
+instance SteepestDescentMorseFlow 19 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly18_8b8f" where
+  morseFlowStep _ _ _ = (19, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly18_8b8f")
+
+instance SteepestDescentMorseFlow 29 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly17_B*1b" where
+  morseFlowStep _ _ _ = (29, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly17_B*1b")
+
+instance SteepestDescentMorseFlow 29 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly17_B*1d" where
+  morseFlowStep _ _ _ = (29, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly17_B*1d")
+
+instance SteepestDescentMorseFlow 27 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly16_5a5b" where
+  morseFlowStep _ _ _ = (27, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly16_5a5b")
+
+instance SteepestDescentMorseFlow 27 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly16_5a6b" where
+  morseFlowStep _ _ _ = (27, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly16_5a6b")
+
+instance SteepestDescentMorseFlow 27 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly15_B*1b" where
+  morseFlowStep _ _ _ = (27, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly15_B*1b")
+
+instance SteepestDescentMorseFlow 27 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly15_B*1d" where
+  morseFlowStep _ _ _ = (27, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly15_B*1d")
+
+instance SteepestDescentMorseFlow 31 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly14_5a4b" where
+  morseFlowStep _ _ _ = (31, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly14_5a4b")
+
+instance SteepestDescentMorseFlow 31 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly14_5a5b" where
+  morseFlowStep _ _ _ = (31, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly14_5a5b")
+
+instance SteepestDescentMorseFlow 19 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly13_8h4d" where
+  morseFlowStep _ _ _ = (19, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly13_8h4d")
+
+instance SteepestDescentMorseFlow 19 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly13_8h3c+" where
+  morseFlowStep _ _ _ = (19, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly13_8h3c+")
+
+instance SteepestDescentMorseFlow 15 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly12_2b5e" where
+  morseFlowStep _ _ _ = (15, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly12_2b5e")
+
+instance SteepestDescentMorseFlow 15 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly12_2b6f" where
+  morseFlowStep _ _ _ = (15, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly12_2b6f")
+
+instance SteepestDescentMorseFlow 13 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly11_8h4d" where
+  morseFlowStep _ _ _ = (13, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly11_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly11_8h3c+" where
+  morseFlowStep _ _ _ = (13, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly11_8h3c+")
+
+instance SteepestDescentMorseFlow 11 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly10_2b5e" where
+  morseFlowStep _ _ _ = (11, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly10_2b5e")
+
+instance SteepestDescentMorseFlow 11 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly10_2b6f" where
+  morseFlowStep _ _ _ = (11, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly10_2b6f")
+
+instance SteepestDescentMorseFlow 15 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly09_8h4d" where
+  morseFlowStep _ _ _ = (15, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly09_8h4d")
+
+instance SteepestDescentMorseFlow 15 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly09_8h3c+" where
+  morseFlowStep _ _ _ = (15, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly09_8h3c+")
+
+instance SteepestDescentMorseFlow 11 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly08_2b5e" where
+  morseFlowStep _ _ _ = (11, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly08_2b5e")
+
+instance SteepestDescentMorseFlow 11 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly08_2b6f" where
+  morseFlowStep _ _ _ = (11, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly08_2b6f")
+
+instance SteepestDescentMorseFlow 13 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly07_8h4d" where
+  morseFlowStep _ _ _ = (13, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly07_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly07_8h3c+" where
+  morseFlowStep _ _ _ = (13, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly07_8h3c+")
+
+instance SteepestDescentMorseFlow 9 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly06_2b5e" where
+  morseFlowStep _ _ _ = (9, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly06_2b5e")
+
+instance SteepestDescentMorseFlow 9 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly06_2b6f" where
+  morseFlowStep _ _ _ = (9, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly06_2b6f")
+
+instance SteepestDescentMorseFlow 13 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly05_8h4d" where
+  morseFlowStep _ _ _ = (13, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly05_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly05_8h3c+" where
+  morseFlowStep _ _ _ = (13, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly05_8h3c+")
+
+instance SteepestDescentMorseFlow 7 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly04_2b5e" where
+  morseFlowStep _ _ _ = (7, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly04_2b5e")
+
+instance SteepestDescentMorseFlow 7 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly04_2b6f" where
+  morseFlowStep _ _ _ = (7, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly04_2b6f")
+
+instance SteepestDescentMorseFlow 11 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly03_8h4d" where
+  morseFlowStep _ _ _ = (11, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly03_8h4d")
+
+instance SteepestDescentMorseFlow 11 "Start" "SenteKakuexchange_IronMino_Equilibrium_DevPly03_8h3c+" where
+  morseFlowStep _ _ _ = (11, "Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly03_8h3c+")
+
+instance SteepestDescentMorseFlow 47 "Start" "SenteKakuexchange_IronMino_Equilibrium" where
+  morseFlowStep _ _ _ = (47, "Start", "SenteKakuexchange_IronMino_Equilibrium")
+
+instance SteepestDescentMorseFlow 19 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly18_2a3c" where
+  morseFlowStep _ _ _ = (19, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly18_2a3c")
+
+instance SteepestDescentMorseFlow 19 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly18_2b6f" where
+  morseFlowStep _ _ _ = (19, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly18_2b6f")
+
+instance SteepestDescentMorseFlow 19 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly17_5h5e" where
+  morseFlowStep _ _ _ = (19, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly17_5h5e")
+
+instance SteepestDescentMorseFlow 19 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly17_5h5c+" where
+  morseFlowStep _ _ _ = (19, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly17_5h5c+")
+
+instance SteepestDescentMorseFlow 17 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly16_2a3c" where
+  morseFlowStep _ _ _ = (17, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly16_2a3c")
+
+instance SteepestDescentMorseFlow 17 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly16_2b6f" where
+  morseFlowStep _ _ _ = (17, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly16_2b6f")
+
+instance SteepestDescentMorseFlow 17 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly15_5h5c+" where
+  morseFlowStep _ _ _ = (17, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly15_5h5c+")
+
+instance SteepestDescentMorseFlow 17 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly15_5h5c" where
+  morseFlowStep _ _ _ = (17, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly15_5h5c")
+
+instance SteepestDescentMorseFlow 15 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly13_5c5b" where
+  morseFlowStep _ _ _ = (15, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly13_5c5b")
+
+instance SteepestDescentMorseFlow 15 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly13_5c6b" where
+  morseFlowStep _ _ _ = (15, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly13_5c6b")
+
+instance SteepestDescentMorseFlow 13 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly12_2b6f" where
+  morseFlowStep _ _ _ = (13, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly12_2b6f")
+
+instance SteepestDescentMorseFlow 13 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly12_2b7g+" where
+  morseFlowStep _ _ _ = (13, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly12_2b7g+")
+
+instance SteepestDescentMorseFlow 13 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly11_5d5c" where
+  morseFlowStep _ _ _ = (13, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly11_5d5c")
+
+instance SteepestDescentMorseFlow 15 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly11_8h4d" where
+  morseFlowStep _ _ _ = (15, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly11_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly10_2b6f" where
+  morseFlowStep _ _ _ = (13, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly10_2b6f")
+
+instance SteepestDescentMorseFlow 13 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly10_2b7g+" where
+  morseFlowStep _ _ _ = (13, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly10_2b7g+")
+
+instance SteepestDescentMorseFlow 13 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly07_8h4d" where
+  morseFlowStep _ _ _ = (13, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly07_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly07_8h3c+" where
+  morseFlowStep _ _ _ = (13, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly07_8h3c+")
+
+instance SteepestDescentMorseFlow 9 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly06_2b5e" where
+  morseFlowStep _ _ _ = (9, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly06_2b5e")
+
+instance SteepestDescentMorseFlow 9 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly06_2b6f" where
+  morseFlowStep _ _ _ = (9, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly06_2b6f")
+
+instance SteepestDescentMorseFlow 13 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly05_8h4d" where
+  morseFlowStep _ _ _ = (13, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly05_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly05_8h3c+" where
+  morseFlowStep _ _ _ = (13, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly05_8h3c+")
+
+instance SteepestDescentMorseFlow 7 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly04_2b5e" where
+  morseFlowStep _ _ _ = (7, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly04_2b5e")
+
+instance SteepestDescentMorseFlow 7 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly04_2b6f" where
+  morseFlowStep _ _ _ = (7, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly04_2b6f")
+
+instance SteepestDescentMorseFlow 11 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly03_8h4d" where
+  morseFlowStep _ _ _ = (11, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly03_8h4d")
+
+instance SteepestDescentMorseFlow 11 "Start" "SenteNakabisha_TokinAssault_Equilibrium_DevPly03_8h3c+" where
+  morseFlowStep _ _ _ = (11, "Start", "SenteNakabisha_TokinAssault_Equilibrium_DevPly03_8h3c+")
+
+instance SteepestDescentMorseFlow 19 "Start" "SenteNakabisha_TokinAssault_Equilibrium" where
+  morseFlowStep _ _ _ = (19, "Start", "SenteNakabisha_TokinAssault_Equilibrium")
+
+instance SteepestDescentMorseFlow 15 "Start" "GoteGokigen_TokinAssault_Equilibrium_DevPly12_5g4h" where
+  morseFlowStep _ _ _ = (15, "Start", "GoteGokigen_TokinAssault_Equilibrium_DevPly12_5g4h")
+
+instance SteepestDescentMorseFlow 15 "Start" "GoteGokigen_TokinAssault_Equilibrium_DevPly12_5g6h" where
+  morseFlowStep _ _ _ = (15, "Start", "GoteGokigen_TokinAssault_Equilibrium_DevPly12_5g6h")
+
+instance SteepestDescentMorseFlow 13 "Start" "GoteGokigen_TokinAssault_Equilibrium_DevPly11_4h5g" where
+  morseFlowStep _ _ _ = (13, "Start", "GoteGokigen_TokinAssault_Equilibrium_DevPly11_4h5g")
+
+instance SteepestDescentMorseFlow 11 "Start" "GoteGokigen_TokinAssault_Equilibrium_DevPly09_5g5f" where
+  morseFlowStep _ _ _ = (11, "Start", "GoteGokigen_TokinAssault_Equilibrium_DevPly09_5g5f")
+
+instance SteepestDescentMorseFlow 12 "Start" "GoteGokigen_TokinAssault_Equilibrium" where
+  morseFlowStep _ _ _ = (12, "Start", "GoteGokigen_TokinAssault_Equilibrium")
+
+instance SteepestDescentMorseFlow 37 "Start" "SujichigaiBishop_Melee_DevPly36_2c2d" where
+  morseFlowStep _ _ _ = (37, "Start", "SujichigaiBishop_Melee_DevPly36_2c2d")
+
+instance SteepestDescentMorseFlow 37 "Start" "SujichigaiBishop_Melee_DevPly36_3c2d" where
+  morseFlowStep _ _ _ = (37, "Start", "SujichigaiBishop_Melee_DevPly36_3c2d")
+
+instance SteepestDescentMorseFlow 37 "Start" "SujichigaiBishop_Melee_DevPly35_2a2b" where
+  morseFlowStep _ _ _ = (37, "Start", "SujichigaiBishop_Melee_DevPly35_2a2b")
+
+instance SteepestDescentMorseFlow 37 "Start" "SujichigaiBishop_Melee_DevPly35_3a4a" where
+  morseFlowStep _ _ _ = (37, "Start", "SujichigaiBishop_Melee_DevPly35_3a4a")
+
+instance SteepestDescentMorseFlow 35 "Start" "SujichigaiBishop_Melee_DevPly34_2i2h" where
+  morseFlowStep _ _ _ = (35, "Start", "SujichigaiBishop_Melee_DevPly34_2i2h")
+
+instance SteepestDescentMorseFlow 35 "Start" "SujichigaiBishop_Melee_DevPly34_3c2b" where
+  morseFlowStep _ _ _ = (35, "Start", "SujichigaiBishop_Melee_DevPly34_3c2b")
+
+instance SteepestDescentMorseFlow 35 "Start" "SujichigaiBishop_Melee_DevPly33_1a1b" where
+  morseFlowStep _ _ _ = (35, "Start", "SujichigaiBishop_Melee_DevPly33_1a1b")
+
+instance SteepestDescentMorseFlow 35 "Start" "SujichigaiBishop_Melee_DevPly33_3a4a" where
+  morseFlowStep _ _ _ = (35, "Start", "SujichigaiBishop_Melee_DevPly33_3a4a")
+
+instance SteepestDescentMorseFlow 33 "Start" "SujichigaiBishop_Melee_DevPly32_1i1h" where
+  morseFlowStep _ _ _ = (33, "Start", "SujichigaiBishop_Melee_DevPly32_1i1h")
+
+instance SteepestDescentMorseFlow 33 "Start" "SujichigaiBishop_Melee_DevPly32_4b3b" where
+  morseFlowStep _ _ _ = (33, "Start", "SujichigaiBishop_Melee_DevPly32_4b3b")
+
+instance SteepestDescentMorseFlow 33 "Start" "SujichigaiBishop_Melee_DevPly31_2a2b" where
+  morseFlowStep _ _ _ = (33, "Start", "SujichigaiBishop_Melee_DevPly31_2a2b")
+
+instance SteepestDescentMorseFlow 33 "Start" "SujichigaiBishop_Melee_DevPly31_3a4a" where
+  morseFlowStep _ _ _ = (33, "Start", "SujichigaiBishop_Melee_DevPly31_3a4a")
+
+instance SteepestDescentMorseFlow 31 "Start" "SujichigaiBishop_Melee_DevPly29_2a3a" where
+  morseFlowStep _ _ _ = (31, "Start", "SujichigaiBishop_Melee_DevPly29_2a3a")
+
+instance SteepestDescentMorseFlow 31 "Start" "SujichigaiBishop_Melee_DevPly29_2a2b" where
+  morseFlowStep _ _ _ = (31, "Start", "SujichigaiBishop_Melee_DevPly29_2a2b")
+
+instance SteepestDescentMorseFlow 29 "Start" "SujichigaiBishop_Melee_DevPly28_1h2h" where
+  morseFlowStep _ _ _ = (29, "Start", "SujichigaiBishop_Melee_DevPly28_1h2h")
+
+instance SteepestDescentMorseFlow 29 "Start" "SujichigaiBishop_Melee_DevPly28_1h1g" where
+  morseFlowStep _ _ _ = (29, "Start", "SujichigaiBishop_Melee_DevPly28_1h1g")
+
+instance SteepestDescentMorseFlow 29 "Start" "SujichigaiBishop_Melee_DevPly27_1a1b" where
+  morseFlowStep _ _ _ = (29, "Start", "SujichigaiBishop_Melee_DevPly27_1a1b")
+
+instance SteepestDescentMorseFlow 29 "Start" "SujichigaiBishop_Melee_DevPly27_2i1g" where
+  morseFlowStep _ _ _ = (29, "Start", "SujichigaiBishop_Melee_DevPly27_2i1g")
+
+instance SteepestDescentMorseFlow 27 "Start" "SujichigaiBishop_Melee_DevPly26_1g2h" where
+  morseFlowStep _ _ _ = (27, "Start", "SujichigaiBishop_Melee_DevPly26_1g2h")
+
+instance SteepestDescentMorseFlow 27 "Start" "SujichigaiBishop_Melee_DevPly26_4b1b" where
+  morseFlowStep _ _ _ = (27, "Start", "SujichigaiBishop_Melee_DevPly26_4b1b")
+
+instance SteepestDescentMorseFlow 27 "Start" "SujichigaiBishop_Melee_DevPly25_1b2b" where
+  morseFlowStep _ _ _ = (27, "Start", "SujichigaiBishop_Melee_DevPly25_1b2b")
+
+instance SteepestDescentMorseFlow 27 "Start" "SujichigaiBishop_Melee_DevPly25_1i1h" where
+  morseFlowStep _ _ _ = (27, "Start", "SujichigaiBishop_Melee_DevPly25_1i1h")
+
+instance SteepestDescentMorseFlow 25 "Start" "SujichigaiBishop_Melee_DevPly24_2e1g" where
+  morseFlowStep _ _ _ = (25, "Start", "SujichigaiBishop_Melee_DevPly24_2e1g")
+
+instance SteepestDescentMorseFlow 25 "Start" "SujichigaiBishop_Melee_DevPly24_2e3g+" where
+  morseFlowStep _ _ _ = (25, "Start", "SujichigaiBishop_Melee_DevPly24_2e3g+")
+
+instance SteepestDescentMorseFlow 25 "Start" "SujichigaiBishop_Melee_DevPly23_1c2b" where
+  morseFlowStep _ _ _ = (25, "Start", "SujichigaiBishop_Melee_DevPly23_1c2b")
+
+instance SteepestDescentMorseFlow 25 "Start" "SujichigaiBishop_Melee_DevPly23_2i1g" where
+  morseFlowStep _ _ _ = (25, "Start", "SujichigaiBishop_Melee_DevPly23_2i1g")
+
+instance SteepestDescentMorseFlow 23 "Start" "SujichigaiBishop_Melee_DevPly22_1a1c" where
+  morseFlowStep _ _ _ = (23, "Start", "SujichigaiBishop_Melee_DevPly22_1a1c")
+
+instance SteepestDescentMorseFlow 23 "Start" "SujichigaiBishop_Melee_DevPly22_2e1g+" where
+  morseFlowStep _ _ _ = (23, "Start", "SujichigaiBishop_Melee_DevPly22_2e1g+")
+
+instance SteepestDescentMorseFlow 23 "Start" "SujichigaiBishop_Melee_DevPly21_2i1g" where
+  morseFlowStep _ _ _ = (23, "Start", "SujichigaiBishop_Melee_DevPly21_2i1g")
+
+instance SteepestDescentMorseFlow 23 "Start" "SujichigaiBishop_Melee_DevPly21_G*1b" where
+  morseFlowStep _ _ _ = (23, "Start", "SujichigaiBishop_Melee_DevPly21_G*1b")
+
+instance SteepestDescentMorseFlow 21 "Start" "SujichigaiBishop_Melee_DevPly20_1a1c" where
+  morseFlowStep _ _ _ = (21, "Start", "SujichigaiBishop_Melee_DevPly20_1a1c")
+
+instance SteepestDescentMorseFlow 21 "Start" "SujichigaiBishop_Melee_DevPly20_1a1d" where
+  morseFlowStep _ _ _ = (21, "Start", "SujichigaiBishop_Melee_DevPly20_1a1d")
+
+instance SteepestDescentMorseFlow 19 "Start" "SujichigaiBishop_Melee_DevPly18_1a1c" where
+  morseFlowStep _ _ _ = (19, "Start", "SujichigaiBishop_Melee_DevPly18_1a1c")
+
+instance SteepestDescentMorseFlow 19 "Start" "SujichigaiBishop_Melee_DevPly18_1a1d" where
+  morseFlowStep _ _ _ = (19, "Start", "SujichigaiBishop_Melee_DevPly18_1a1d")
+
+instance SteepestDescentMorseFlow 19 "Start" "SujichigaiBishop_Melee_DevPly17_2i1g" where
+  morseFlowStep _ _ _ = (19, "Start", "SujichigaiBishop_Melee_DevPly17_2i1g")
+
+instance SteepestDescentMorseFlow 17 "Start" "SujichigaiBishop_Melee_DevPly15_2i1g" where
+  morseFlowStep _ _ _ = (17, "Start", "SujichigaiBishop_Melee_DevPly15_2i1g")
+
+instance SteepestDescentMorseFlow 17 "Start" "SujichigaiBishop_Melee_DevPly15_G*1b" where
+  morseFlowStep _ _ _ = (17, "Start", "SujichigaiBishop_Melee_DevPly15_G*1b")
+
+instance SteepestDescentMorseFlow 15 "Start" "SujichigaiBishop_Melee_DevPly13_2i1g" where
+  morseFlowStep _ _ _ = (15, "Start", "SujichigaiBishop_Melee_DevPly13_2i1g")
+
+instance SteepestDescentMorseFlow 15 "Start" "SujichigaiBishop_Melee_DevPly13_6c5b" where
+  morseFlowStep _ _ _ = (15, "Start", "SujichigaiBishop_Melee_DevPly13_6c5b")
+
+instance SteepestDescentMorseFlow 13 "Start" "SujichigaiBishop_Melee_DevPly12_B*1d" where
+  morseFlowStep _ _ _ = (13, "Start", "SujichigaiBishop_Melee_DevPly12_B*1d")
+
+instance SteepestDescentMorseFlow 13 "Start" "SujichigaiBishop_Melee_DevPly12_B*1f" where
+  morseFlowStep _ _ _ = (13, "Start", "SujichigaiBishop_Melee_DevPly12_B*1f")
+
+instance SteepestDescentMorseFlow 13 "Start" "SujichigaiBishop_Melee_DevPly11_4e5d" where
+  morseFlowStep _ _ _ = (13, "Start", "SujichigaiBishop_Melee_DevPly11_4e5d")
+
+instance SteepestDescentMorseFlow 11 "Start" "SujichigaiBishop_Melee_DevPly10_1a1d" where
+  morseFlowStep _ _ _ = (11, "Start", "SujichigaiBishop_Melee_DevPly10_1a1d")
+
+instance SteepestDescentMorseFlow 11 "Start" "SujichigaiBishop_Melee_DevPly10_1a1e" where
+  morseFlowStep _ _ _ = (11, "Start", "SujichigaiBishop_Melee_DevPly10_1a1e")
+
+instance SteepestDescentMorseFlow 11 "Start" "SujichigaiBishop_Melee_DevPly09_4e3d" where
+  morseFlowStep _ _ _ = (11, "Start", "SujichigaiBishop_Melee_DevPly09_4e3d")
+
+instance SteepestDescentMorseFlow 17 "Start" "SujichigaiBishop_Melee_DevPly09_4e5d" where
+  morseFlowStep _ _ _ = (17, "Start", "SujichigaiBishop_Melee_DevPly09_4e5d")
+
+instance SteepestDescentMorseFlow 11 "Start" "SujichigaiBishop_Melee_DevPly08_B*1e" where
+  morseFlowStep _ _ _ = (11, "Start", "SujichigaiBishop_Melee_DevPly08_B*1e")
+
+instance SteepestDescentMorseFlow 11 "Start" "SujichigaiBishop_Melee_DevPly08_B*1g" where
+  morseFlowStep _ _ _ = (11, "Start", "SujichigaiBishop_Melee_DevPly08_B*1g")
+
+instance SteepestDescentMorseFlow 9 "Start" "SujichigaiBishop_Melee_DevPly07_4e3d" where
+  morseFlowStep _ _ _ = (9, "Start", "SujichigaiBishop_Melee_DevPly07_4e3d")
+
+instance SteepestDescentMorseFlow 21 "Start" "SujichigaiBishop_Melee_DevPly07_4e5d" where
+  morseFlowStep _ _ _ = (21, "Start", "SujichigaiBishop_Melee_DevPly07_4e5d")
+
+instance SteepestDescentMorseFlow 9 "Start" "SujichigaiBishop_Melee_DevPly06_B*1f" where
+  morseFlowStep _ _ _ = (9, "Start", "SujichigaiBishop_Melee_DevPly06_B*1f")
+
+instance SteepestDescentMorseFlow 9 "Start" "SujichigaiBishop_Melee_DevPly06_B*1h" where
+  morseFlowStep _ _ _ = (9, "Start", "SujichigaiBishop_Melee_DevPly06_B*1h")
+
+instance SteepestDescentMorseFlow 25 "Start" "SujichigaiBishop_Melee_DevPly05_B*1b" where
+  morseFlowStep _ _ _ = (25, "Start", "SujichigaiBishop_Melee_DevPly05_B*1b")
+
+instance SteepestDescentMorseFlow 25 "Start" "SujichigaiBishop_Melee_DevPly05_B*1d" where
+  morseFlowStep _ _ _ = (25, "Start", "SujichigaiBishop_Melee_DevPly05_B*1d")
+
+instance SteepestDescentMorseFlow 39 "Start" "SujichigaiBishop_Melee_DevPly04_5a4b" where
+  morseFlowStep _ _ _ = (39, "Start", "SujichigaiBishop_Melee_DevPly04_5a4b")
+
+instance SteepestDescentMorseFlow 49 "Start" "SujichigaiBishop_Melee_DevPly04_5a5b" where
+  morseFlowStep _ _ _ = (49, "Start", "SujichigaiBishop_Melee_DevPly04_5a5b")
+
+instance SteepestDescentMorseFlow 11 "Start" "SujichigaiBishop_Melee_DevPly03_8h4d" where
+  morseFlowStep _ _ _ = (11, "Start", "SujichigaiBishop_Melee_DevPly03_8h4d")
+
+instance SteepestDescentMorseFlow 11 "Start" "SujichigaiBishop_Melee_DevPly03_8h3c+" where
+  morseFlowStep _ _ _ = (11, "Start", "SujichigaiBishop_Melee_DevPly03_8h3c+")
+
+instance SteepestDescentMorseFlow 37 "Start" "SujichigaiBishop_Melee" where
+  morseFlowStep _ _ _ = (37, "Start", "SujichigaiBishop_Melee")
+
+instance SteepestDescentMorseFlow 37 "Start" "Early3eBlitz_Melee_DevPly36_1f1g+" where
+  morseFlowStep _ _ _ = (37, "Start", "Early3eBlitz_Melee_DevPly36_1f1g+")
+
+instance SteepestDescentMorseFlow 37 "Start" "Early3eBlitz_Melee_DevPly36_1f1g" where
+  morseFlowStep _ _ _ = (37, "Start", "Early3eBlitz_Melee_DevPly36_1f1g")
+
+instance SteepestDescentMorseFlow 37 "Start" "Early3eBlitz_Melee_DevPly35_1h1g" where
+  morseFlowStep _ _ _ = (37, "Start", "Early3eBlitz_Melee_DevPly35_1h1g")
+
+instance SteepestDescentMorseFlow 37 "Start" "Early3eBlitz_Melee_DevPly35_2a2b" where
+  morseFlowStep _ _ _ = (37, "Start", "Early3eBlitz_Melee_DevPly35_2a2b")
+
+instance SteepestDescentMorseFlow 35 "Start" "Early3eBlitz_Melee_DevPly34_1e2f" where
+  morseFlowStep _ _ _ = (35, "Start", "Early3eBlitz_Melee_DevPly34_1e2f")
+
+instance SteepestDescentMorseFlow 35 "Start" "Early3eBlitz_Melee_DevPly34_1e2d" where
+  morseFlowStep _ _ _ = (35, "Start", "Early3eBlitz_Melee_DevPly34_1e2d")
+
+instance SteepestDescentMorseFlow 35 "Start" "Early3eBlitz_Melee_DevPly33_1h1g" where
+  morseFlowStep _ _ _ = (35, "Start", "Early3eBlitz_Melee_DevPly33_1h1g")
+
+instance SteepestDescentMorseFlow 35 "Start" "Early3eBlitz_Melee_DevPly33_1h1f" where
+  morseFlowStep _ _ _ = (35, "Start", "Early3eBlitz_Melee_DevPly33_1h1f")
+
+instance SteepestDescentMorseFlow 33 "Start" "Early3eBlitz_Melee_DevPly32_1d2e" where
+  morseFlowStep _ _ _ = (33, "Start", "Early3eBlitz_Melee_DevPly32_1d2e")
+
+instance SteepestDescentMorseFlow 33 "Start" "Early3eBlitz_Melee_DevPly32_1d2c" where
+  morseFlowStep _ _ _ = (33, "Start", "Early3eBlitz_Melee_DevPly32_1d2c")
+
+instance SteepestDescentMorseFlow 33 "Start" "Early3eBlitz_Melee_DevPly31_1h1g" where
+  morseFlowStep _ _ _ = (33, "Start", "Early3eBlitz_Melee_DevPly31_1h1g")
+
+instance SteepestDescentMorseFlow 33 "Start" "Early3eBlitz_Melee_DevPly31_1h1f" where
+  morseFlowStep _ _ _ = (33, "Start", "Early3eBlitz_Melee_DevPly31_1h1f")
+
+instance SteepestDescentMorseFlow 31 "Start" "Early3eBlitz_Melee_DevPly30_3c2b" where
+  morseFlowStep _ _ _ = (31, "Start", "Early3eBlitz_Melee_DevPly30_3c2b")
+
+instance SteepestDescentMorseFlow 31 "Start" "Early3eBlitz_Melee_DevPly30_3c2d" where
+  morseFlowStep _ _ _ = (31, "Start", "Early3eBlitz_Melee_DevPly30_3c2d")
+
+instance SteepestDescentMorseFlow 31 "Start" "Early3eBlitz_Melee_DevPly29_2h3h" where
+  morseFlowStep _ _ _ = (31, "Start", "Early3eBlitz_Melee_DevPly29_2h3h")
+
+instance SteepestDescentMorseFlow 31 "Start" "Early3eBlitz_Melee_DevPly29_2h4h" where
+  morseFlowStep _ _ _ = (31, "Start", "Early3eBlitz_Melee_DevPly29_2h4h")
+
+instance SteepestDescentMorseFlow 29 "Start" "Early3eBlitz_Melee_DevPly28_2b1a" where
+  morseFlowStep _ _ _ = (29, "Start", "Early3eBlitz_Melee_DevPly28_2b1a")
+
+instance SteepestDescentMorseFlow 29 "Start" "Early3eBlitz_Melee_DevPly28_3c4b" where
+  morseFlowStep _ _ _ = (29, "Start", "Early3eBlitz_Melee_DevPly28_3c4b")
+
+instance SteepestDescentMorseFlow 29 "Start" "Early3eBlitz_Melee_DevPly27_2h3h" where
+  morseFlowStep _ _ _ = (29, "Start", "Early3eBlitz_Melee_DevPly27_2h3h")
+
+instance SteepestDescentMorseFlow 29 "Start" "Early3eBlitz_Melee_DevPly27_2h4h" where
+  morseFlowStep _ _ _ = (29, "Start", "Early3eBlitz_Melee_DevPly27_2h4h")
+
+instance SteepestDescentMorseFlow 27 "Start" "Early3eBlitz_Melee_DevPly26_2a1b" where
+  morseFlowStep _ _ _ = (27, "Start", "Early3eBlitz_Melee_DevPly26_2a1b")
+
+instance SteepestDescentMorseFlow 27 "Start" "Early3eBlitz_Melee_DevPly26_2a3b" where
+  morseFlowStep _ _ _ = (27, "Start", "Early3eBlitz_Melee_DevPly26_2a3b")
+
+instance SteepestDescentMorseFlow 27 "Start" "Early3eBlitz_Melee_DevPly25_2h3h" where
+  morseFlowStep _ _ _ = (27, "Start", "Early3eBlitz_Melee_DevPly25_2h3h")
+
+instance SteepestDescentMorseFlow 27 "Start" "Early3eBlitz_Melee_DevPly25_2h4h" where
+  morseFlowStep _ _ _ = (27, "Start", "Early3eBlitz_Melee_DevPly25_2h4h")
+
+instance SteepestDescentMorseFlow 25 "Start" "Early3eBlitz_Melee_DevPly24_2c2d" where
+  morseFlowStep _ _ _ = (25, "Start", "Early3eBlitz_Melee_DevPly24_2c2d")
+
+instance SteepestDescentMorseFlow 25 "Start" "Early3eBlitz_Melee_DevPly24_3c2b" where
+  morseFlowStep _ _ _ = (25, "Start", "Early3eBlitz_Melee_DevPly24_3c2b")
+
+instance SteepestDescentMorseFlow 25 "Start" "Early3eBlitz_Melee_DevPly23_2a1a" where
+  morseFlowStep _ _ _ = (25, "Start", "Early3eBlitz_Melee_DevPly23_2a1a")
+
+instance SteepestDescentMorseFlow 25 "Start" "Early3eBlitz_Melee_DevPly23_2a2b" where
+  morseFlowStep _ _ _ = (25, "Start", "Early3eBlitz_Melee_DevPly23_2a2b")
+
+instance SteepestDescentMorseFlow 23 "Start" "Early3eBlitz_Melee_DevPly22_2c2d" where
+  morseFlowStep _ _ _ = (23, "Start", "Early3eBlitz_Melee_DevPly22_2c2d")
+
+instance SteepestDescentMorseFlow 23 "Start" "Early3eBlitz_Melee_DevPly22_3a2b" where
+  morseFlowStep _ _ _ = (23, "Start", "Early3eBlitz_Melee_DevPly22_3a2b")
+
+instance SteepestDescentMorseFlow 23 "Start" "Early3eBlitz_Melee_DevPly21_2a1a" where
+  morseFlowStep _ _ _ = (23, "Start", "Early3eBlitz_Melee_DevPly21_2a1a")
+
+instance SteepestDescentMorseFlow 23 "Start" "Early3eBlitz_Melee_DevPly21_2a3a" where
+  morseFlowStep _ _ _ = (23, "Start", "Early3eBlitz_Melee_DevPly21_2a3a")
+
+instance SteepestDescentMorseFlow 21 "Start" "Early3eBlitz_Melee_DevPly20_1g2h" where
+  morseFlowStep _ _ _ = (21, "Start", "Early3eBlitz_Melee_DevPly20_1g2h")
+
+instance SteepestDescentMorseFlow 21 "Start" "Early3eBlitz_Melee_DevPly20_1g2g" where
+  morseFlowStep _ _ _ = (21, "Start", "Early3eBlitz_Melee_DevPly20_1g2g")
+
+instance SteepestDescentMorseFlow 21 "Start" "Early3eBlitz_Melee_DevPly19_1a1b" where
+  morseFlowStep _ _ _ = (21, "Start", "Early3eBlitz_Melee_DevPly19_1a1b")
+
+instance SteepestDescentMorseFlow 21 "Start" "Early3eBlitz_Melee_DevPly19_1i1h" where
+  morseFlowStep _ _ _ = (21, "Start", "Early3eBlitz_Melee_DevPly19_1i1h")
+
+instance SteepestDescentMorseFlow 19 "Start" "Early3eBlitz_Melee_DevPly18_2e1g" where
+  morseFlowStep _ _ _ = (19, "Start", "Early3eBlitz_Melee_DevPly18_2e1g")
+
+instance SteepestDescentMorseFlow 19 "Start" "Early3eBlitz_Melee_DevPly18_2e3g+" where
+  morseFlowStep _ _ _ = (19, "Start", "Early3eBlitz_Melee_DevPly18_2e3g+")
+
+instance SteepestDescentMorseFlow 19 "Start" "Early3eBlitz_Melee_DevPly17_1b2b" where
+  morseFlowStep _ _ _ = (19, "Start", "Early3eBlitz_Melee_DevPly17_1b2b")
+
+instance SteepestDescentMorseFlow 19 "Start" "Early3eBlitz_Melee_DevPly17_2i1g" where
+  morseFlowStep _ _ _ = (19, "Start", "Early3eBlitz_Melee_DevPly17_2i1g")
+
+instance SteepestDescentMorseFlow 17 "Start" "Early3eBlitz_Melee_DevPly16_2b1a" where
+  morseFlowStep _ _ _ = (17, "Start", "Early3eBlitz_Melee_DevPly16_2b1a")
+
+instance SteepestDescentMorseFlow 17 "Start" "Early3eBlitz_Melee_DevPly16_2b1c" where
+  morseFlowStep _ _ _ = (17, "Start", "Early3eBlitz_Melee_DevPly16_2b1c")
+
+instance SteepestDescentMorseFlow 17 "Start" "Early3eBlitz_Melee_DevPly15_1c2b" where
+  morseFlowStep _ _ _ = (17, "Start", "Early3eBlitz_Melee_DevPly15_1c2b")
+
+instance SteepestDescentMorseFlow 17 "Start" "Early3eBlitz_Melee_DevPly15_2i1g" where
+  morseFlowStep _ _ _ = (17, "Start", "Early3eBlitz_Melee_DevPly15_2i1g")
+
+instance SteepestDescentMorseFlow 15 "Start" "Early3eBlitz_Melee_DevPly14_1a1c" where
+  morseFlowStep _ _ _ = (15, "Start", "Early3eBlitz_Melee_DevPly14_1a1c")
+
+instance SteepestDescentMorseFlow 15 "Start" "Early3eBlitz_Melee_DevPly14_2b1c" where
+  morseFlowStep _ _ _ = (15, "Start", "Early3eBlitz_Melee_DevPly14_2b1c")
+
+instance SteepestDescentMorseFlow 15 "Start" "Early3eBlitz_Melee_DevPly13_2i1g" where
+  morseFlowStep _ _ _ = (15, "Start", "Early3eBlitz_Melee_DevPly13_2i1g")
+
+instance SteepestDescentMorseFlow 15 "Start" "Early3eBlitz_Melee_DevPly13_8h4d" where
+  morseFlowStep _ _ _ = (15, "Start", "Early3eBlitz_Melee_DevPly13_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "Early3eBlitz_Melee_DevPly12_2b6f" where
+  morseFlowStep _ _ _ = (13, "Start", "Early3eBlitz_Melee_DevPly12_2b6f")
+
+instance SteepestDescentMorseFlow 13 "Start" "Early3eBlitz_Melee_DevPly12_2b7g+" where
+  morseFlowStep _ _ _ = (13, "Start", "Early3eBlitz_Melee_DevPly12_2b7g+")
+
+instance SteepestDescentMorseFlow 13 "Start" "Early3eBlitz_Melee_DevPly11_8h4d" where
+  morseFlowStep _ _ _ = (13, "Start", "Early3eBlitz_Melee_DevPly11_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "Early3eBlitz_Melee_DevPly11_8h2b+" where
+  morseFlowStep _ _ _ = (13, "Start", "Early3eBlitz_Melee_DevPly11_8h2b+")
+
+instance SteepestDescentMorseFlow 11 "Start" "Early3eBlitz_Melee_DevPly10_1a1d" where
+  morseFlowStep _ _ _ = (11, "Start", "Early3eBlitz_Melee_DevPly10_1a1d")
+
+instance SteepestDescentMorseFlow 11 "Start" "Early3eBlitz_Melee_DevPly10_1a1e" where
+  morseFlowStep _ _ _ = (11, "Start", "Early3eBlitz_Melee_DevPly10_1a1e")
+
+instance SteepestDescentMorseFlow 17 "Start" "Early3eBlitz_Melee_DevPly09_8h4d" where
+  morseFlowStep _ _ _ = (17, "Start", "Early3eBlitz_Melee_DevPly09_8h4d")
+
+instance SteepestDescentMorseFlow 17 "Start" "Early3eBlitz_Melee_DevPly09_8h3c+" where
+  morseFlowStep _ _ _ = (17, "Start", "Early3eBlitz_Melee_DevPly09_8h3c+")
+
+instance SteepestDescentMorseFlow 11 "Start" "Early3eBlitz_Melee_DevPly08_2b6f" where
+  morseFlowStep _ _ _ = (11, "Start", "Early3eBlitz_Melee_DevPly08_2b6f")
+
+instance SteepestDescentMorseFlow 11 "Start" "Early3eBlitz_Melee_DevPly08_2b7g+" where
+  morseFlowStep _ _ _ = (11, "Start", "Early3eBlitz_Melee_DevPly08_2b7g+")
+
+instance SteepestDescentMorseFlow 15 "Start" "Early3eBlitz_Melee_DevPly07_8h4d" where
+  morseFlowStep _ _ _ = (15, "Start", "Early3eBlitz_Melee_DevPly07_8h4d")
+
+instance SteepestDescentMorseFlow 15 "Start" "Early3eBlitz_Melee_DevPly07_8h3c+" where
+  morseFlowStep _ _ _ = (15, "Start", "Early3eBlitz_Melee_DevPly07_8h3c+")
+
+instance SteepestDescentMorseFlow 9 "Start" "Early3eBlitz_Melee_DevPly06_2b6f" where
+  morseFlowStep _ _ _ = (9, "Start", "Early3eBlitz_Melee_DevPly06_2b6f")
+
+instance SteepestDescentMorseFlow 9 "Start" "Early3eBlitz_Melee_DevPly06_2b7g+" where
+  morseFlowStep _ _ _ = (9, "Start", "Early3eBlitz_Melee_DevPly06_2b7g+")
+
+instance SteepestDescentMorseFlow 13 "Start" "Early3eBlitz_Melee_DevPly05_8h4d" where
+  morseFlowStep _ _ _ = (13, "Start", "Early3eBlitz_Melee_DevPly05_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "Early3eBlitz_Melee_DevPly05_8h3c+" where
+  morseFlowStep _ _ _ = (13, "Start", "Early3eBlitz_Melee_DevPly05_8h3c+")
+
+instance SteepestDescentMorseFlow 7 "Start" "Early3eBlitz_Melee_DevPly04_2b6f" where
+  morseFlowStep _ _ _ = (7, "Start", "Early3eBlitz_Melee_DevPly04_2b6f")
+
+instance SteepestDescentMorseFlow 7 "Start" "Early3eBlitz_Melee_DevPly04_2b7g+" where
+  morseFlowStep _ _ _ = (7, "Start", "Early3eBlitz_Melee_DevPly04_2b7g+")
+
+instance SteepestDescentMorseFlow 11 "Start" "Early3eBlitz_Melee_DevPly03_8h4d" where
+  morseFlowStep _ _ _ = (11, "Start", "Early3eBlitz_Melee_DevPly03_8h4d")
+
+instance SteepestDescentMorseFlow 11 "Start" "Early3eBlitz_Melee_DevPly03_8h3c+" where
+  morseFlowStep _ _ _ = (11, "Start", "Early3eBlitz_Melee_DevPly03_8h3c+")
+
+instance SteepestDescentMorseFlow 37 "Start" "Early3eBlitz_Melee" where
+  morseFlowStep _ _ _ = (37, "Start", "Early3eBlitz_Melee")
+
+instance SteepestDescentMorseFlow 37 "Start" "EarlyClimbingSilver_Melee_DevPly36_1f1g+" where
+  morseFlowStep _ _ _ = (37, "Start", "EarlyClimbingSilver_Melee_DevPly36_1f1g+")
+
+instance SteepestDescentMorseFlow 37 "Start" "EarlyClimbingSilver_Melee_DevPly36_1f1g" where
+  morseFlowStep _ _ _ = (37, "Start", "EarlyClimbingSilver_Melee_DevPly36_1f1g")
+
+instance SteepestDescentMorseFlow 37 "Start" "EarlyClimbingSilver_Melee_DevPly35_1h1g" where
+  morseFlowStep _ _ _ = (37, "Start", "EarlyClimbingSilver_Melee_DevPly35_1h1g")
+
+instance SteepestDescentMorseFlow 37 "Start" "EarlyClimbingSilver_Melee_DevPly35_2a2b" where
+  morseFlowStep _ _ _ = (37, "Start", "EarlyClimbingSilver_Melee_DevPly35_2a2b")
+
+instance SteepestDescentMorseFlow 35 "Start" "EarlyClimbingSilver_Melee_DevPly34_1e2f" where
+  morseFlowStep _ _ _ = (35, "Start", "EarlyClimbingSilver_Melee_DevPly34_1e2f")
+
+instance SteepestDescentMorseFlow 35 "Start" "EarlyClimbingSilver_Melee_DevPly34_1e2d" where
+  morseFlowStep _ _ _ = (35, "Start", "EarlyClimbingSilver_Melee_DevPly34_1e2d")
+
+instance SteepestDescentMorseFlow 35 "Start" "EarlyClimbingSilver_Melee_DevPly33_1h1g" where
+  morseFlowStep _ _ _ = (35, "Start", "EarlyClimbingSilver_Melee_DevPly33_1h1g")
+
+instance SteepestDescentMorseFlow 35 "Start" "EarlyClimbingSilver_Melee_DevPly33_1h1f" where
+  morseFlowStep _ _ _ = (35, "Start", "EarlyClimbingSilver_Melee_DevPly33_1h1f")
+
+instance SteepestDescentMorseFlow 33 "Start" "EarlyClimbingSilver_Melee_DevPly32_1d2e" where
+  morseFlowStep _ _ _ = (33, "Start", "EarlyClimbingSilver_Melee_DevPly32_1d2e")
+
+instance SteepestDescentMorseFlow 33 "Start" "EarlyClimbingSilver_Melee_DevPly32_1d2c" where
+  morseFlowStep _ _ _ = (33, "Start", "EarlyClimbingSilver_Melee_DevPly32_1d2c")
+
+instance SteepestDescentMorseFlow 33 "Start" "EarlyClimbingSilver_Melee_DevPly31_1h1g" where
+  morseFlowStep _ _ _ = (33, "Start", "EarlyClimbingSilver_Melee_DevPly31_1h1g")
+
+instance SteepestDescentMorseFlow 33 "Start" "EarlyClimbingSilver_Melee_DevPly31_1h1f" where
+  morseFlowStep _ _ _ = (33, "Start", "EarlyClimbingSilver_Melee_DevPly31_1h1f")
+
+instance SteepestDescentMorseFlow 31 "Start" "EarlyClimbingSilver_Melee_DevPly30_3c2b" where
+  morseFlowStep _ _ _ = (31, "Start", "EarlyClimbingSilver_Melee_DevPly30_3c2b")
+
+instance SteepestDescentMorseFlow 31 "Start" "EarlyClimbingSilver_Melee_DevPly30_3c2d" where
+  morseFlowStep _ _ _ = (31, "Start", "EarlyClimbingSilver_Melee_DevPly30_3c2d")
+
+instance SteepestDescentMorseFlow 31 "Start" "EarlyClimbingSilver_Melee_DevPly29_2h2g" where
+  morseFlowStep _ _ _ = (31, "Start", "EarlyClimbingSilver_Melee_DevPly29_2h2g")
+
+instance SteepestDescentMorseFlow 31 "Start" "EarlyClimbingSilver_Melee_DevPly29_2h2f" where
+  morseFlowStep _ _ _ = (31, "Start", "EarlyClimbingSilver_Melee_DevPly29_2h2f")
+
+instance SteepestDescentMorseFlow 29 "Start" "EarlyClimbingSilver_Melee_DevPly28_2b1a" where
+  morseFlowStep _ _ _ = (29, "Start", "EarlyClimbingSilver_Melee_DevPly28_2b1a")
+
+instance SteepestDescentMorseFlow 29 "Start" "EarlyClimbingSilver_Melee_DevPly28_3c4b" where
+  morseFlowStep _ _ _ = (29, "Start", "EarlyClimbingSilver_Melee_DevPly28_3c4b")
+
+instance SteepestDescentMorseFlow 29 "Start" "EarlyClimbingSilver_Melee_DevPly27_2h2g" where
+  morseFlowStep _ _ _ = (29, "Start", "EarlyClimbingSilver_Melee_DevPly27_2h2g")
+
+instance SteepestDescentMorseFlow 29 "Start" "EarlyClimbingSilver_Melee_DevPly27_2h2f" where
+  morseFlowStep _ _ _ = (29, "Start", "EarlyClimbingSilver_Melee_DevPly27_2h2f")
+
+instance SteepestDescentMorseFlow 27 "Start" "EarlyClimbingSilver_Melee_DevPly26_2a1b" where
+  morseFlowStep _ _ _ = (27, "Start", "EarlyClimbingSilver_Melee_DevPly26_2a1b")
+
+instance SteepestDescentMorseFlow 27 "Start" "EarlyClimbingSilver_Melee_DevPly26_2a3b" where
+  morseFlowStep _ _ _ = (27, "Start", "EarlyClimbingSilver_Melee_DevPly26_2a3b")
+
+instance SteepestDescentMorseFlow 27 "Start" "EarlyClimbingSilver_Melee_DevPly25_2h2g" where
+  morseFlowStep _ _ _ = (27, "Start", "EarlyClimbingSilver_Melee_DevPly25_2h2g")
+
+instance SteepestDescentMorseFlow 27 "Start" "EarlyClimbingSilver_Melee_DevPly25_2i1g" where
+  morseFlowStep _ _ _ = (27, "Start", "EarlyClimbingSilver_Melee_DevPly25_2i1g")
+
+instance SteepestDescentMorseFlow 25 "Start" "EarlyClimbingSilver_Melee_DevPly24_2c2d" where
+  morseFlowStep _ _ _ = (25, "Start", "EarlyClimbingSilver_Melee_DevPly24_2c2d")
+
+instance SteepestDescentMorseFlow 25 "Start" "EarlyClimbingSilver_Melee_DevPly24_3c2b" where
+  morseFlowStep _ _ _ = (25, "Start", "EarlyClimbingSilver_Melee_DevPly24_3c2b")
+
+instance SteepestDescentMorseFlow 25 "Start" "EarlyClimbingSilver_Melee_DevPly23_2a1a" where
+  morseFlowStep _ _ _ = (25, "Start", "EarlyClimbingSilver_Melee_DevPly23_2a1a")
+
+instance SteepestDescentMorseFlow 25 "Start" "EarlyClimbingSilver_Melee_DevPly23_2a2b" where
+  morseFlowStep _ _ _ = (25, "Start", "EarlyClimbingSilver_Melee_DevPly23_2a2b")
+
+instance SteepestDescentMorseFlow 23 "Start" "EarlyClimbingSilver_Melee_DevPly22_2c2d" where
+  morseFlowStep _ _ _ = (23, "Start", "EarlyClimbingSilver_Melee_DevPly22_2c2d")
+
+instance SteepestDescentMorseFlow 23 "Start" "EarlyClimbingSilver_Melee_DevPly22_3a2b" where
+  morseFlowStep _ _ _ = (23, "Start", "EarlyClimbingSilver_Melee_DevPly22_3a2b")
+
+instance SteepestDescentMorseFlow 23 "Start" "EarlyClimbingSilver_Melee_DevPly21_2a1a" where
+  morseFlowStep _ _ _ = (23, "Start", "EarlyClimbingSilver_Melee_DevPly21_2a1a")
+
+instance SteepestDescentMorseFlow 23 "Start" "EarlyClimbingSilver_Melee_DevPly21_2a3a" where
+  morseFlowStep _ _ _ = (23, "Start", "EarlyClimbingSilver_Melee_DevPly21_2a3a")
+
+instance SteepestDescentMorseFlow 21 "Start" "EarlyClimbingSilver_Melee_DevPly20_1g2g" where
+  morseFlowStep _ _ _ = (21, "Start", "EarlyClimbingSilver_Melee_DevPly20_1g2g")
+
+instance SteepestDescentMorseFlow 21 "Start" "EarlyClimbingSilver_Melee_DevPly20_3c2b" where
+  morseFlowStep _ _ _ = (21, "Start", "EarlyClimbingSilver_Melee_DevPly20_3c2b")
+
+instance SteepestDescentMorseFlow 21 "Start" "EarlyClimbingSilver_Melee_DevPly19_1a1b" where
+  morseFlowStep _ _ _ = (21, "Start", "EarlyClimbingSilver_Melee_DevPly19_1a1b")
+
+instance SteepestDescentMorseFlow 21 "Start" "EarlyClimbingSilver_Melee_DevPly19_1i1h" where
+  morseFlowStep _ _ _ = (21, "Start", "EarlyClimbingSilver_Melee_DevPly19_1i1h")
+
+instance SteepestDescentMorseFlow 19 "Start" "EarlyClimbingSilver_Melee_DevPly18_2e1g" where
+  morseFlowStep _ _ _ = (19, "Start", "EarlyClimbingSilver_Melee_DevPly18_2e1g")
+
+instance SteepestDescentMorseFlow 19 "Start" "EarlyClimbingSilver_Melee_DevPly18_2e3g+" where
+  morseFlowStep _ _ _ = (19, "Start", "EarlyClimbingSilver_Melee_DevPly18_2e3g+")
+
+instance SteepestDescentMorseFlow 19 "Start" "EarlyClimbingSilver_Melee_DevPly17_1b2b" where
+  morseFlowStep _ _ _ = (19, "Start", "EarlyClimbingSilver_Melee_DevPly17_1b2b")
+
+instance SteepestDescentMorseFlow 19 "Start" "EarlyClimbingSilver_Melee_DevPly17_2i1g" where
+  morseFlowStep _ _ _ = (19, "Start", "EarlyClimbingSilver_Melee_DevPly17_2i1g")
+
+instance SteepestDescentMorseFlow 17 "Start" "EarlyClimbingSilver_Melee_DevPly16_2b1a" where
+  morseFlowStep _ _ _ = (17, "Start", "EarlyClimbingSilver_Melee_DevPly16_2b1a")
+
+instance SteepestDescentMorseFlow 17 "Start" "EarlyClimbingSilver_Melee_DevPly16_2b1c" where
+  morseFlowStep _ _ _ = (17, "Start", "EarlyClimbingSilver_Melee_DevPly16_2b1c")
+
+instance SteepestDescentMorseFlow 17 "Start" "EarlyClimbingSilver_Melee_DevPly15_1c2b" where
+  morseFlowStep _ _ _ = (17, "Start", "EarlyClimbingSilver_Melee_DevPly15_1c2b")
+
+instance SteepestDescentMorseFlow 17 "Start" "EarlyClimbingSilver_Melee_DevPly15_2i1g" where
+  morseFlowStep _ _ _ = (17, "Start", "EarlyClimbingSilver_Melee_DevPly15_2i1g")
+
+instance SteepestDescentMorseFlow 15 "Start" "EarlyClimbingSilver_Melee_DevPly14_1a1c" where
+  morseFlowStep _ _ _ = (15, "Start", "EarlyClimbingSilver_Melee_DevPly14_1a1c")
+
+instance SteepestDescentMorseFlow 15 "Start" "EarlyClimbingSilver_Melee_DevPly14_2b1c" where
+  morseFlowStep _ _ _ = (15, "Start", "EarlyClimbingSilver_Melee_DevPly14_2b1c")
+
+instance SteepestDescentMorseFlow 15 "Start" "EarlyClimbingSilver_Melee_DevPly13_2i1g" where
+  morseFlowStep _ _ _ = (15, "Start", "EarlyClimbingSilver_Melee_DevPly13_2i1g")
+
+instance SteepestDescentMorseFlow 15 "Start" "EarlyClimbingSilver_Melee_DevPly13_8h4d" where
+  morseFlowStep _ _ _ = (15, "Start", "EarlyClimbingSilver_Melee_DevPly13_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "EarlyClimbingSilver_Melee_DevPly12_2b6f" where
+  morseFlowStep _ _ _ = (13, "Start", "EarlyClimbingSilver_Melee_DevPly12_2b6f")
+
+instance SteepestDescentMorseFlow 13 "Start" "EarlyClimbingSilver_Melee_DevPly12_2b7g+" where
+  morseFlowStep _ _ _ = (13, "Start", "EarlyClimbingSilver_Melee_DevPly12_2b7g+")
+
+instance SteepestDescentMorseFlow 13 "Start" "EarlyClimbingSilver_Melee_DevPly11_8h4d" where
+  morseFlowStep _ _ _ = (13, "Start", "EarlyClimbingSilver_Melee_DevPly11_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "EarlyClimbingSilver_Melee_DevPly11_8h2b+" where
+  morseFlowStep _ _ _ = (13, "Start", "EarlyClimbingSilver_Melee_DevPly11_8h2b+")
+
+instance SteepestDescentMorseFlow 11 "Start" "EarlyClimbingSilver_Melee_DevPly10_1a1d" where
+  morseFlowStep _ _ _ = (11, "Start", "EarlyClimbingSilver_Melee_DevPly10_1a1d")
+
+instance SteepestDescentMorseFlow 11 "Start" "EarlyClimbingSilver_Melee_DevPly10_1a1e" where
+  morseFlowStep _ _ _ = (11, "Start", "EarlyClimbingSilver_Melee_DevPly10_1a1e")
+
+instance SteepestDescentMorseFlow 19 "Start" "EarlyClimbingSilver_Melee_DevPly09_8h4d" where
+  morseFlowStep _ _ _ = (19, "Start", "EarlyClimbingSilver_Melee_DevPly09_8h4d")
+
+instance SteepestDescentMorseFlow 19 "Start" "EarlyClimbingSilver_Melee_DevPly09_8h3c+" where
+  morseFlowStep _ _ _ = (19, "Start", "EarlyClimbingSilver_Melee_DevPly09_8h3c+")
+
+instance SteepestDescentMorseFlow 11 "Start" "EarlyClimbingSilver_Melee_DevPly08_2b6f" where
+  morseFlowStep _ _ _ = (11, "Start", "EarlyClimbingSilver_Melee_DevPly08_2b6f")
+
+instance SteepestDescentMorseFlow 11 "Start" "EarlyClimbingSilver_Melee_DevPly08_2b7g+" where
+  morseFlowStep _ _ _ = (11, "Start", "EarlyClimbingSilver_Melee_DevPly08_2b7g+")
+
+instance SteepestDescentMorseFlow 17 "Start" "EarlyClimbingSilver_Melee_DevPly07_8h4d" where
+  morseFlowStep _ _ _ = (17, "Start", "EarlyClimbingSilver_Melee_DevPly07_8h4d")
+
+instance SteepestDescentMorseFlow 17 "Start" "EarlyClimbingSilver_Melee_DevPly07_8h3c+" where
+  morseFlowStep _ _ _ = (17, "Start", "EarlyClimbingSilver_Melee_DevPly07_8h3c+")
+
+instance SteepestDescentMorseFlow 9 "Start" "EarlyClimbingSilver_Melee_DevPly06_2b6f" where
+  morseFlowStep _ _ _ = (9, "Start", "EarlyClimbingSilver_Melee_DevPly06_2b6f")
+
+instance SteepestDescentMorseFlow 9 "Start" "EarlyClimbingSilver_Melee_DevPly06_2b7g+" where
+  morseFlowStep _ _ _ = (9, "Start", "EarlyClimbingSilver_Melee_DevPly06_2b7g+")
+
+instance SteepestDescentMorseFlow 13 "Start" "EarlyClimbingSilver_Melee_DevPly05_8h4d" where
+  morseFlowStep _ _ _ = (13, "Start", "EarlyClimbingSilver_Melee_DevPly05_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "EarlyClimbingSilver_Melee_DevPly05_8h3c+" where
+  morseFlowStep _ _ _ = (13, "Start", "EarlyClimbingSilver_Melee_DevPly05_8h3c+")
+
+instance SteepestDescentMorseFlow 7 "Start" "EarlyClimbingSilver_Melee_DevPly04_2b6f" where
+  morseFlowStep _ _ _ = (7, "Start", "EarlyClimbingSilver_Melee_DevPly04_2b6f")
+
+instance SteepestDescentMorseFlow 7 "Start" "EarlyClimbingSilver_Melee_DevPly04_2b7g+" where
+  morseFlowStep _ _ _ = (7, "Start", "EarlyClimbingSilver_Melee_DevPly04_2b7g+")
+
+instance SteepestDescentMorseFlow 11 "Start" "EarlyClimbingSilver_Melee_DevPly03_8h4d" where
+  morseFlowStep _ _ _ = (11, "Start", "EarlyClimbingSilver_Melee_DevPly03_8h4d")
+
+instance SteepestDescentMorseFlow 11 "Start" "EarlyClimbingSilver_Melee_DevPly03_8h3c+" where
+  morseFlowStep _ _ _ = (11, "Start", "EarlyClimbingSilver_Melee_DevPly03_8h3c+")
+
+instance SteepestDescentMorseFlow 37 "Start" "EarlyClimbingSilver_Melee" where
+  morseFlowStep _ _ _ = (37, "Start", "EarlyClimbingSilver_Melee")
+
+instance SteepestDescentMorseFlow 37 "Start" "MigiShikenBlitz_Melee_DevPly36_3h2i" where
+  morseFlowStep _ _ _ = (37, "Start", "MigiShikenBlitz_Melee_DevPly36_3h2i")
+
+instance SteepestDescentMorseFlow 37 "Start" "MigiShikenBlitz_Melee_DevPly36_3h3i" where
+  morseFlowStep _ _ _ = (37, "Start", "MigiShikenBlitz_Melee_DevPly36_3h3i")
+
+instance SteepestDescentMorseFlow 37 "Start" "MigiShikenBlitz_Melee_DevPly35_3a4a" where
+  morseFlowStep _ _ _ = (37, "Start", "MigiShikenBlitz_Melee_DevPly35_3a4a")
+
+instance SteepestDescentMorseFlow 37 "Start" "MigiShikenBlitz_Melee_DevPly35_3i2h" where
+  morseFlowStep _ _ _ = (37, "Start", "MigiShikenBlitz_Melee_DevPly35_3i2h")
+
+instance SteepestDescentMorseFlow 35 "Start" "MigiShikenBlitz_Melee_DevPly34_3g2h" where
+  morseFlowStep _ _ _ = (35, "Start", "MigiShikenBlitz_Melee_DevPly34_3g2h")
+
+instance SteepestDescentMorseFlow 35 "Start" "MigiShikenBlitz_Melee_DevPly34_3g4h" where
+  morseFlowStep _ _ _ = (35, "Start", "MigiShikenBlitz_Melee_DevPly34_3g4h")
+
+instance SteepestDescentMorseFlow 35 "Start" "MigiShikenBlitz_Melee_DevPly33_2c3c" where
+  morseFlowStep _ _ _ = (35, "Start", "MigiShikenBlitz_Melee_DevPly33_2c3c")
+
+instance SteepestDescentMorseFlow 35 "Start" "MigiShikenBlitz_Melee_DevPly33_2c2d" where
+  morseFlowStep _ _ _ = (35, "Start", "MigiShikenBlitz_Melee_DevPly33_2c2d")
+
+instance SteepestDescentMorseFlow 33 "Start" "MigiShikenBlitz_Melee_DevPly32_4b3c" where
+  morseFlowStep _ _ _ = (33, "Start", "MigiShikenBlitz_Melee_DevPly32_4b3c")
+
+instance SteepestDescentMorseFlow 33 "Start" "MigiShikenBlitz_Melee_DevPly32_4b2d" where
+  morseFlowStep _ _ _ = (33, "Start", "MigiShikenBlitz_Melee_DevPly32_4b2d")
+
+instance SteepestDescentMorseFlow 33 "Start" "MigiShikenBlitz_Melee_DevPly31_3a4a" where
+  morseFlowStep _ _ _ = (33, "Start", "MigiShikenBlitz_Melee_DevPly31_3a4a")
+
+instance SteepestDescentMorseFlow 33 "Start" "MigiShikenBlitz_Melee_DevPly31_3a3b" where
+  morseFlowStep _ _ _ = (33, "Start", "MigiShikenBlitz_Melee_DevPly31_3a3b")
+
+instance SteepestDescentMorseFlow 31 "Start" "MigiShikenBlitz_Melee_DevPly30_N*1a" where
+  morseFlowStep _ _ _ = (31, "Start", "MigiShikenBlitz_Melee_DevPly30_N*1a")
+
+instance SteepestDescentMorseFlow 31 "Start" "MigiShikenBlitz_Melee_DevPly30_N*1b" where
+  morseFlowStep _ _ _ = (31, "Start", "MigiShikenBlitz_Melee_DevPly30_N*1b")
+
+instance SteepestDescentMorseFlow 31 "Start" "MigiShikenBlitz_Melee_DevPly29_3a4a" where
+  morseFlowStep _ _ _ = (31, "Start", "MigiShikenBlitz_Melee_DevPly29_3a4a")
+
+instance SteepestDescentMorseFlow 31 "Start" "MigiShikenBlitz_Melee_DevPly29_3a3b" where
+  morseFlowStep _ _ _ = (31, "Start", "MigiShikenBlitz_Melee_DevPly29_3a3b")
+
+instance SteepestDescentMorseFlow 29 "Start" "MigiShikenBlitz_Melee_DevPly28_4b2d" where
+  morseFlowStep _ _ _ = (29, "Start", "MigiShikenBlitz_Melee_DevPly28_4b2d")
+
+instance SteepestDescentMorseFlow 29 "Start" "MigiShikenBlitz_Melee_DevPly28_4b1e" where
+  morseFlowStep _ _ _ = (29, "Start", "MigiShikenBlitz_Melee_DevPly28_4b1e")
+
+instance SteepestDescentMorseFlow 29 "Start" "MigiShikenBlitz_Melee_DevPly27_3a4a" where
+  morseFlowStep _ _ _ = (29, "Start", "MigiShikenBlitz_Melee_DevPly27_3a4a")
+
+instance SteepestDescentMorseFlow 29 "Start" "MigiShikenBlitz_Melee_DevPly27_3a3b" where
+  morseFlowStep _ _ _ = (29, "Start", "MigiShikenBlitz_Melee_DevPly27_3a3b")
+
+instance SteepestDescentMorseFlow 27 "Start" "MigiShikenBlitz_Melee_DevPly26_3c1a" where
+  morseFlowStep _ _ _ = (27, "Start", "MigiShikenBlitz_Melee_DevPly26_3c1a")
+
+instance SteepestDescentMorseFlow 27 "Start" "MigiShikenBlitz_Melee_DevPly26_3c1e" where
+  morseFlowStep _ _ _ = (27, "Start", "MigiShikenBlitz_Melee_DevPly26_3c1e")
+
+instance SteepestDescentMorseFlow 27 "Start" "MigiShikenBlitz_Melee_DevPly25_2a1a" where
+  morseFlowStep _ _ _ = (27, "Start", "MigiShikenBlitz_Melee_DevPly25_2a1a")
+
+instance SteepestDescentMorseFlow 27 "Start" "MigiShikenBlitz_Melee_DevPly25_2a2b" where
+  morseFlowStep _ _ _ = (27, "Start", "MigiShikenBlitz_Melee_DevPly25_2a2b")
+
+instance SteepestDescentMorseFlow 25 "Start" "MigiShikenBlitz_Melee_DevPly23_2a1a" where
+  morseFlowStep _ _ _ = (25, "Start", "MigiShikenBlitz_Melee_DevPly23_2a1a")
+
+instance SteepestDescentMorseFlow 25 "Start" "MigiShikenBlitz_Melee_DevPly23_2a3a" where
+  morseFlowStep _ _ _ = (25, "Start", "MigiShikenBlitz_Melee_DevPly23_2a3a")
+
+instance SteepestDescentMorseFlow 23 "Start" "MigiShikenBlitz_Melee_DevPly22_2c2d" where
+  morseFlowStep _ _ _ = (23, "Start", "MigiShikenBlitz_Melee_DevPly22_2c2d")
+
+instance SteepestDescentMorseFlow 23 "Start" "MigiShikenBlitz_Melee_DevPly22_3a2b" where
+  morseFlowStep _ _ _ = (23, "Start", "MigiShikenBlitz_Melee_DevPly22_3a2b")
+
+instance SteepestDescentMorseFlow 23 "Start" "MigiShikenBlitz_Melee_DevPly21_2a1a" where
+  morseFlowStep _ _ _ = (23, "Start", "MigiShikenBlitz_Melee_DevPly21_2a1a")
+
+instance SteepestDescentMorseFlow 23 "Start" "MigiShikenBlitz_Melee_DevPly21_2a3a" where
+  morseFlowStep _ _ _ = (23, "Start", "MigiShikenBlitz_Melee_DevPly21_2a3a")
+
+instance SteepestDescentMorseFlow 21 "Start" "MigiShikenBlitz_Melee_DevPly20_1g2h" where
+  morseFlowStep _ _ _ = (21, "Start", "MigiShikenBlitz_Melee_DevPly20_1g2h")
+
+instance SteepestDescentMorseFlow 21 "Start" "MigiShikenBlitz_Melee_DevPly20_3c2b" where
+  morseFlowStep _ _ _ = (21, "Start", "MigiShikenBlitz_Melee_DevPly20_3c2b")
+
+instance SteepestDescentMorseFlow 21 "Start" "MigiShikenBlitz_Melee_DevPly19_1a1b" where
+  morseFlowStep _ _ _ = (21, "Start", "MigiShikenBlitz_Melee_DevPly19_1a1b")
+
+instance SteepestDescentMorseFlow 21 "Start" "MigiShikenBlitz_Melee_DevPly19_1i1h" where
+  morseFlowStep _ _ _ = (21, "Start", "MigiShikenBlitz_Melee_DevPly19_1i1h")
+
+instance SteepestDescentMorseFlow 19 "Start" "MigiShikenBlitz_Melee_DevPly18_2e1g" where
+  morseFlowStep _ _ _ = (19, "Start", "MigiShikenBlitz_Melee_DevPly18_2e1g")
+
+instance SteepestDescentMorseFlow 19 "Start" "MigiShikenBlitz_Melee_DevPly18_2e3g+" where
+  morseFlowStep _ _ _ = (19, "Start", "MigiShikenBlitz_Melee_DevPly18_2e3g+")
+
+instance SteepestDescentMorseFlow 19 "Start" "MigiShikenBlitz_Melee_DevPly17_1b2b" where
+  morseFlowStep _ _ _ = (19, "Start", "MigiShikenBlitz_Melee_DevPly17_1b2b")
+
+instance SteepestDescentMorseFlow 19 "Start" "MigiShikenBlitz_Melee_DevPly17_2i1g" where
+  morseFlowStep _ _ _ = (19, "Start", "MigiShikenBlitz_Melee_DevPly17_2i1g")
+
+instance SteepestDescentMorseFlow 17 "Start" "MigiShikenBlitz_Melee_DevPly16_2b1a" where
+  morseFlowStep _ _ _ = (17, "Start", "MigiShikenBlitz_Melee_DevPly16_2b1a")
+
+instance SteepestDescentMorseFlow 17 "Start" "MigiShikenBlitz_Melee_DevPly16_2b1c" where
+  morseFlowStep _ _ _ = (17, "Start", "MigiShikenBlitz_Melee_DevPly16_2b1c")
+
+instance SteepestDescentMorseFlow 17 "Start" "MigiShikenBlitz_Melee_DevPly15_1c2b" where
+  morseFlowStep _ _ _ = (17, "Start", "MigiShikenBlitz_Melee_DevPly15_1c2b")
+
+instance SteepestDescentMorseFlow 17 "Start" "MigiShikenBlitz_Melee_DevPly15_2i1g" where
+  morseFlowStep _ _ _ = (17, "Start", "MigiShikenBlitz_Melee_DevPly15_2i1g")
+
+instance SteepestDescentMorseFlow 15 "Start" "MigiShikenBlitz_Melee_DevPly14_1a1c" where
+  morseFlowStep _ _ _ = (15, "Start", "MigiShikenBlitz_Melee_DevPly14_1a1c")
+
+instance SteepestDescentMorseFlow 15 "Start" "MigiShikenBlitz_Melee_DevPly14_2b1c" where
+  morseFlowStep _ _ _ = (15, "Start", "MigiShikenBlitz_Melee_DevPly14_2b1c")
+
+instance SteepestDescentMorseFlow 15 "Start" "MigiShikenBlitz_Melee_DevPly13_2i1g" where
+  morseFlowStep _ _ _ = (15, "Start", "MigiShikenBlitz_Melee_DevPly13_2i1g")
+
+instance SteepestDescentMorseFlow 11 "Start" "MigiShikenBlitz_Melee_DevPly10_1a1d" where
+  morseFlowStep _ _ _ = (11, "Start", "MigiShikenBlitz_Melee_DevPly10_1a1d")
+
+instance SteepestDescentMorseFlow 11 "Start" "MigiShikenBlitz_Melee_DevPly10_1a1e" where
+  morseFlowStep _ _ _ = (11, "Start", "MigiShikenBlitz_Melee_DevPly10_1a1e")
+
+instance SteepestDescentMorseFlow 11 "Start" "MigiShikenBlitz_Melee_DevPly09_8h4d" where
+  morseFlowStep _ _ _ = (11, "Start", "MigiShikenBlitz_Melee_DevPly09_8h4d")
+
+instance SteepestDescentMorseFlow 9 "Start" "MigiShikenBlitz_Melee_DevPly07_8h4d" where
+  morseFlowStep _ _ _ = (9, "Start", "MigiShikenBlitz_Melee_DevPly07_8h4d")
+
+instance SteepestDescentMorseFlow 7 "Start" "MigiShikenBlitz_Melee_DevPly05_8h4d" where
+  morseFlowStep _ _ _ = (7, "Start", "MigiShikenBlitz_Melee_DevPly05_8h4d")
+
+instance SteepestDescentMorseFlow 7 "Start" "MigiShikenBlitz_Melee_DevPly04_2b6f" where
+  morseFlowStep _ _ _ = (7, "Start", "MigiShikenBlitz_Melee_DevPly04_2b6f")
+
+instance SteepestDescentMorseFlow 7 "Start" "MigiShikenBlitz_Melee_DevPly04_2b7g+" where
+  morseFlowStep _ _ _ = (7, "Start", "MigiShikenBlitz_Melee_DevPly04_2b7g+")
+
+instance SteepestDescentMorseFlow 11 "Start" "MigiShikenBlitz_Melee_DevPly03_8h4d" where
+  morseFlowStep _ _ _ = (11, "Start", "MigiShikenBlitz_Melee_DevPly03_8h4d")
+
+instance SteepestDescentMorseFlow 11 "Start" "MigiShikenBlitz_Melee_DevPly03_8h3c+" where
+  morseFlowStep _ _ _ = (11, "Start", "MigiShikenBlitz_Melee_DevPly03_8h3c+")
+
+instance SteepestDescentMorseFlow 37 "Start" "MigiShikenBlitz_Melee" where
+  morseFlowStep _ _ _ = (37, "Start", "MigiShikenBlitz_Melee")
+
+instance SteepestDescentMorseFlow 37 "Start" "SodebishaBlitz_Melee_DevPly36_1f1g+" where
+  morseFlowStep _ _ _ = (37, "Start", "SodebishaBlitz_Melee_DevPly36_1f1g+")
+
+instance SteepestDescentMorseFlow 37 "Start" "SodebishaBlitz_Melee_DevPly36_1f1g" where
+  morseFlowStep _ _ _ = (37, "Start", "SodebishaBlitz_Melee_DevPly36_1f1g")
+
+instance SteepestDescentMorseFlow 37 "Start" "SodebishaBlitz_Melee_DevPly35_1h1g" where
+  morseFlowStep _ _ _ = (37, "Start", "SodebishaBlitz_Melee_DevPly35_1h1g")
+
+instance SteepestDescentMorseFlow 37 "Start" "SodebishaBlitz_Melee_DevPly35_2a2b" where
+  morseFlowStep _ _ _ = (37, "Start", "SodebishaBlitz_Melee_DevPly35_2a2b")
+
+instance SteepestDescentMorseFlow 35 "Start" "SodebishaBlitz_Melee_DevPly34_1e2f" where
+  morseFlowStep _ _ _ = (35, "Start", "SodebishaBlitz_Melee_DevPly34_1e2f")
+
+instance SteepestDescentMorseFlow 35 "Start" "SodebishaBlitz_Melee_DevPly34_1e2d" where
+  morseFlowStep _ _ _ = (35, "Start", "SodebishaBlitz_Melee_DevPly34_1e2d")
+
+instance SteepestDescentMorseFlow 35 "Start" "SodebishaBlitz_Melee_DevPly33_1h1g" where
+  morseFlowStep _ _ _ = (35, "Start", "SodebishaBlitz_Melee_DevPly33_1h1g")
+
+instance SteepestDescentMorseFlow 35 "Start" "SodebishaBlitz_Melee_DevPly33_1h1f" where
+  morseFlowStep _ _ _ = (35, "Start", "SodebishaBlitz_Melee_DevPly33_1h1f")
+
+instance SteepestDescentMorseFlow 33 "Start" "SodebishaBlitz_Melee_DevPly32_1d2e" where
+  morseFlowStep _ _ _ = (33, "Start", "SodebishaBlitz_Melee_DevPly32_1d2e")
+
+instance SteepestDescentMorseFlow 33 "Start" "SodebishaBlitz_Melee_DevPly32_1d2c" where
+  morseFlowStep _ _ _ = (33, "Start", "SodebishaBlitz_Melee_DevPly32_1d2c")
+
+instance SteepestDescentMorseFlow 33 "Start" "SodebishaBlitz_Melee_DevPly31_1h1g" where
+  morseFlowStep _ _ _ = (33, "Start", "SodebishaBlitz_Melee_DevPly31_1h1g")
+
+instance SteepestDescentMorseFlow 33 "Start" "SodebishaBlitz_Melee_DevPly31_1h1f" where
+  morseFlowStep _ _ _ = (33, "Start", "SodebishaBlitz_Melee_DevPly31_1h1f")
+
+instance SteepestDescentMorseFlow 31 "Start" "SodebishaBlitz_Melee_DevPly30_3c2b" where
+  morseFlowStep _ _ _ = (31, "Start", "SodebishaBlitz_Melee_DevPly30_3c2b")
+
+instance SteepestDescentMorseFlow 31 "Start" "SodebishaBlitz_Melee_DevPly30_3c2d" where
+  morseFlowStep _ _ _ = (31, "Start", "SodebishaBlitz_Melee_DevPly30_3c2d")
+
+instance SteepestDescentMorseFlow 31 "Start" "SodebishaBlitz_Melee_DevPly29_2i1g" where
+  morseFlowStep _ _ _ = (31, "Start", "SodebishaBlitz_Melee_DevPly29_2i1g")
+
+instance SteepestDescentMorseFlow 31 "Start" "SodebishaBlitz_Melee_DevPly29_3a2a" where
+  morseFlowStep _ _ _ = (31, "Start", "SodebishaBlitz_Melee_DevPly29_3a2a")
+
+instance SteepestDescentMorseFlow 29 "Start" "SodebishaBlitz_Melee_DevPly28_2b1a" where
+  morseFlowStep _ _ _ = (29, "Start", "SodebishaBlitz_Melee_DevPly28_2b1a")
+
+instance SteepestDescentMorseFlow 29 "Start" "SodebishaBlitz_Melee_DevPly28_3c4b" where
+  morseFlowStep _ _ _ = (29, "Start", "SodebishaBlitz_Melee_DevPly28_3c4b")
+
+instance SteepestDescentMorseFlow 29 "Start" "SodebishaBlitz_Melee_DevPly27_2i1g" where
+  morseFlowStep _ _ _ = (29, "Start", "SodebishaBlitz_Melee_DevPly27_2i1g")
+
+instance SteepestDescentMorseFlow 29 "Start" "SodebishaBlitz_Melee_DevPly27_3a2a" where
+  morseFlowStep _ _ _ = (29, "Start", "SodebishaBlitz_Melee_DevPly27_3a2a")
+
+instance SteepestDescentMorseFlow 27 "Start" "SodebishaBlitz_Melee_DevPly26_2a1b" where
+  morseFlowStep _ _ _ = (27, "Start", "SodebishaBlitz_Melee_DevPly26_2a1b")
+
+instance SteepestDescentMorseFlow 27 "Start" "SodebishaBlitz_Melee_DevPly26_2a3b" where
+  morseFlowStep _ _ _ = (27, "Start", "SodebishaBlitz_Melee_DevPly26_2a3b")
+
+instance SteepestDescentMorseFlow 27 "Start" "SodebishaBlitz_Melee_DevPly25_2i1g" where
+  morseFlowStep _ _ _ = (27, "Start", "SodebishaBlitz_Melee_DevPly25_2i1g")
+
+instance SteepestDescentMorseFlow 27 "Start" "SodebishaBlitz_Melee_DevPly25_3a4a" where
+  morseFlowStep _ _ _ = (27, "Start", "SodebishaBlitz_Melee_DevPly25_3a4a")
+
+instance SteepestDescentMorseFlow 25 "Start" "SodebishaBlitz_Melee_DevPly24_2c2d" where
+  morseFlowStep _ _ _ = (25, "Start", "SodebishaBlitz_Melee_DevPly24_2c2d")
+
+instance SteepestDescentMorseFlow 25 "Start" "SodebishaBlitz_Melee_DevPly24_3c2b" where
+  morseFlowStep _ _ _ = (25, "Start", "SodebishaBlitz_Melee_DevPly24_3c2b")
+
+instance SteepestDescentMorseFlow 25 "Start" "SodebishaBlitz_Melee_DevPly23_2a1a" where
+  morseFlowStep _ _ _ = (25, "Start", "SodebishaBlitz_Melee_DevPly23_2a1a")
+
+instance SteepestDescentMorseFlow 25 "Start" "SodebishaBlitz_Melee_DevPly23_2a2b" where
+  morseFlowStep _ _ _ = (25, "Start", "SodebishaBlitz_Melee_DevPly23_2a2b")
+
+instance SteepestDescentMorseFlow 23 "Start" "SodebishaBlitz_Melee_DevPly22_2c2d" where
+  morseFlowStep _ _ _ = (23, "Start", "SodebishaBlitz_Melee_DevPly22_2c2d")
+
+instance SteepestDescentMorseFlow 23 "Start" "SodebishaBlitz_Melee_DevPly22_3a2b" where
+  morseFlowStep _ _ _ = (23, "Start", "SodebishaBlitz_Melee_DevPly22_3a2b")
+
+instance SteepestDescentMorseFlow 23 "Start" "SodebishaBlitz_Melee_DevPly21_2a1a" where
+  morseFlowStep _ _ _ = (23, "Start", "SodebishaBlitz_Melee_DevPly21_2a1a")
+
+instance SteepestDescentMorseFlow 23 "Start" "SodebishaBlitz_Melee_DevPly21_2a3a" where
+  morseFlowStep _ _ _ = (23, "Start", "SodebishaBlitz_Melee_DevPly21_2a3a")
+
+instance SteepestDescentMorseFlow 21 "Start" "SodebishaBlitz_Melee_DevPly20_1g2h" where
+  morseFlowStep _ _ _ = (21, "Start", "SodebishaBlitz_Melee_DevPly20_1g2h")
+
+instance SteepestDescentMorseFlow 21 "Start" "SodebishaBlitz_Melee_DevPly20_3c2b" where
+  morseFlowStep _ _ _ = (21, "Start", "SodebishaBlitz_Melee_DevPly20_3c2b")
+
+instance SteepestDescentMorseFlow 21 "Start" "SodebishaBlitz_Melee_DevPly19_1a1b" where
+  morseFlowStep _ _ _ = (21, "Start", "SodebishaBlitz_Melee_DevPly19_1a1b")
+
+instance SteepestDescentMorseFlow 21 "Start" "SodebishaBlitz_Melee_DevPly19_1i1h" where
+  morseFlowStep _ _ _ = (21, "Start", "SodebishaBlitz_Melee_DevPly19_1i1h")
+
+instance SteepestDescentMorseFlow 19 "Start" "SodebishaBlitz_Melee_DevPly18_2e1g" where
+  morseFlowStep _ _ _ = (19, "Start", "SodebishaBlitz_Melee_DevPly18_2e1g")
+
+instance SteepestDescentMorseFlow 19 "Start" "SodebishaBlitz_Melee_DevPly18_2e3g+" where
+  morseFlowStep _ _ _ = (19, "Start", "SodebishaBlitz_Melee_DevPly18_2e3g+")
+
+instance SteepestDescentMorseFlow 19 "Start" "SodebishaBlitz_Melee_DevPly17_1b2b" where
+  morseFlowStep _ _ _ = (19, "Start", "SodebishaBlitz_Melee_DevPly17_1b2b")
+
+instance SteepestDescentMorseFlow 19 "Start" "SodebishaBlitz_Melee_DevPly17_2i1g" where
+  morseFlowStep _ _ _ = (19, "Start", "SodebishaBlitz_Melee_DevPly17_2i1g")
+
+instance SteepestDescentMorseFlow 17 "Start" "SodebishaBlitz_Melee_DevPly16_2b1a" where
+  morseFlowStep _ _ _ = (17, "Start", "SodebishaBlitz_Melee_DevPly16_2b1a")
+
+instance SteepestDescentMorseFlow 17 "Start" "SodebishaBlitz_Melee_DevPly16_2b1c" where
+  morseFlowStep _ _ _ = (17, "Start", "SodebishaBlitz_Melee_DevPly16_2b1c")
+
+instance SteepestDescentMorseFlow 17 "Start" "SodebishaBlitz_Melee_DevPly15_1c2b" where
+  morseFlowStep _ _ _ = (17, "Start", "SodebishaBlitz_Melee_DevPly15_1c2b")
+
+instance SteepestDescentMorseFlow 17 "Start" "SodebishaBlitz_Melee_DevPly15_2i1g" where
+  morseFlowStep _ _ _ = (17, "Start", "SodebishaBlitz_Melee_DevPly15_2i1g")
+
+instance SteepestDescentMorseFlow 15 "Start" "SodebishaBlitz_Melee_DevPly14_1a1c" where
+  morseFlowStep _ _ _ = (15, "Start", "SodebishaBlitz_Melee_DevPly14_1a1c")
+
+instance SteepestDescentMorseFlow 15 "Start" "SodebishaBlitz_Melee_DevPly14_2b1c" where
+  morseFlowStep _ _ _ = (15, "Start", "SodebishaBlitz_Melee_DevPly14_2b1c")
+
+instance SteepestDescentMorseFlow 15 "Start" "SodebishaBlitz_Melee_DevPly13_2i1g" where
+  morseFlowStep _ _ _ = (15, "Start", "SodebishaBlitz_Melee_DevPly13_2i1g")
+
+instance SteepestDescentMorseFlow 15 "Start" "SodebishaBlitz_Melee_DevPly13_8h4d" where
+  morseFlowStep _ _ _ = (15, "Start", "SodebishaBlitz_Melee_DevPly13_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "SodebishaBlitz_Melee_DevPly12_2b6f" where
+  morseFlowStep _ _ _ = (13, "Start", "SodebishaBlitz_Melee_DevPly12_2b6f")
+
+instance SteepestDescentMorseFlow 13 "Start" "SodebishaBlitz_Melee_DevPly12_2b7g+" where
+  morseFlowStep _ _ _ = (13, "Start", "SodebishaBlitz_Melee_DevPly12_2b7g+")
+
+instance SteepestDescentMorseFlow 13 "Start" "SodebishaBlitz_Melee_DevPly11_8h4d" where
+  morseFlowStep _ _ _ = (13, "Start", "SodebishaBlitz_Melee_DevPly11_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "SodebishaBlitz_Melee_DevPly11_8h2b+" where
+  morseFlowStep _ _ _ = (13, "Start", "SodebishaBlitz_Melee_DevPly11_8h2b+")
+
+instance SteepestDescentMorseFlow 11 "Start" "SodebishaBlitz_Melee_DevPly10_1a1d" where
+  morseFlowStep _ _ _ = (11, "Start", "SodebishaBlitz_Melee_DevPly10_1a1d")
+
+instance SteepestDescentMorseFlow 11 "Start" "SodebishaBlitz_Melee_DevPly10_1a1e" where
+  morseFlowStep _ _ _ = (11, "Start", "SodebishaBlitz_Melee_DevPly10_1a1e")
+
+instance SteepestDescentMorseFlow 15 "Start" "SodebishaBlitz_Melee_DevPly09_8h4d" where
+  morseFlowStep _ _ _ = (15, "Start", "SodebishaBlitz_Melee_DevPly09_8h4d")
+
+instance SteepestDescentMorseFlow 15 "Start" "SodebishaBlitz_Melee_DevPly09_8h3c+" where
+  morseFlowStep _ _ _ = (15, "Start", "SodebishaBlitz_Melee_DevPly09_8h3c+")
+
+instance SteepestDescentMorseFlow 11 "Start" "SodebishaBlitz_Melee_DevPly08_2b6f" where
+  morseFlowStep _ _ _ = (11, "Start", "SodebishaBlitz_Melee_DevPly08_2b6f")
+
+instance SteepestDescentMorseFlow 11 "Start" "SodebishaBlitz_Melee_DevPly08_2b7g+" where
+  morseFlowStep _ _ _ = (11, "Start", "SodebishaBlitz_Melee_DevPly08_2b7g+")
+
+instance SteepestDescentMorseFlow 13 "Start" "SodebishaBlitz_Melee_DevPly07_8h4d" where
+  morseFlowStep _ _ _ = (13, "Start", "SodebishaBlitz_Melee_DevPly07_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "SodebishaBlitz_Melee_DevPly07_8h3c+" where
+  morseFlowStep _ _ _ = (13, "Start", "SodebishaBlitz_Melee_DevPly07_8h3c+")
+
+instance SteepestDescentMorseFlow 9 "Start" "SodebishaBlitz_Melee_DevPly06_2b6f" where
+  morseFlowStep _ _ _ = (9, "Start", "SodebishaBlitz_Melee_DevPly06_2b6f")
+
+instance SteepestDescentMorseFlow 9 "Start" "SodebishaBlitz_Melee_DevPly06_2b7g+" where
+  morseFlowStep _ _ _ = (9, "Start", "SodebishaBlitz_Melee_DevPly06_2b7g+")
+
+instance SteepestDescentMorseFlow 13 "Start" "SodebishaBlitz_Melee_DevPly05_8h4d" where
+  morseFlowStep _ _ _ = (13, "Start", "SodebishaBlitz_Melee_DevPly05_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "SodebishaBlitz_Melee_DevPly05_8h3c+" where
+  morseFlowStep _ _ _ = (13, "Start", "SodebishaBlitz_Melee_DevPly05_8h3c+")
+
+instance SteepestDescentMorseFlow 7 "Start" "SodebishaBlitz_Melee_DevPly04_2b6f" where
+  morseFlowStep _ _ _ = (7, "Start", "SodebishaBlitz_Melee_DevPly04_2b6f")
+
+instance SteepestDescentMorseFlow 7 "Start" "SodebishaBlitz_Melee_DevPly04_2b7g+" where
+  morseFlowStep _ _ _ = (7, "Start", "SodebishaBlitz_Melee_DevPly04_2b7g+")
+
+instance SteepestDescentMorseFlow 11 "Start" "SodebishaBlitz_Melee_DevPly03_8h4d" where
+  morseFlowStep _ _ _ = (11, "Start", "SodebishaBlitz_Melee_DevPly03_8h4d")
+
+instance SteepestDescentMorseFlow 11 "Start" "SodebishaBlitz_Melee_DevPly03_8h3c+" where
+  morseFlowStep _ _ _ = (11, "Start", "SodebishaBlitz_Melee_DevPly03_8h3c+")
+
+instance SteepestDescentMorseFlow 37 "Start" "SodebishaBlitz_Melee" where
+  morseFlowStep _ _ _ = (37, "Start", "SodebishaBlitz_Melee")
+
+instance SteepestDescentMorseFlow 37 "Start" "EarlyIshidaMelee_DevPly36_1f1g+" where
+  morseFlowStep _ _ _ = (37, "Start", "EarlyIshidaMelee_DevPly36_1f1g+")
+
+instance SteepestDescentMorseFlow 37 "Start" "EarlyIshidaMelee_DevPly36_1f1g" where
+  morseFlowStep _ _ _ = (37, "Start", "EarlyIshidaMelee_DevPly36_1f1g")
+
+instance SteepestDescentMorseFlow 37 "Start" "EarlyIshidaMelee_DevPly35_1h1g" where
+  morseFlowStep _ _ _ = (37, "Start", "EarlyIshidaMelee_DevPly35_1h1g")
+
+instance SteepestDescentMorseFlow 37 "Start" "EarlyIshidaMelee_DevPly35_2b1a" where
+  morseFlowStep _ _ _ = (37, "Start", "EarlyIshidaMelee_DevPly35_2b1a")
+
+instance SteepestDescentMorseFlow 35 "Start" "EarlyIshidaMelee_DevPly34_1e2f" where
+  morseFlowStep _ _ _ = (35, "Start", "EarlyIshidaMelee_DevPly34_1e2f")
+
+instance SteepestDescentMorseFlow 35 "Start" "EarlyIshidaMelee_DevPly34_1e2d" where
+  morseFlowStep _ _ _ = (35, "Start", "EarlyIshidaMelee_DevPly34_1e2d")
+
+instance SteepestDescentMorseFlow 35 "Start" "EarlyIshidaMelee_DevPly33_1h1g" where
+  morseFlowStep _ _ _ = (35, "Start", "EarlyIshidaMelee_DevPly33_1h1g")
+
+instance SteepestDescentMorseFlow 35 "Start" "EarlyIshidaMelee_DevPly33_1h1f" where
+  morseFlowStep _ _ _ = (35, "Start", "EarlyIshidaMelee_DevPly33_1h1f")
+
+instance SteepestDescentMorseFlow 33 "Start" "EarlyIshidaMelee_DevPly32_1d2e" where
+  morseFlowStep _ _ _ = (33, "Start", "EarlyIshidaMelee_DevPly32_1d2e")
+
+instance SteepestDescentMorseFlow 33 "Start" "EarlyIshidaMelee_DevPly32_3c2b" where
+  morseFlowStep _ _ _ = (33, "Start", "EarlyIshidaMelee_DevPly32_3c2b")
+
+instance SteepestDescentMorseFlow 33 "Start" "EarlyIshidaMelee_DevPly31_1h1g" where
+  morseFlowStep _ _ _ = (33, "Start", "EarlyIshidaMelee_DevPly31_1h1g")
+
+instance SteepestDescentMorseFlow 33 "Start" "EarlyIshidaMelee_DevPly31_1h1f" where
+  morseFlowStep _ _ _ = (33, "Start", "EarlyIshidaMelee_DevPly31_1h1f")
+
+instance SteepestDescentMorseFlow 31 "Start" "EarlyIshidaMelee_DevPly30_3c6f" where
+  morseFlowStep _ _ _ = (31, "Start", "EarlyIshidaMelee_DevPly30_3c6f")
+
+instance SteepestDescentMorseFlow 31 "Start" "EarlyIshidaMelee_DevPly30_3c7g+" where
+  morseFlowStep _ _ _ = (31, "Start", "EarlyIshidaMelee_DevPly30_3c7g+")
+
+instance SteepestDescentMorseFlow 31 "Start" "EarlyIshidaMelee_DevPly29_2h3h" where
+  morseFlowStep _ _ _ = (31, "Start", "EarlyIshidaMelee_DevPly29_2h3h")
+
+instance SteepestDescentMorseFlow 31 "Start" "EarlyIshidaMelee_DevPly29_2h4h" where
+  morseFlowStep _ _ _ = (31, "Start", "EarlyIshidaMelee_DevPly29_2h4h")
+
+instance SteepestDescentMorseFlow 29 "Start" "EarlyIshidaMelee_DevPly28_2b1a" where
+  morseFlowStep _ _ _ = (29, "Start", "EarlyIshidaMelee_DevPly28_2b1a")
+
+instance SteepestDescentMorseFlow 29 "Start" "EarlyIshidaMelee_DevPly28_2c2d" where
+  morseFlowStep _ _ _ = (29, "Start", "EarlyIshidaMelee_DevPly28_2c2d")
+
+instance SteepestDescentMorseFlow 29 "Start" "EarlyIshidaMelee_DevPly27_2h3h" where
+  morseFlowStep _ _ _ = (29, "Start", "EarlyIshidaMelee_DevPly27_2h3h")
+
+instance SteepestDescentMorseFlow 29 "Start" "EarlyIshidaMelee_DevPly27_2h4h" where
+  morseFlowStep _ _ _ = (29, "Start", "EarlyIshidaMelee_DevPly27_2h4h")
+
+instance SteepestDescentMorseFlow 27 "Start" "EarlyIshidaMelee_DevPly26_2a1b" where
+  morseFlowStep _ _ _ = (27, "Start", "EarlyIshidaMelee_DevPly26_2a1b")
+
+instance SteepestDescentMorseFlow 27 "Start" "EarlyIshidaMelee_DevPly26_2a3b" where
+  morseFlowStep _ _ _ = (27, "Start", "EarlyIshidaMelee_DevPly26_2a3b")
+
+instance SteepestDescentMorseFlow 27 "Start" "EarlyIshidaMelee_DevPly25_2h3h" where
+  morseFlowStep _ _ _ = (27, "Start", "EarlyIshidaMelee_DevPly25_2h3h")
+
+instance SteepestDescentMorseFlow 27 "Start" "EarlyIshidaMelee_DevPly25_2h4h" where
+  morseFlowStep _ _ _ = (27, "Start", "EarlyIshidaMelee_DevPly25_2h4h")
+
+instance SteepestDescentMorseFlow 25 "Start" "EarlyIshidaMelee_DevPly24_2c2d" where
+  morseFlowStep _ _ _ = (25, "Start", "EarlyIshidaMelee_DevPly24_2c2d")
+
+instance SteepestDescentMorseFlow 25 "Start" "EarlyIshidaMelee_DevPly24_3c2b" where
+  morseFlowStep _ _ _ = (25, "Start", "EarlyIshidaMelee_DevPly24_3c2b")
+
+instance SteepestDescentMorseFlow 25 "Start" "EarlyIshidaMelee_DevPly23_2a1a" where
+  morseFlowStep _ _ _ = (25, "Start", "EarlyIshidaMelee_DevPly23_2a1a")
+
+instance SteepestDescentMorseFlow 25 "Start" "EarlyIshidaMelee_DevPly23_2a2b" where
+  morseFlowStep _ _ _ = (25, "Start", "EarlyIshidaMelee_DevPly23_2a2b")
+
+instance SteepestDescentMorseFlow 23 "Start" "EarlyIshidaMelee_DevPly22_2c2d" where
+  morseFlowStep _ _ _ = (23, "Start", "EarlyIshidaMelee_DevPly22_2c2d")
+
+instance SteepestDescentMorseFlow 23 "Start" "EarlyIshidaMelee_DevPly22_3a2b" where
+  morseFlowStep _ _ _ = (23, "Start", "EarlyIshidaMelee_DevPly22_3a2b")
+
+instance SteepestDescentMorseFlow 23 "Start" "EarlyIshidaMelee_DevPly21_2a1a" where
+  morseFlowStep _ _ _ = (23, "Start", "EarlyIshidaMelee_DevPly21_2a1a")
+
+instance SteepestDescentMorseFlow 23 "Start" "EarlyIshidaMelee_DevPly21_2a3a" where
+  morseFlowStep _ _ _ = (23, "Start", "EarlyIshidaMelee_DevPly21_2a3a")
+
+instance SteepestDescentMorseFlow 21 "Start" "EarlyIshidaMelee_DevPly20_1g2h" where
+  morseFlowStep _ _ _ = (21, "Start", "EarlyIshidaMelee_DevPly20_1g2h")
+
+instance SteepestDescentMorseFlow 21 "Start" "EarlyIshidaMelee_DevPly20_1g2g" where
+  morseFlowStep _ _ _ = (21, "Start", "EarlyIshidaMelee_DevPly20_1g2g")
+
+instance SteepestDescentMorseFlow 21 "Start" "EarlyIshidaMelee_DevPly19_1a1b" where
+  morseFlowStep _ _ _ = (21, "Start", "EarlyIshidaMelee_DevPly19_1a1b")
+
+instance SteepestDescentMorseFlow 21 "Start" "EarlyIshidaMelee_DevPly19_1i1h" where
+  morseFlowStep _ _ _ = (21, "Start", "EarlyIshidaMelee_DevPly19_1i1h")
+
+instance SteepestDescentMorseFlow 19 "Start" "EarlyIshidaMelee_DevPly18_2e1g" where
+  morseFlowStep _ _ _ = (19, "Start", "EarlyIshidaMelee_DevPly18_2e1g")
+
+instance SteepestDescentMorseFlow 19 "Start" "EarlyIshidaMelee_DevPly18_2e3g+" where
+  morseFlowStep _ _ _ = (19, "Start", "EarlyIshidaMelee_DevPly18_2e3g+")
+
+instance SteepestDescentMorseFlow 19 "Start" "EarlyIshidaMelee_DevPly17_1b2b" where
+  morseFlowStep _ _ _ = (19, "Start", "EarlyIshidaMelee_DevPly17_1b2b")
+
+instance SteepestDescentMorseFlow 19 "Start" "EarlyIshidaMelee_DevPly17_2i1g" where
+  morseFlowStep _ _ _ = (19, "Start", "EarlyIshidaMelee_DevPly17_2i1g")
+
+instance SteepestDescentMorseFlow 17 "Start" "EarlyIshidaMelee_DevPly16_2b1a" where
+  morseFlowStep _ _ _ = (17, "Start", "EarlyIshidaMelee_DevPly16_2b1a")
+
+instance SteepestDescentMorseFlow 17 "Start" "EarlyIshidaMelee_DevPly16_2b1c" where
+  morseFlowStep _ _ _ = (17, "Start", "EarlyIshidaMelee_DevPly16_2b1c")
+
+instance SteepestDescentMorseFlow 17 "Start" "EarlyIshidaMelee_DevPly15_1c2b" where
+  morseFlowStep _ _ _ = (17, "Start", "EarlyIshidaMelee_DevPly15_1c2b")
+
+instance SteepestDescentMorseFlow 17 "Start" "EarlyIshidaMelee_DevPly15_2i1g" where
+  morseFlowStep _ _ _ = (17, "Start", "EarlyIshidaMelee_DevPly15_2i1g")
+
+instance SteepestDescentMorseFlow 15 "Start" "EarlyIshidaMelee_DevPly14_1a1c" where
+  morseFlowStep _ _ _ = (15, "Start", "EarlyIshidaMelee_DevPly14_1a1c")
+
+instance SteepestDescentMorseFlow 15 "Start" "EarlyIshidaMelee_DevPly14_2b1c" where
+  morseFlowStep _ _ _ = (15, "Start", "EarlyIshidaMelee_DevPly14_2b1c")
+
+instance SteepestDescentMorseFlow 15 "Start" "EarlyIshidaMelee_DevPly13_2i1g" where
+  morseFlowStep _ _ _ = (15, "Start", "EarlyIshidaMelee_DevPly13_2i1g")
+
+instance SteepestDescentMorseFlow 15 "Start" "EarlyIshidaMelee_DevPly13_7f8e" where
+  morseFlowStep _ _ _ = (15, "Start", "EarlyIshidaMelee_DevPly13_7f8e")
+
+instance SteepestDescentMorseFlow 13 "Start" "EarlyIshidaMelee_DevPly12_2b6f" where
+  morseFlowStep _ _ _ = (13, "Start", "EarlyIshidaMelee_DevPly12_2b6f")
+
+instance SteepestDescentMorseFlow 13 "Start" "EarlyIshidaMelee_DevPly12_2b7g+" where
+  morseFlowStep _ _ _ = (13, "Start", "EarlyIshidaMelee_DevPly12_2b7g+")
+
+instance SteepestDescentMorseFlow 13 "Start" "EarlyIshidaMelee_DevPly11_7f8e" where
+  morseFlowStep _ _ _ = (13, "Start", "EarlyIshidaMelee_DevPly11_7f8e")
+
+instance SteepestDescentMorseFlow 13 "Start" "EarlyIshidaMelee_DevPly11_8h4d" where
+  morseFlowStep _ _ _ = (13, "Start", "EarlyIshidaMelee_DevPly11_8h4d")
+
+instance SteepestDescentMorseFlow 11 "Start" "EarlyIshidaMelee_DevPly10_1a1d" where
+  morseFlowStep _ _ _ = (11, "Start", "EarlyIshidaMelee_DevPly10_1a1d")
+
+instance SteepestDescentMorseFlow 11 "Start" "EarlyIshidaMelee_DevPly10_1a1e" where
+  morseFlowStep _ _ _ = (11, "Start", "EarlyIshidaMelee_DevPly10_1a1e")
+
+instance SteepestDescentMorseFlow 11 "Start" "EarlyIshidaMelee_DevPly09_7f8e" where
+  morseFlowStep _ _ _ = (11, "Start", "EarlyIshidaMelee_DevPly09_7f8e")
+
+instance SteepestDescentMorseFlow 11 "Start" "EarlyIshidaMelee_DevPly09_8h4d" where
+  morseFlowStep _ _ _ = (11, "Start", "EarlyIshidaMelee_DevPly09_8h4d")
+
+instance SteepestDescentMorseFlow 9 "Start" "EarlyIshidaMelee_DevPly08_2b6f" where
+  morseFlowStep _ _ _ = (9, "Start", "EarlyIshidaMelee_DevPly08_2b6f")
+
+instance SteepestDescentMorseFlow 9 "Start" "EarlyIshidaMelee_DevPly08_2b7g+" where
+  morseFlowStep _ _ _ = (9, "Start", "EarlyIshidaMelee_DevPly08_2b7g+")
+
+instance SteepestDescentMorseFlow 9 "Start" "EarlyIshidaMelee_DevPly07_7f8e" where
+  morseFlowStep _ _ _ = (9, "Start", "EarlyIshidaMelee_DevPly07_7f8e")
+
+instance SteepestDescentMorseFlow 9 "Start" "EarlyIshidaMelee_DevPly07_8h4d" where
+  morseFlowStep _ _ _ = (9, "Start", "EarlyIshidaMelee_DevPly07_8h4d")
+
+instance SteepestDescentMorseFlow 7 "Start" "EarlyIshidaMelee_DevPly06_2b6f" where
+  morseFlowStep _ _ _ = (7, "Start", "EarlyIshidaMelee_DevPly06_2b6f")
+
+instance SteepestDescentMorseFlow 7 "Start" "EarlyIshidaMelee_DevPly06_2b7g+" where
+  morseFlowStep _ _ _ = (7, "Start", "EarlyIshidaMelee_DevPly06_2b7g+")
+
+instance SteepestDescentMorseFlow 13 "Start" "EarlyIshidaMelee_DevPly05_8h4d" where
+  morseFlowStep _ _ _ = (13, "Start", "EarlyIshidaMelee_DevPly05_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "EarlyIshidaMelee_DevPly05_8h3c+" where
+  morseFlowStep _ _ _ = (13, "Start", "EarlyIshidaMelee_DevPly05_8h3c+")
+
+instance SteepestDescentMorseFlow 7 "Start" "EarlyIshidaMelee_DevPly04_2b6f" where
+  morseFlowStep _ _ _ = (7, "Start", "EarlyIshidaMelee_DevPly04_2b6f")
+
+instance SteepestDescentMorseFlow 7 "Start" "EarlyIshidaMelee_DevPly04_2b7g+" where
+  morseFlowStep _ _ _ = (7, "Start", "EarlyIshidaMelee_DevPly04_2b7g+")
+
+instance SteepestDescentMorseFlow 11 "Start" "EarlyIshidaMelee_DevPly03_8h4d" where
+  morseFlowStep _ _ _ = (11, "Start", "EarlyIshidaMelee_DevPly03_8h4d")
+
+instance SteepestDescentMorseFlow 11 "Start" "EarlyIshidaMelee_DevPly03_8h3c+" where
+  morseFlowStep _ _ _ = (11, "Start", "EarlyIshidaMelee_DevPly03_8h3c+")
+
+instance SteepestDescentMorseFlow 37 "Start" "EarlyIshidaMelee" where
+  morseFlowStep _ _ _ = (37, "Start", "EarlyIshidaMelee")
+
+instance SteepestDescentMorseFlow 37 "Start" "UreshinoMelee_DevPly36_1g1h" where
+  morseFlowStep _ _ _ = (37, "Start", "UreshinoMelee_DevPly36_1g1h")
+
+instance SteepestDescentMorseFlow 37 "Start" "UreshinoMelee_DevPly36_1g2g" where
+  morseFlowStep _ _ _ = (37, "Start", "UreshinoMelee_DevPly36_1g2g")
+
+instance SteepestDescentMorseFlow 37 "Start" "UreshinoMelee_DevPly35_2i2g" where
+  morseFlowStep _ _ _ = (37, "Start", "UreshinoMelee_DevPly35_2i2g")
+
+instance SteepestDescentMorseFlow 37 "Start" "UreshinoMelee_DevPly35_2i2e" where
+  morseFlowStep _ _ _ = (37, "Start", "UreshinoMelee_DevPly35_2i2e")
+
+instance SteepestDescentMorseFlow 35 "Start" "UreshinoMelee_DevPly34_1f2g+" where
+  morseFlowStep _ _ _ = (35, "Start", "UreshinoMelee_DevPly34_1f2g+")
+
+instance SteepestDescentMorseFlow 35 "Start" "UreshinoMelee_DevPly34_1f2g" where
+  morseFlowStep _ _ _ = (35, "Start", "UreshinoMelee_DevPly34_1f2g")
+
+instance SteepestDescentMorseFlow 35 "Start" "UreshinoMelee_DevPly33_2h3h" where
+  morseFlowStep _ _ _ = (35, "Start", "UreshinoMelee_DevPly33_2h3h")
+
+instance SteepestDescentMorseFlow 35 "Start" "UreshinoMelee_DevPly33_2h4h" where
+  morseFlowStep _ _ _ = (35, "Start", "UreshinoMelee_DevPly33_2h4h")
+
+instance SteepestDescentMorseFlow 33 "Start" "UreshinoMelee_DevPly32_1e2f" where
+  morseFlowStep _ _ _ = (33, "Start", "UreshinoMelee_DevPly32_1e2f")
+
+instance SteepestDescentMorseFlow 33 "Start" "UreshinoMelee_DevPly32_3c2e" where
+  morseFlowStep _ _ _ = (33, "Start", "UreshinoMelee_DevPly32_3c2e")
+
+instance SteepestDescentMorseFlow 33 "Start" "UreshinoMelee_DevPly31_2i2f" where
+  morseFlowStep _ _ _ = (33, "Start", "UreshinoMelee_DevPly31_2i2f")
+
+instance SteepestDescentMorseFlow 33 "Start" "UreshinoMelee_DevPly31_2i2e" where
+  morseFlowStep _ _ _ = (33, "Start", "UreshinoMelee_DevPly31_2i2e")
+
+instance SteepestDescentMorseFlow 31 "Start" "UreshinoMelee_DevPly30_3c2e" where
+  morseFlowStep _ _ _ = (31, "Start", "UreshinoMelee_DevPly30_3c2e")
+
+instance SteepestDescentMorseFlow 31 "Start" "UreshinoMelee_DevPly30_3i4i" where
+  morseFlowStep _ _ _ = (31, "Start", "UreshinoMelee_DevPly30_3i4i")
+
+instance SteepestDescentMorseFlow 31 "Start" "UreshinoMelee_DevPly29_2h3h" where
+  morseFlowStep _ _ _ = (31, "Start", "UreshinoMelee_DevPly29_2h3h")
+
+instance SteepestDescentMorseFlow 31 "Start" "UreshinoMelee_DevPly29_2h4h" where
+  morseFlowStep _ _ _ = (31, "Start", "UreshinoMelee_DevPly29_2h4h")
+
+instance SteepestDescentMorseFlow 29 "Start" "UreshinoMelee_DevPly28_3c2e" where
+  morseFlowStep _ _ _ = (29, "Start", "UreshinoMelee_DevPly28_3c2e")
+
+instance SteepestDescentMorseFlow 29 "Start" "UreshinoMelee_DevPly28_3i2i" where
+  morseFlowStep _ _ _ = (29, "Start", "UreshinoMelee_DevPly28_3i2i")
+
+instance SteepestDescentMorseFlow 29 "Start" "UreshinoMelee_DevPly27_2a2b" where
+  morseFlowStep _ _ _ = (29, "Start", "UreshinoMelee_DevPly27_2a2b")
+
+instance SteepestDescentMorseFlow 29 "Start" "UreshinoMelee_DevPly27_2h1h" where
+  morseFlowStep _ _ _ = (29, "Start", "UreshinoMelee_DevPly27_2h1h")
+
+instance SteepestDescentMorseFlow 27 "Start" "UreshinoMelee_DevPly26_3b2a" where
+  morseFlowStep _ _ _ = (27, "Start", "UreshinoMelee_DevPly26_3b2a")
+
+instance SteepestDescentMorseFlow 27 "Start" "UreshinoMelee_DevPly26_3c2e" where
+  morseFlowStep _ _ _ = (27, "Start", "UreshinoMelee_DevPly26_3c2e")
+
+instance SteepestDescentMorseFlow 27 "Start" "UreshinoMelee_DevPly25_2b3a" where
+  morseFlowStep _ _ _ = (27, "Start", "UreshinoMelee_DevPly25_2b3a")
+
+instance SteepestDescentMorseFlow 27 "Start" "UreshinoMelee_DevPly25_2b1b" where
+  morseFlowStep _ _ _ = (27, "Start", "UreshinoMelee_DevPly25_2b1b")
+
+instance SteepestDescentMorseFlow 25 "Start" "UreshinoMelee_DevPly24_3c2e" where
+  morseFlowStep _ _ _ = (25, "Start", "UreshinoMelee_DevPly24_3c2e")
+
+instance SteepestDescentMorseFlow 25 "Start" "UreshinoMelee_DevPly24_3i2i" where
+  morseFlowStep _ _ _ = (25, "Start", "UreshinoMelee_DevPly24_3i2i")
+
+instance SteepestDescentMorseFlow 25 "Start" "UreshinoMelee_DevPly23_2c1b" where
+  morseFlowStep _ _ _ = (25, "Start", "UreshinoMelee_DevPly23_2c1b")
+
+instance SteepestDescentMorseFlow 25 "Start" "UreshinoMelee_DevPly23_2c3b" where
+  morseFlowStep _ _ _ = (25, "Start", "UreshinoMelee_DevPly23_2c3b")
+
+instance SteepestDescentMorseFlow 23 "Start" "UreshinoMelee_DevPly22_2i2h" where
+  morseFlowStep _ _ _ = (23, "Start", "UreshinoMelee_DevPly22_2i2h")
+
+instance SteepestDescentMorseFlow 23 "Start" "UreshinoMelee_DevPly22_3c2e" where
+  morseFlowStep _ _ _ = (23, "Start", "UreshinoMelee_DevPly22_3c2e")
+
+instance SteepestDescentMorseFlow 23 "Start" "UreshinoMelee_DevPly21_2h1h" where
+  morseFlowStep _ _ _ = (23, "Start", "UreshinoMelee_DevPly21_2h1h")
+
+instance SteepestDescentMorseFlow 23 "Start" "UreshinoMelee_DevPly21_2h4h" where
+  morseFlowStep _ _ _ = (23, "Start", "UreshinoMelee_DevPly21_2h4h")
+
+instance SteepestDescentMorseFlow 21 "Start" "UreshinoMelee_DevPly20_1i1h" where
+  morseFlowStep _ _ _ = (21, "Start", "UreshinoMelee_DevPly20_1i1h")
+
+instance SteepestDescentMorseFlow 21 "Start" "UreshinoMelee_DevPly20_3c2e" where
+  morseFlowStep _ _ _ = (21, "Start", "UreshinoMelee_DevPly20_3c2e")
+
+instance SteepestDescentMorseFlow 21 "Start" "UreshinoMelee_DevPly19_2h1h" where
+  morseFlowStep _ _ _ = (21, "Start", "UreshinoMelee_DevPly19_2h1h")
+
+instance SteepestDescentMorseFlow 21 "Start" "UreshinoMelee_DevPly19_2i1g" where
+  morseFlowStep _ _ _ = (21, "Start", "UreshinoMelee_DevPly19_2i1g")
+
+instance SteepestDescentMorseFlow 19 "Start" "UreshinoMelee_DevPly18_1h2i" where
+  morseFlowStep _ _ _ = (19, "Start", "UreshinoMelee_DevPly18_1h2i")
+
+instance SteepestDescentMorseFlow 19 "Start" "UreshinoMelee_DevPly18_1h2h" where
+  morseFlowStep _ _ _ = (19, "Start", "UreshinoMelee_DevPly18_1h2h")
+
+instance SteepestDescentMorseFlow 19 "Start" "UreshinoMelee_DevPly17_2h1h" where
+  morseFlowStep _ _ _ = (19, "Start", "UreshinoMelee_DevPly17_2h1h")
+
+instance SteepestDescentMorseFlow 19 "Start" "UreshinoMelee_DevPly17_2i1g" where
+  morseFlowStep _ _ _ = (19, "Start", "UreshinoMelee_DevPly17_2i1g")
+
+instance SteepestDescentMorseFlow 17 "Start" "UreshinoMelee_DevPly16_1g2h" where
+  morseFlowStep _ _ _ = (17, "Start", "UreshinoMelee_DevPly16_1g2h")
+
+instance SteepestDescentMorseFlow 17 "Start" "UreshinoMelee_DevPly16_1g2g" where
+  morseFlowStep _ _ _ = (17, "Start", "UreshinoMelee_DevPly16_1g2g")
+
+instance SteepestDescentMorseFlow 17 "Start" "UreshinoMelee_DevPly15_1i1g" where
+  morseFlowStep _ _ _ = (17, "Start", "UreshinoMelee_DevPly15_1i1g")
+
+instance SteepestDescentMorseFlow 17 "Start" "UreshinoMelee_DevPly15_2h1h" where
+  morseFlowStep _ _ _ = (17, "Start", "UreshinoMelee_DevPly15_2h1h")
+
+instance SteepestDescentMorseFlow 15 "Start" "UreshinoMelee_DevPly14_3c2e" where
+  morseFlowStep _ _ _ = (15, "Start", "UreshinoMelee_DevPly14_3c2e")
+
+instance SteepestDescentMorseFlow 25 "Start" "UreshinoMelee_DevPly14_5a4b" where
+  morseFlowStep _ _ _ = (25, "Start", "UreshinoMelee_DevPly14_5a4b")
+
+instance SteepestDescentMorseFlow 15 "Start" "UreshinoMelee_DevPly13_1i1g" where
+  morseFlowStep _ _ _ = (15, "Start", "UreshinoMelee_DevPly13_1i1g")
+
+instance SteepestDescentMorseFlow 15 "Start" "UreshinoMelee_DevPly13_1i1f" where
+  morseFlowStep _ _ _ = (15, "Start", "UreshinoMelee_DevPly13_1i1f")
+
+instance SteepestDescentMorseFlow 23 "Start" "UreshinoMelee_DevPly12_5a5b" where
+  morseFlowStep _ _ _ = (23, "Start", "UreshinoMelee_DevPly12_5a5b")
+
+instance SteepestDescentMorseFlow 121 "Start" "UreshinoMelee_DevPly12_5a6b" where
+  morseFlowStep _ _ _ = (121, "Start", "UreshinoMelee_DevPly12_5a6b")
+
+instance SteepestDescentMorseFlow 13 "Start" "UreshinoMelee_DevPly11_1i1g" where
+  morseFlowStep _ _ _ = (13, "Start", "UreshinoMelee_DevPly11_1i1g")
+
+instance SteepestDescentMorseFlow 13 "Start" "UreshinoMelee_DevPly11_1i1f" where
+  morseFlowStep _ _ _ = (13, "Start", "UreshinoMelee_DevPly11_1i1f")
+
+instance SteepestDescentMorseFlow 11 "Start" "UreshinoMelee_DevPly10_1a1b" where
+  morseFlowStep _ _ _ = (11, "Start", "UreshinoMelee_DevPly10_1a1b")
+
+instance SteepestDescentMorseFlow 11 "Start" "UreshinoMelee_DevPly10_1a1c" where
+  morseFlowStep _ _ _ = (11, "Start", "UreshinoMelee_DevPly10_1a1c")
+
+instance SteepestDescentMorseFlow 11 "Start" "UreshinoMelee_DevPly09_1f1e" where
+  morseFlowStep _ _ _ = (11, "Start", "UreshinoMelee_DevPly09_1f1e")
+
+instance SteepestDescentMorseFlow 17 "Start" "UreshinoMelee_DevPly09_8h4d" where
+  morseFlowStep _ _ _ = (17, "Start", "UreshinoMelee_DevPly09_8h4d")
+
+instance SteepestDescentMorseFlow 11 "Start" "UreshinoMelee_DevPly08_2b6f" where
+  morseFlowStep _ _ _ = (11, "Start", "UreshinoMelee_DevPly08_2b6f")
+
+instance SteepestDescentMorseFlow 11 "Start" "UreshinoMelee_DevPly08_2b7g+" where
+  morseFlowStep _ _ _ = (11, "Start", "UreshinoMelee_DevPly08_2b7g+")
+
+instance SteepestDescentMorseFlow 15 "Start" "UreshinoMelee_DevPly07_8h4d" where
+  morseFlowStep _ _ _ = (15, "Start", "UreshinoMelee_DevPly07_8h4d")
+
+instance SteepestDescentMorseFlow 15 "Start" "UreshinoMelee_DevPly07_8h3c+" where
+  morseFlowStep _ _ _ = (15, "Start", "UreshinoMelee_DevPly07_8h3c+")
+
+instance SteepestDescentMorseFlow 9 "Start" "UreshinoMelee_DevPly06_2b6f" where
+  morseFlowStep _ _ _ = (9, "Start", "UreshinoMelee_DevPly06_2b6f")
+
+instance SteepestDescentMorseFlow 9 "Start" "UreshinoMelee_DevPly06_2b7g+" where
+  morseFlowStep _ _ _ = (9, "Start", "UreshinoMelee_DevPly06_2b7g+")
+
+instance SteepestDescentMorseFlow 13 "Start" "UreshinoMelee_DevPly05_8h4d" where
+  morseFlowStep _ _ _ = (13, "Start", "UreshinoMelee_DevPly05_8h4d")
+
+instance SteepestDescentMorseFlow 13 "Start" "UreshinoMelee_DevPly05_8h3c+" where
+  morseFlowStep _ _ _ = (13, "Start", "UreshinoMelee_DevPly05_8h3c+")
+
+instance SteepestDescentMorseFlow 7 "Start" "UreshinoMelee_DevPly04_2b6f" where
+  morseFlowStep _ _ _ = (7, "Start", "UreshinoMelee_DevPly04_2b6f")
+
+instance SteepestDescentMorseFlow 7 "Start" "UreshinoMelee_DevPly04_2b7g+" where
+  morseFlowStep _ _ _ = (7, "Start", "UreshinoMelee_DevPly04_2b7g+")
+
+instance SteepestDescentMorseFlow 37 "Start" "UreshinoMelee" where
+  morseFlowStep _ _ _ = (37, "Start", "UreshinoMelee")
+
+
+-- ============================================================================
+-- 4. 512手型推論モース勾配流チェーン GADT (Steepest Descent Morse Flow Chain)
+-- ============================================================================
+
+-- | コンパイル時型推論により、各遷移が最急降下流であり、
+--   かつ累積手数が 512 手以内であることを GHC が自動証明する GADT
+data MorseGradientChain (currentPly :: Nat) (nodes :: [Symbol]) where
+  NilGradient   :: MorseGradientChain 0 '[]
+  StartGradient :: KnownSymbol start => Proxy start -> MorseGradientChain 0 '[start]
+  StepGradient  :: ( KnownSymbol to
+                   , KnownSymbol from
+                   , ValidTransition from to ~ 'True
+                   , WithinMaxMorseFlow (currentPly + 1) ~ 'True
+                   ) => MorseGradientChain currentPly (from : rest)
+                     -> Proxy to
+                     -> MorseGradientChain (currentPly + 1) (to : from : rest)
+
+-- | 後方互換用：静的な型安全 MorseChain GADT
 data MorseChain (nodes :: [Symbol]) where
   Nil     :: MorseChain '[]
   StartAt :: KnownSymbol start => Proxy start -> MorseChain '[start]
@@ -2606,8 +6752,14 @@ data MorseChain (nodes :: [Symbol]) where
                -> Proxy to
                -> MorseChain (to : from : rest)
 
+-- | 512手型推論チェーンの検証関数（証明項）
+verifyMorseGradientFlow512 :: MorseGradientChain ply nodes -> Integer
+verifyMorseGradientFlow512 NilGradient = 0
+verifyMorseGradientFlow512 (StartGradient _) = 0
+verifyMorseGradientFlow512 (StepGradient rest _) = 1 + verifyMorseGradientFlow512 rest
+
 -- ============================================================================
--- 4. 実行時（Runtime）高速展開用のV-Path定義マップ
+-- 5. 実行時（Runtime）高速展開用のV-Path定義マップ
 -- ============================================================================
 vpathLookup :: String -> String -> Maybe [String]
 vpathLookup from to = Map.lookup (from, to) runtimePaths
@@ -2615,17 +6767,17 @@ vpathLookup from to = Map.lookup (from, to) runtimePaths
 runtimePaths :: Map.Map (String, String) [String]
 runtimePaths = Map.fromList
   [
-    (("Start", "Aigakari_StratifiedEquilibrium_DevPly35_2f6f"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","4b3c","6h7h","7b6c","3h2g","8b8d","2h2f","8d7d","2f2e","7d8d","2e2f","8d7d","2f6f","7d8d","6f6c+","P*6f","6c6a","8d5d","6a4a","3b4a"]),
-    (("Start", "Aigakari_StratifiedEquilibrium_DevPly35_2f2d"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","4b3c","6h7h","7b6c","3h2g","8b8d","2h2f","8d7d","2f2e","7d8d","2e2f","8d7d","2f2d","3c2d","8h2b+","7d8d","2b3b","4a3b","2g1f","8d5d"]),
+    (("Start", "Aigakari_StratifiedEquilibrium_DevPly35_2f6f"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","4b3c","6h7h","7b6c","3h2g","8b8d","2h2f","8d7d","2f2e","7d8d","2e2f","8d7d","2f6f","7d8d","6f6c+","P*6f","6c6a","8d5d","6a4a","3b4a","8h6f","4c4d","S*2d","2c2d","S*4b","4a4b","G*2c","3c2c","G*1d","1c1d","2g1f","S*5f","5g5f","S*7g","6f7g","5d8d","1f1e","1d1e","S*1b","1a1b","S*1d","1b1d","5f5e","G*6h","5h6h","G*7i","6i7i","S*6i","7i6i","5c5d","S*1b","2c1b","P*1b"]),
+    (("Start", "Aigakari_StratifiedEquilibrium_DevPly35_2f2d"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","4b3c","6h7h","7b6c","3h2g","8b8d","2h2f","8d7d","2f2e","7d8d","2e2f","8d7d","2f2d","3c2d","8h2b+","7d8d","2b3b","4a3b","2g1f","8d5d","1f1e","2d1e","1g1f","1e1d","1f1e","1d2d","S*2e","2d2e","2i1g","2e1e","1g2e","1e2e","S*1d","1c1d","1i1d","5d8d","1d1a+","8d5d","1a2a","5d8d","P*2f","2e2f","P*2g","2f2g","L*2h","2g2h","4g4f","8d5d","3g3f","5d8d","7f7e","8d5d","5h4g","5d8d","B*3g","2h1g","N*2i","1g1f","2i1g","1f1g","3f3e","8d5d","5g5f","5d8d","5f5e","3d3e","8i7g","8d3d","3g1e","3d8d","4g3f","3e3f","7g6e","8d3d","6e5c+","3d8d","5c6c","8d3d","P*1h","1g1h","S*1i","1h1i","5e5d","3d5d","6c7c","8a7c","P*1g","5d3d","4f4e","3d5d","6i5i","5d5i+","1e5i","N*6f","6g6f","N*8f","8g8f","S*6g","7h6g","N*5e","6g5f","S*4g","5f5e","4g5f+","5e5f","S*4g","5f4g","3f3g+","5i3g","S*2h","3g2h","1i2h","S*3g","2h2i","S*3h","2i1h","3h2g","1h2g","3g3f","2g1g","R*1b"]),
     (("Start", "Aigakari_StratifiedEquilibrium_DevPly33_2e3e"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","4b3c","6h7h","7b6c","3h2g","8b8d","2h2f","8d7d","2f2e","7d8d","2e3e","P*6f","8h6f","4c4d","6f8d","3d3e","R*3b"]),
     (("Start", "Aigakari_StratifiedEquilibrium_DevPly33_2e5e"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","4b3c","6h7h","7b6c","3h2g","8b8d","2h2f","8d7d","2f2e","7d8d","2e5e","8d5d","5e5d","P*6f","R*3b"]),
-    (("Start", "Aigakari_StratifiedEquilibrium_DevPly31_2f6f"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","4b3c","6h7h","7b6c","3h2g","8b8d","2h2f","8d7d","2f6f","7d8d","6f6c+","P*6f","6c6a","8d5d","6a4a","3b4a"]),
-    (("Start", "Aigakari_StratifiedEquilibrium_DevPly31_2f2d"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","4b3c","6h7h","7b6c","3h2g","8b8d","2h2f","8d7d","2f2d","3c2d","8h2b+","7d8d","2b3b","4a3b","2g1f","8d5d"]),
-    (("Start", "Aigakari_StratifiedEquilibrium_DevPly29_6g6f"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","4b3c","6h7h","7b6c","3h2g","8b8d","6g6f","8d5d","6f6e","P*6f","8h6f","4c4d","S*2d","2c2d"]),
-    (("Start", "Aigakari_StratifiedEquilibrium_DevPly29_7h7g"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","4b3c","6h7h","7b6c","3h2g","8b8d","7h7g","8d5d","S*4d","4c4d","2g1f","5d8d","2h2f","8d5d"]),
-    (("Start", "Aigakari_StratifiedEquilibrium_DevPly27_2h2d"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","4b3c","6h7h","7b6c","2h2d","3c2d","8h2b+","8b8d","2b3b","4a3b","S*1e","2d1e"]),
+    (("Start", "Aigakari_StratifiedEquilibrium_DevPly31_2f6f"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","4b3c","6h7h","7b6c","3h2g","8b8d","2h2f","8d7d","2f6f","7d8d","6f6c+","P*6f","6c6a","8d5d","6a4a","3b4a","8h6f","4c4d","S*2d","2c2d","S*4b","4a4b","G*2c","3c2c","G*1d","1c1d","2g1f","S*5f","5g5f","S*7g","6f7g","5d8d","1f1e","1d1e","S*1b","1a1b","S*1d","1b1d","5f5e","G*6h","5h6h","G*7i","6i7i","S*6i","7i6i","5c5d","S*1b","2c1b","P*1b"]),
+    (("Start", "Aigakari_StratifiedEquilibrium_DevPly31_2f2d"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","4b3c","6h7h","7b6c","3h2g","8b8d","2h2f","8d7d","2f2d","3c2d","8h2b+","7d8d","2b3b","4a3b","2g1f","8d5d","1f1e","2d1e","1g1f","1e1d","1f1e","1d2d","S*2e","2d2e","2i1g","2e1e","1g2e","1e2e","S*1d","1c1d","1i1d","5d8d","1d1a+","8d5d","1a2a","5d8d","P*2f","2e2f","P*2g","2f2g","L*2h","2g2h","4g4f","8d5d","3g3f","5d8d","7f7e","8d5d","5h4g","5d8d","B*3g","2h1g","N*2i","1g1f","2i1g","1f1g","3f3e","8d5d","5g5f","5d8d","5f5e","3d3e","8i7g","8d3d","3g1e","3d8d","4g3f","3e3f","7g6e","8d3d","6e5c+","3d8d","5c6c","8d3d","P*1h","1g1h","S*1i","1h1i","5e5d","3d5d","6c7c","8a7c","P*1g","5d3d","4f4e","3d5d","6i5i","5d5i+","1e5i","N*6f","6g6f","N*8f","8g8f","S*6g","7h6g","N*5e","6g5f","S*4g","5f5e","4g5f+","5e5f","S*4g","5f4g","3f3g+","5i3g","S*2h","3g2h","1i2h","S*3g","2h2i","S*3h","2i1h","3h2g","1h2g","3g3f","2g1g","R*1b"]),
+    (("Start", "Aigakari_StratifiedEquilibrium_DevPly29_6g6f"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","4b3c","6h7h","7b6c","3h2g","8b8d","6g6f","8d5d","6f6e","P*6f","8h6f","4c4d","S*2d","2c2d","2g1f","6c6d","6e6d","S*5f","5g5f","5d5f","1f1e","5f5h+","2h5h","G*6g","R*3b"]),
+    (("Start", "Aigakari_StratifiedEquilibrium_DevPly29_7h7g"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","4b3c","6h7h","7b6c","3h2g","8b8d","7h7g","8d5d","S*4d","4c4d","2g1f","5d8d","2h2f","8d5d","2f5f","5d5f","5g5f","S*6f","R*3b"]),
+    (("Start", "Aigakari_StratifiedEquilibrium_DevPly27_2h2d"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","4b3c","6h7h","7b6c","2h2d","3c2d","8h2b+","8b8d","2b3b","4a3b","S*1e","2d1e","3h2g","8d5d","2g1f","1e1d","1f1e","1d1e","1g1f","1e1d","1f1e","1d2d","S*2e","2d2e","2i1g","2e1e","1g2e","1e2e","P*2f","2e2f","B*1e","2f2e","4g4f","5d8d","4f4e","8d5d","3g3f","5d8d","3f3e","8d5d","3e3d","5d3d","P*2f","2e1d","2f2e","3d5d","2e2d","5d3d","2d2c+","3b2c","1e4b+","N*1e","1i1e","1d2e","1e1c+","2a1c","4b4c","6c5d","4c3d","2c3d","R*2b"]),
     (("Start", "Aigakari_StratifiedEquilibrium_DevPly27_2h2c+"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","4b3c","6h7h","7b6c","2h2c+","3c2c","8h2b+","2c2b","P*2b"]),
-    (("Start", "Aigakari_StratifiedEquilibrium_DevPly25_2h2d"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","4b3c","2h2d","3c2d","8h2b+","8b8d","2b3b","4a3b","S*3e","3d3e"]),
+    (("Start", "Aigakari_StratifiedEquilibrium_DevPly25_2h2d"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","4b3c","2h2d","3c2d","8h2b+","8b8d","2b3b","4a3b","S*3e","3d3e","P*2e","2d2e","3h2g","8d5d","2g3f","3e3f","3g3f","5d3d","2i3g","2e3f","5g5f","3f3g","5f5e","3d8d","5h4h","3g4h","6i5h","4h3g","5h4h","3g4h","7f7e","8d3d","8i7g","3d8d","6h6i","8d3d","B*1e","N*3g","1e3g","3d3g+","N*4f","3g4f","4g4f","S*5h","6i6h","5h5i","6h6i","S*5h","6i7i","5h6i+","7h6i","5i6h+","6i6h","N*5g","6h5g","4h5g","S*6f","5g4f","S*5g","4f3e","R*3b"]),
     (("Start", "Aigakari_StratifiedEquilibrium_DevPly25_2h2c+"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","4b3c","2h2c+","3c2c","8h2b+","2c2b","P*2b"]),
     (("Start", "Aigakari_StratifiedEquilibrium_DevPly24_2b6f"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","2b6f","P*4b"]),
     (("Start", "Aigakari_StratifiedEquilibrium_DevPly24_2b7g+"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","2e2d","2c2d","2h2d","P*2c","2d2h","8e8f","8g8f","8b8f","P*8g","8f8b","3i3h","7a7b","5i6h","5a4b","4i5h","2b7g+","P*4b"]),
@@ -2676,37 +6828,37 @@ runtimePaths = Map.fromList
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly36_1c1d"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","P*2c","2d2h","3d3e","S*5h","S*3a","P*3c","3b3c","B*1f","1c1d","P*4b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly35_2h2d"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","P*2c","2d2h","3d3e","S*5h","S*3a","P*3c","3b3c","2h2d","2c2d","P*4b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly35_2h2c+"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","P*2c","2d2h","3d3e","S*5h","S*3a","P*3c","3b3c","2h2c+","2b2c","P*4b"]),
-    (("Start", "Kakugawari_StratifiedEquilibrium_DevPly34_4b3c"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","P*2c","2d2h","3d3e","S*5h","S*3a","P*3c","4b3c","2h2f","8b8d","2f5f","8e8f","5f2f","8f8g+","8h8g"]),
+    (("Start", "Kakugawari_StratifiedEquilibrium_DevPly34_4b3c"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","P*2c","2d2h","3d3e","S*5h","S*3a","P*3c","4b3c","2h2f","8b8d","2f5f","8e8f","5f2f","8f8g+","8h8g","B*9e","8i7g","9e7g+","7h7g","N*5f","2f5f","7b7c","N*3c"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly34_B*1f"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","P*2c","2d2h","3d3e","S*5h","S*3a","P*3c","B*1f","P*4b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly33_2h2d"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","P*2c","2d2h","3d3e","S*5h","S*3a","2h2d","2c2d","P*4b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly33_2h2c+"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","P*2c","2d2h","3d3e","S*5h","S*3a","2h2c+","2b2c","P*4b"]),
-    (("Start", "Kakugawari_StratifiedEquilibrium_DevPly32_4b3c"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","P*2c","2d2h","3d3e","S*5h","4b3c","2h2f","8b8d","2f5f","8e8f","5f2f","8f8g+","8h8g"]),
+    (("Start", "Kakugawari_StratifiedEquilibrium_DevPly32_4b3c"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","P*2c","2d2h","3d3e","S*5h","4b3c","2h2f","8b8d","2f5f","8e8f","5f2f","8f8g+","8h8g","S*5i","4i5i","B*9e","8i7g","9e7g+","7h7g","N*5f","2f5f","7b7c","N*3c"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly32_S*1f"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","P*2c","2d2h","3d3e","S*5h","S*1f","P*4b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly31_2h2d"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","P*2c","2d2h","3d3e","2h2d","2c2d","P*4b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly31_2h2c+"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","P*2c","2d2h","3d3e","2h2c+","2b2c","P*4b"]),
-    (("Start", "Kakugawari_StratifiedEquilibrium_DevPly30_4b3c"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","P*2c","2d2h","4b3c","3e2d","2c2d","2h2f","8b8d","2f5f","8e8f","5f2f"]),
+    (("Start", "Kakugawari_StratifiedEquilibrium_DevPly30_4b3c"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","P*2c","2d2h","4b3c","3e2d","2c2d","2h2f","8b8d","2f5f","8e8f","5f2f","8f8g+","8h8g","S*5i","4i5i","B*9e","8i7g","9e7g+","7h7g","N*5f","2f5f","7b7c","N*3c"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly30_B*1f"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","P*2c","2d2h","B*1f","P*4b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly29_2d1d"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","P*2c","2d1d","1c1d","P*4b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly29_2d2c+"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","P*2c","2d2c+","2b2c","P*4b"]),
-    (("Start", "Kakugawari_StratifiedEquilibrium_DevPly28_4b3c"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","4b3c","2d2b+","3b2b","3e2d","3c2d","S*3e","3d3e","S*1e"]),
+    (("Start", "Kakugawari_StratifiedEquilibrium_DevPly28_4b3c"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","4b3c","2d2b+","3b2b","3e2d","3c2d","S*3e","3d3e","S*1e","2d1e","1g1f","1e1d","1f1e","1d2c","P*2d","2c2d","P*2e","2d2e","2i3g","2e2d","3g4e","8b8d","4e3c+","2a3c","4g4f","8e8f","4f4e","8f8g+","8h8g","N*5f","5g5f","S*5g","6h5g","3c4e","5g4f","S*3g","4f4e","S*3f","4e5e","5c5d","5e5d","7b7c","5f5e","3f4e","5d4e","3g4f+","4e4f","2d3d","S*4e","3d2c","N*2c"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly28_B*1f"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","B*1f","P*4b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly27_2h2e"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2e","2d2e","P*4b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly27_3e4d"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","3e4d","4c4d","P*4b"]),
-    (("Start", "Kakugawari_StratifiedEquilibrium_DevPly26_4b3c"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","4b3c","2d2c+","2b2c","2h2c+","3b2c","3e2d","2c2d","S*2b"]),
+    (("Start", "Kakugawari_StratifiedEquilibrium_DevPly26_4b3c"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","4b3c","2d2c+","2b2c","2h2c+","3b2c","3e2d","2c2d","S*2b","3c2b","P*2b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly26_B*1f"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","B*1f","P*4b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly25_3e2d"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","3e2d","2c2d","P*4b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly25_3e4d"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","3e4d","4c4d","P*4b"]),
-    (("Start", "Kakugawari_StratifiedEquilibrium_DevPly24_4b3c"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","4b3c","3e2d","2c2d","2e2d","8b8d","2d2c+","2b2c","2h2c+"]),
+    (("Start", "Kakugawari_StratifiedEquilibrium_DevPly24_4b3c"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","4b3c","3e2d","2c2d","2e2d","8b8d","2d2c+","2b2c","2h2c+","3b2c","S*2b","3c2b","P*2b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly24_B*1f"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","B*1f","P*4b"]),
-    (("Start", "Kakugawari_StratifiedEquilibrium_DevPly23_P*3c"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","P*3c","8b8d","3c3b+","4b3b","2h2f","8e8f","2e2d","8f8g+"]),
+    (("Start", "Kakugawari_StratifiedEquilibrium_DevPly23_P*3c"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","P*3c","8b8d","3c3b+","4b3b","2h2f","8e8f","2e2d","8f8g+","8h8g","B*9e","P*3b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly23_P*3e"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","P*3e","8b8d","2h2f","8e8f","2e2d","8f8g+","8h8g","3d3e","P*4b"]),
-    (("Start", "Kakugawari_StratifiedEquilibrium_DevPly22_4b3c"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","4b3c","4f4e","8b8d","4e3d","3c3d","2h2f","8e8f","2f5f"]),
+    (("Start", "Kakugawari_StratifiedEquilibrium_DevPly22_4b3c"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","4b3c","4f4e","8b8d","4e3d","3c3d","2h2f","8e8f","2f5f","8f8g+","8h8g","S*5i","4i5i","B*9e","8i7g","9e7g+","7h7g","7b8c","5f2f","N*5f","2f5f","8c7d","5f2f","7d6e","5g5f","6e5f","2f5f","2a3c","5f2f","3c2e","2f2e","3d2e","2i3g","2e1d","S*1e","1d1e","1g1f","1e1d","1f1e","1d2d","S*3e","2d3e","S*4f","3e2d","4f4e","S*5g","6h5g","S*4f","4g4f","5c5d","S*2e","2d3c","N*3c"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly22_B*1f"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","B*1f","P*4b"]),
-    (("Start", "Kakugawari_StratifiedEquilibrium_DevPly21_P*3c"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","P*3c","8b8d","3c3b+","4b3b","2h2f","8e8f","2f5f","8f8g+"]),
+    (("Start", "Kakugawari_StratifiedEquilibrium_DevPly21_P*3c"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","P*3c","8b8d","3c3b+","4b3b","2h2f","8e8f","2f5f","8f8g+","8h8g","B*9e","P*3b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly21_P*3e"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","P*3e","8b8d","2h2f","8e8f","2f5f","8f8g+","8h8g","3d3e","P*4b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly20_4b3c"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","4b3c","2h2f","8b8d","2f5f","8d5d","5f5d","5c5d","R*3b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly20_B*1f"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","B*1f","P*4b"]),
-    (("Start", "Kakugawari_StratifiedEquilibrium_DevPly19_P*3c"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","P*3c","8b8d","3c3b+","4b3b","2h2f","8d5d","2f5f","5d5f"]),
+    (("Start", "Kakugawari_StratifiedEquilibrium_DevPly19_P*3c"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","P*3c","8b8d","3c3b+","4b3b","2h2f","8d5d","2f5f","5d5f","5g5f","B*9e","R*3b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly19_P*3e"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","P*3e","8b8d","2h2f","8d5d","2f5f","5d5f","5g5f","3d3e","R*4b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly18_B*1f"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","B*1f","S*4b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly18_B*1h"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","B*1h","S*4b"]),
@@ -2725,7 +6877,7 @@ runtimePaths = Map.fromList
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly11_B*1b"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","B*1b","1a1b","2h2f","8b8d","2f5f","8d5d","5f5d","5c5d","R*5b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly11_B*1d"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","B*1d","1c1d","2h2f","8b8d","2f5f","8d5d","5f5d","5c5d","R*5b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly10_3b3c"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b3c","B*6b"]),
-    (("Start", "Kakugawari_StratifiedEquilibrium_DevPly10_5a4b"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","5a4b","2b3b","4a3b","2h2f","8b8d","2f5f","8d5d","5f5d"]),
+    (("Start", "Kakugawari_StratifiedEquilibrium_DevPly10_5a4b"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","5a4b","2b3b","4a3b","2h2f","8b8d","2f5f","8d5d","5f5d","5c5d","R*4b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly09_8h4d"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h4d","2b4d","2h5h","4d9i+","8i7g","9i7g","7h7g","8b8d","B*6b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly09_8h3c+"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h3c+","3b3c","2h2f","8b8d","2f5f","8d5d","5f5d","5c5d","R*5b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly08_2b6f"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","2b6f","8h6f","8b5b","B*6b"]),
@@ -2742,41 +6894,41 @@ runtimePaths = Map.fromList
     (("Start", "Kakugawari_StratifiedEquilibrium_DevPly03_8h3c+"), ["7g7f","3c3d","8h3c+","2b3c","2h5h","3c9i+","7i8h","9i8h","5h8h","S*4h","B*6b"]),
     (("Start", "Kakugawari_StratifiedEquilibrium"), ["7g7f","3c3d","2g2f","8c8d","2f2e","8d8e","7i7h","3a3b","8h2b+","3b2b","7i8h","7a6b","3i4h","6b7b","4h3g","4a3b","6i7h","5a4b","5i6h","6c6d","3g4f","7c7d","4f3e","3c3d","2e2d","2c2d","2h2d","P*2c","2d2h","3d3e","S*5h","S*3a","P*3c","3b3c","B*1f","8b8d","P*4b"]),
     (("Start", "Yagura_StratifiedEquilibrium_DevPly40_8b8f"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","3i4h","4c3b","4h4g","6a5b","2e2d","4a4b","B*1f","8b8f","7g8f","2c2d","R*3b"]),
-    (("Start", "Yagura_StratifiedEquilibrium_DevPly39_B*1b"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","3i4h","4c3b","4h4g","6a5b","2e2d","4a4b","B*1b","1a1b","2d2c+","3b2c","2h2c+","3c2c","S*1d","1c1d"]),
-    (("Start", "Yagura_StratifiedEquilibrium_DevPly39_B*1d"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","3i4h","4c3b","4h4g","6a5b","2e2d","4a4b","B*1d","1c1d","2d2c+","3b2c","2h2c+","3c2c","S*1b","1a1b"]),
+    (("Start", "Yagura_StratifiedEquilibrium_DevPly39_B*1b"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","3i4h","4c3b","4h4g","6a5b","2e2d","4a4b","B*1b","1a1b","2d2c+","3b2c","2h2c+","3c2c","S*1d","1c1d","P*2d","2c2d","4g3f","8b8d","3f2e","2d2e","7g8f","8d8f","8g8f","S*7g","R*2b"]),
+    (("Start", "Yagura_StratifiedEquilibrium_DevPly39_B*1d"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","3i4h","4c3b","4h4g","6a5b","2e2d","4a4b","B*1d","1c1d","2d2c+","3b2c","2h2c+","3c2c","S*1b","1a1b","P*2d","2c2d","4g3f","8b8d","3f2e","2d2e","7g8f","8d8f","8g8f","S*7g","R*2b"]),
     (("Start", "Yagura_StratifiedEquilibrium_DevPly38_8b8f"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","3i4h","4c3b","4h4g","6a5b","2e2d","8b8f","7g8f","2c2d","R*3b"]),
-    (("Start", "Yagura_StratifiedEquilibrium_DevPly37_B*1b"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","3i4h","4c3b","4h4g","6a5b","B*1b","1a1b","2h2f","8b8d","5f5e","5d5e","2e2d","2c2d"]),
-    (("Start", "Yagura_StratifiedEquilibrium_DevPly37_B*1d"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","3i4h","4c3b","4h4g","6a5b","B*1d","1c1d","2h2f","8b8d","5f5e","5d5e","2e2d","2c2d"]),
+    (("Start", "Yagura_StratifiedEquilibrium_DevPly37_B*1b"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","3i4h","4c3b","4h4g","6a5b","B*1b","1a1b","2h2f","8b8d","5f5e","5d5e","2e2d","2c2d","4g5f","5e5f","7g8f","8d8f","8g8f","S*7g","R*3b"]),
+    (("Start", "Yagura_StratifiedEquilibrium_DevPly37_B*1d"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","3i4h","4c3b","4h4g","6a5b","B*1d","1c1d","2h2f","8b8d","5f5e","5d5e","2e2d","2c2d","4g5f","5e5f","7g8f","8d8f","8g8f","S*7g","R*3b"]),
     (("Start", "Yagura_StratifiedEquilibrium_DevPly36_8b8f"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","3i4h","4c3b","4h4g","8b8f","7g8f","3d3e","R*3b"]),
-    (("Start", "Yagura_StratifiedEquilibrium_DevPly35_B*1b"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","3i4h","4c3b","B*1b","1a1b","2h2f","8b8d","5f5e","5d5e","2e2d","2c2d"]),
-    (("Start", "Yagura_StratifiedEquilibrium_DevPly35_B*1d"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","3i4h","4c3b","B*1d","1c1d","2h2f","8b8d","5f5e","5d5e","2e2d","2c2d"]),
+    (("Start", "Yagura_StratifiedEquilibrium_DevPly35_B*1b"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","3i4h","4c3b","B*1b","1a1b","2h2f","8b8d","5f5e","5d5e","2e2d","2c2d","7g8f","8d8f","8g8f","S*7g","R*3b"]),
+    (("Start", "Yagura_StratifiedEquilibrium_DevPly35_B*1d"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","3i4h","4c3b","B*1d","1c1d","2h2f","8b8d","5f5e","5d5e","2e2d","2c2d","7g8f","8d8f","8g8f","S*7g","R*3b"]),
     (("Start", "Yagura_StratifiedEquilibrium_DevPly34_8b8f"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","3i4h","8b8f","7g8f","3d3e","R*3b"]),
-    (("Start", "Yagura_StratifiedEquilibrium_DevPly33_B*1b"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","B*1b","1a1b","2h2f","8b8d","5f5e","5d5e","2e2d","2c2d"]),
-    (("Start", "Yagura_StratifiedEquilibrium_DevPly33_B*1d"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","B*1d","1c1d","2h2f","8b8d","5f5e","5d5e","2e2d","2c2d"]),
+    (("Start", "Yagura_StratifiedEquilibrium_DevPly33_B*1b"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","B*1b","1a1b","2h2f","8b8d","5f5e","5d5e","2e2d","2c2d","7g8f","8d8f","8g8f","S*7g","R*3b"]),
+    (("Start", "Yagura_StratifiedEquilibrium_DevPly33_B*1d"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","B*1d","1c1d","2h2f","8b8d","5f5e","5d5e","2e2d","2c2d","7g8f","8d8f","8g8f","S*7g","R*3b"]),
     (("Start", "Yagura_StratifiedEquilibrium_DevPly32_8b8f"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","8b8f","7g8f","3d3e","R*3b"]),
-    (("Start", "Yagura_StratifiedEquilibrium_DevPly31_B*1b"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","B*1b","1a1b","2h2f","8b8d","5f5e","5d5e","2e2d","2c2d"]),
-    (("Start", "Yagura_StratifiedEquilibrium_DevPly31_B*1d"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","B*1d","1c1d","2h2f","8b8d","5f5e","5d5e","2e2d","2c2d"]),
+    (("Start", "Yagura_StratifiedEquilibrium_DevPly31_B*1b"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","B*1b","1a1b","2h2f","8b8d","5f5e","5d5e","2e2d","2c2d","7g8f","8d8f","8g8f","S*7g","R*3b"]),
+    (("Start", "Yagura_StratifiedEquilibrium_DevPly31_B*1d"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","B*1d","1c1d","2h2f","8b8d","5f5e","5d5e","2e2d","2c2d","7g8f","8d8f","8g8f","S*7g","R*3b"]),
     (("Start", "Yagura_StratifiedEquilibrium_DevPly30_8f7f"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f7f","7g7f","3d3e","R*3b"]),
     (("Start", "Yagura_StratifiedEquilibrium_DevPly30_8f9f"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f9f","9g9f","3d3e","R*3b"]),
     (("Start", "Yagura_StratifiedEquilibrium_DevPly28_8b8e"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8e","8f8e","3d3e","R*3b"]),
-    (("Start", "Yagura_StratifiedEquilibrium_DevPly27_B*1b"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","B*1b","1a1b","2h2f","8f8g+","8h7i","8g7g","8i7g","8b8d"]),
-    (("Start", "Yagura_StratifiedEquilibrium_DevPly27_B*1d"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","B*1d","1c1d","2h2f","8f8g+","8h7i","8g7g","8i7g","8b8d"]),
-    (("Start", "Yagura_StratifiedEquilibrium_DevPly25_7g8f"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","7g8f","8e8f","5f5e","8f8g+","8h7i","8b8d","5e5d","S*6h"]),
-    (("Start", "Yagura_StratifiedEquilibrium_DevPly25_B*1b"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","B*1b","1a1b","5f5e","8b8d","5e5d","8e8f","5d5c+","8f8g+"]),
-    (("Start", "Yagura_StratifiedEquilibrium_DevPly23_7g8f"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","7g8f","8e8f","5f5e","8f8g+","8h7i","8b8d","5e5d","S*6h"]),
-    (("Start", "Yagura_StratifiedEquilibrium_DevPly23_B*1b"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","B*1b","1a1b","5f5e","8b8d","5e5d","8e8f","5d5c+","8f8g+"]),
-    (("Start", "Yagura_StratifiedEquilibrium_DevPly21_7g8f"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7g8f","8e8f","5f5e","8f8g+","7h6g","5d5e","8i7g","8g7g"]),
-    (("Start", "Yagura_StratifiedEquilibrium_DevPly21_B*1b"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","B*1b","1a1b","5f5e","8b8d","5e5d","8e8f","5d5c+","6b5c"]),
-    (("Start", "Yagura_StratifiedEquilibrium_DevPly19_B*1b"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","B*1b","1a1b","5f5e","5d5e","7f7e","3d3e","2g2f","5e5f"]),
-    (("Start", "Yagura_StratifiedEquilibrium_DevPly19_B*1d"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","B*1d","1c1d","5f5e","5d5e","7f7e","3d3e","2g2f","5e5f"]),
-    (("Start", "Yagura_StratifiedEquilibrium_DevPly14_2b5e"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","2b5e","5f5e","3d3e","5e5d","5c5d","B*1e","2a3c","1e3c+"]),
+    (("Start", "Yagura_StratifiedEquilibrium_DevPly27_B*1b"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","B*1b","1a1b","2h2f","8f8g+","8h7i","8g7g","8i7g","8b8d","2e2d","S*6h","5h6h","2c2d","5f5e","5d5e","S*4b","5c4b","7f7e","S*7h","6h7h","B*3e","4g4f","3e2f","4f4e","2f3e","6i6h","3e6h+","7h6h","G*6i","7i6i","8d8i+","S*7i","8i7i","6i7i","S*7h","R*3b"]),
+    (("Start", "Yagura_StratifiedEquilibrium_DevPly27_B*1d"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","B*1d","1c1d","2h2f","8f8g+","8h7i","8g7g","8i7g","8b8d","2e2d","S*6h","5h6h","2c2d","5f5e","5d5e","S*4b","5c4b","7f7e","S*7h","6h7h","B*3e","4g4f","3e2f","4f4e","2f3e","6i6h","3e6h+","7h6h","G*6i","7i6i","8d8i+","S*7i","8i7i","6i7i","S*7h","R*3b"]),
+    (("Start", "Yagura_StratifiedEquilibrium_DevPly25_7g8f"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","7g8f","8e8f","5f5e","8f8g+","8h7i","8b8d","5e5d","S*6h","5h6h","8g9g","8i9g","8d8g+","5d5c+","8g9g","9i9g","N*6g","R*3b"]),
+    (("Start", "Yagura_StratifiedEquilibrium_DevPly25_B*1b"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","B*1b","1a1b","5f5e","8b8d","5e5d","8e8f","5d5c+","8f8g+","8h7i","8g7g","8i7g","S*6h","5h6h","B*8h","7i7h","8h7g+","6h7g","N*8f","7g8f","8d8f","N*3c"]),
+    (("Start", "Yagura_StratifiedEquilibrium_DevPly23_7g8f"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","7g8f","8e8f","5f5e","8f8g+","8h7i","8b8d","5e5d","S*6h","5h6h","8g9g","8i9g","8d8g+","5d5c+","8g9g","9i9g","N*6g","R*3b"]),
+    (("Start", "Yagura_StratifiedEquilibrium_DevPly23_B*1b"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","B*1b","1a1b","5f5e","8b8d","5e5d","8e8f","5d5c+","8f8g+","8h7i","8g7g","8i7g","S*6h","5h6h","B*8h","7i7h","8h7g+","6h7g","N*8f","7g8f","8d8f","N*3c"]),
+    (("Start", "Yagura_StratifiedEquilibrium_DevPly21_7g8f"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7g8f","8e8f","5f5e","8f8g+","7h6g","5d5e","8i7g","8g7g","6g7g","8b8d","7f7e","N*6e","6f6e","6d6e","N*3c"]),
+    (("Start", "Yagura_StratifiedEquilibrium_DevPly21_B*1b"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","B*1b","1a1b","5f5e","8b8d","5e5d","8e8f","5d5c+","6b5c","7g8f","8d8f","8g8f","S*6g","R*3b"]),
+    (("Start", "Yagura_StratifiedEquilibrium_DevPly19_B*1b"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","B*1b","1a1b","5f5e","5d5e","7f7e","3d3e","2g2f","5e5f","2f2e","5f5g+","5h5g","2c2d","2e2d","3b2c","2d2c+","3c3d","2c2b","2a3c","2h2f","3c2e","2f2e","3d2e","2b1b","3e3f","3g3f","8d8e","2i3g","2e3f","S*2e","3f3g","3i2h","3g2h","2e1d","1c1d","P*2i","2h1i","2i2h","8b8d","2h2g","8e8f","7g8f","8d8f","8g8f","N*7f","8h7g","7f6h+","6i6h","S*7f","7g7f","S*6e","6f6e","6d6e","S*2h","1i2h","2g2f","S*6g","5g6g","S*8e","8f8e","R*3f","L*4f","3f3d","S*1i","2h1i","S*2h","1i2h","S*1i","2h1i","R*4i","S*2i","4i2i","1i2i","S*1h","2i1h","B*5d","S*2g","5d2g","1h2g","N*4e","4d4e","4f4e","3d5d","4e4a+","5d3d","2f2e","3d5d","N*1i","2g1g","P*1h","1g1h","S*2g","1h1i","G*1h","1i2i","1h2h","2i2h","2g1f","5d3d","1f1e","1d1e","4g4f","3d5d","2e2d","5d3d","2d2c+","3d5d","P*2i","2h2i","8i7g","5d3d","7g6e","3d5d","6e7c+","6b7c","P*1g","5d3d","P*2g","3d5d","P*3g","5d3d","2g2f","3d5d","2f2e","5d3d","2e2d","3d5d","6g5g","5d5g+","6h5g","7c6d","R*2e","S*2h","2e2h","2i2h","S*1i","2h1i","P*6e","6d5e","5g6f","5e6f","7f6f","S*5e","6f5e","S*6f","5e6f","S*5e","6f5e","P*5d","5e5d","P*5c","5d5c","6a5b","5c5b","P*5a","4a5a","G*4a","5a4a","P*5a","4a5a","G*4a","5a4a","P*5a","4a5a","G*4a","5a4a","P*5a","4a5a","B*2e","S*4c","2e4c","5b4c","L*4a","5a4a","N*3a","4a3a","N*5a","4c3b","S*2a","1b2a","B*4c","3b2b","4c2a","2b2a","5a4c","S*2h","1i2h","L*2i","2h2i","S*1h","2i1h","S*1i","1h1i","S*2h","1i2h","G*1h","2h1h","G*1i","1h1i","G*1h","1i1h","G*1i","1h1i","N*1h","1i1h","B*3f","N*2g","3f2g","1h2g","N*1i","2g1g","P*1h","1g1h","B*2g","1h1i","2g8a+","S*1b","2a1b","L*1a","1b1a","S*2b","1a2b","P*2a","2b2a","S*1b","2a1b","S*1a","1b1a","G*1b","1a1b","G*1a","1b1a","G*1b","1a1b","G*1a","1b1a","B*4d","N*3c","4d3c","2c3c","R*1c","S*1b","1c1b","1a1b","S*1a","1b1a","R*1c","S*1b","1c1b","1a1b","S*1a","1b1a","P*2a","3c4c","2a2b","8a9a","2b2c","2d2c+","P*2a","S*2h","1i2h","P*2i","2h2i","S*1h","2i1h","9a8a","N*2g","8a2g","1h2g","P*2h","2g2h","P*2i","2h2i","S*1h","2i1h","P*1i","1h1i","S*2h","1i2h","P*2i","2h2i","G*1i","2i1i","G*1h","1i1h","P*1i","1h1i","G*1h","1i1h","P*1i","1h1i","G*1h","1i1h","L*1i","1h1i","R*1g","S*1h","1g1h","1i1h","L*1i","1h1i","S*2h","1i2h","R*2d","N*2g","2d2g","2h2g","N*1i","2g3g","N*2i","3g4f","N*3h","4f3e","1i2g","3e2e","2g1e","2e1e","P*1f","1e1f","B*3d","N*2e","3d2e","1f2e","2i1g","2e1d","3h2f","1d2c","N*2c"]),
+    (("Start", "Yagura_StratifiedEquilibrium_DevPly19_B*1d"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","B*1d","1c1d","5f5e","5d5e","7f7e","3d3e","2g2f","5e5f","2f2e","5f5g+","5h5g","2c2d","2e2d","3b2c","2d2c+","3c3d","2c2b","2a3c","2h2f","3c2e","2f2e","3d2e","2b1a","3e3f","3g3f","8d8e","2i3g","2e3f","S*2e","3f3g","2e1d","8b8d","3i2h","3g2h","1d1c+","2h1i","B*3g","R*2h","3g2h","1i2h","P*2i","2h1g","2i2h","8e8f","7g8f","8d8f","8g8f","N*7f","8h7g","7f6h+","6i6h","S*7f","7g7f","S*6e","6f6e","6d6e","2h2g","B*4i","7f6e","6b5c","8i7g","5c5d","6e5d","4i2g+","P*3f","2g3f","N*4e","4d4e","S*2f","1g2f","R*2b"]),
+    (("Start", "Yagura_StratifiedEquilibrium_DevPly14_2b5e"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","2b5e","5f5e","3d3e","5e5d","5c5d","B*1e","2a3c","1e3c+","3b3c","N*3d","3c3d","7f7e","N*5f","6h5g","5d5e","3i4h","5f4h+","5h4h","5e5f","5g5f","3d4e","P*4b"]),
     (("Start", "Yagura_StratifiedEquilibrium_DevPly14_2b6f"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","2b6f","7g6f","3d3e","6f5e","2a3c","5e6d","P*6g","P*4b"]),
-    (("Start", "Yagura_StratifiedEquilibrium_DevPly12_2b5e"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","2b5e","5f5e","3d3e","5e5d","5c5d","B*1e","2a3c","1e3c+"]),
+    (("Start", "Yagura_StratifiedEquilibrium_DevPly12_2b5e"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","2b5e","5f5e","3d3e","5e5d","5c5d","B*1e","2a3c","1e3c+","4b3c","N*3c"]),
     (("Start", "Yagura_StratifiedEquilibrium_DevPly12_2b6f"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","2b6f","7g6f","3d3e","6f5e","2a3c","5e6d","5c5d","P*4b"]),
     (("Start", "Yagura_StratifiedEquilibrium_DevPly10_2b5e"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","2b5e","5f5e","2a3c","B*6b"]),
     (("Start", "Yagura_StratifiedEquilibrium_DevPly10_2b6f"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","2b6f","7g6f","2a3c","B*6b"]),
     (("Start", "Yagura_StratifiedEquilibrium_DevPly08_2b6f"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","2b6f","7g6f","8b5b","B*6b"]),
-    (("Start", "Yagura_StratifiedEquilibrium_DevPly03_8h4d"), ["7g7f","8c8d","8h4d","4c4d","2h5h","8b5b","8i7g","5c5d","2g2f","5d5e"]),
+    (("Start", "Yagura_StratifiedEquilibrium_DevPly03_8h4d"), ["7g7f","8c8d","8h4d","4c4d","2h5h","8b5b","8i7g","5c5d","2g2f","5d5e","5g5f","5b5d","5f5e","8d8e","P*5b"]),
     (("Start", "Yagura_StratifiedEquilibrium_DevPly03_8h3c+"), ["7g7f","8c8d","8h3c+","2b3c","P*5b"]),
     (("Start", "Yagura_StratifiedEquilibrium"), ["7g7f","8c8d","6g6f","3c3d","7i6h","6c6d","6h7g","7a6b","5g5f","5a4b","4i5h","3a3b","5i6h","4b3c","6h7h","5c5d","7h8h","4c4d","8h7h","8d8e","7h8h","6b5c","2g2f","7c7d","2f2e","8e8f","8g8f","8b8f","P*8g","8f8b","4g4f","3b4c","3i4h","4c3b","4h4g","6a5b","2e2d","4a4b","B*1f","2b3c","8h7i"," *1b","2d2c+","3b2c","P*1b"]),
     (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly38_2a3c"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","1g1f","5c5d","2g2f","4b3a","2f2e","2b3c","3g3f","R*4i","S*9h","4i6i+","2e2d","3c2d","6f6e","2a3c","G*3b"]),
@@ -2791,7 +6943,7 @@ runtimePaths = Map.fromList
     (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly34_3c2d"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","1g1f","5c5d","2g2f","4b3a","2f2e","2b3c","3g3f","R*4i","S*9h","3c2d","G*3b"]),
     (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly33_6i5i"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","1g1f","5c5d","2g2f","4b3a","2f2e","2b3c","3g3f","R*4i","6i5i","4i5i+","G*3b"]),
     (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly33_7g8f"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","1g1f","5c5d","2g2f","4b3a","2f2e","2b3c","3g3f","R*4i","7g8f","8e8f","G*3b"]),
-    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly32_3a2b"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","1g1f","5c5d","2g2f","4b3a","2f2e","2b3c","3g3f","3a2b","2e2d","3c2d","6f6e","2a3c","7g3c+","2d3c","S*1c"]),
+    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly32_3a2b"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","1g1f","5c5d","2g2f","4b3a","2f2e","2b3c","3g3f","3a2b","2e2d","3c2d","6f6e","2a3c","7g3c+","2d3c","S*1c","1a1c","G*1b","2b1b","N*2d","3c2d","7f7e","S*1g","2i1g","3d3e","7h7f","3e3f","7f5f","3f3g+","2h3g","2d1e","P*1b"]),
     (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly32_3c2d"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","1g1f","5c5d","2g2f","4b3a","2f2e","2b3c","3g3f","3c2d","G*3b"]),
     (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly31_7g8f"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","1g1f","5c5d","2g2f","4b3a","2f2e","2b3c","7g8f","8e8f","G*3b"]),
     (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly31_S*1b"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","1g1f","5c5d","2g2f","4b3a","2f2e","2b3c","S*1b","1a1b","G*3b"]),
@@ -2801,32 +6953,32 @@ runtimePaths = Map.fromList
     (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly29_S*1b"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","1g1f","5c5d","2g2f","4b3a","S*1b","1a1b","G*3b"]),
     (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly28_4b3c"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","1g1f","5c5d","2g2f","4b3c","2f2e","R*2f","S*2g","2f2g+","2h2g","3d3e","R*3b"]),
     (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly28_4b4a"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","1g1f","5c5d","2g2f","4b4a","G*4b"]),
-    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly27_7g8f"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","1g1f","5c5d","7g8f","8e8f","S*3a","2b3a","G*3c","2a3c","2g2f","8f8g+"]),
-    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly27_S*1b"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","1g1f","5c5d","S*1b","1a1b","G*3c","2b3c","2g2f","S*1g","2i1g","3c4d"]),
+    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly27_7g8f"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","1g1f","5c5d","7g8f","8e8f","S*3a","2b3a","G*3c","2a3c","2g2f","8f8g+","2f2e","8g7h","7i7h","S*1g","P*4b"]),
+    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly27_S*1b"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","1g1f","5c5d","S*1b","1a1b","G*3c","2b3c","2g2f","S*1g","2i1g","3c4d","S*3a","4b3a","2f2e","S*2g","2h2g","3d3e","S*2b"]),
     (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly26_4b3a"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","1g1f","4b3a","G*3b"]),
-    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly26_4b3c"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","1g1f","4b3c","1f1e","1d1e","1i1e","1a1e","2i1g","1e1g+","2h1g"]),
-    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly25_7g8f"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","7g8f","8e8f","S*3a","2b3a","G*3c","2a3c","2g2f","8f8g+"]),
-    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly25_S*1b"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","S*1b","1a1b","G*3c","2b3c","2g2f","S*2g","2h2g","3d3e"]),
+    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly26_4b3c"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","1g1f","4b3c","1f1e","1d1e","1i1e","1a1e","2i1g","1e1g+","2h1g","3d3e","S*2d","2c2d","6f6e","4c4d","L*3d","3c3d","2g2f","N*2e","2f2e","2d2e","N*2f","2e2f","G*2d","3d2d","7g4d","2f2g+","1g2g","S*3f","3g3f","3e3f","4d2b+","3b2b","S*1e","2d1e","2g3f","S*2e","3f3g","2e2f","3g2h","2f1g+","2h1g","P*1f","1g1h","1f1g+","1h1g","P*1f","1g1h","1f1g+","1h1g","P*1f","1g1h","1f1g+","1h1g","P*1f","1g1h","1f1g+","1h1g","L*1f","1g2g","L*2f","2g3f","G*2e","3f3g","2f2g+","3g2g","2e2f","2g2h","1f1g+","2h1i","N*2g","1i2i","2g1i+","2i1i","1g1h","1i1h","2f1g","1h1g","B*2f","1g1h","B*3f","N*2g","3f2g+","1h2g","N*3e","2g1h","3e2g+","1h2g","R*1g","2g2h","2f3g+","2h1g","3g2f","R*1b"]),
+    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly25_7g8f"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","7g8f","8e8f","S*3a","2b3a","G*3c","2a3c","2g2f","8f8g+","2f2e","8g7h","7i7h","S*2g","P*4b"]),
+    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly25_S*1b"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","1c1d","S*1b","1a1b","G*3c","2b3c","2g2f","S*2g","2h2g","3d3e","S*3a","4b3a","2f2e","S*1f","1g1f","3c4d","S*2b"]),
     (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly24_4b3a"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","4b3a","G*3b"]),
-    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly24_4b3c"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","4b3c","6f6e","4c4d","S*2d","2c2d","G*2c","2b2c","2g2f"]),
-    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly23_7g8f"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","7g8f","8e8f","S*3a","2b3a","G*3c","2a3c","2g2f","8f8g+"]),
-    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly23_S*1b"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","S*1b","1a1b","G*3c","2b3c","2g2f","S*2g","1h2g","3d3e"]),
+    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly24_4b3c"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","1h2h","4b3c","6f6e","4c4d","S*2d","2c2d","G*2c","2b2c","2g2f","S*2g","2h2g","3d3e","S*3d","2c3d","2f2e","3d2e","7f7e","2e3f","3g3f","3e3f","S*3d","3c3d","5g5f","3f3g+","2i3g","8e8f","5f5e","8f8g+","5e5d","8g7h","7i7h","5c5d","3g2e","2d2e","P*3e","3d3e","P*3f","3e2d","7g4d","N*3e","3f3e","2a3c","4d3c+","3b3c","N*3d","3c3d","3e3d","S*2f","2g1f","2d3d","8i7g","2f2g","1f2g","S*2f","2g1f","2f2g","1f2g","G*2f","2g1h","2f1g","1h1g","N*2f","S*3e","3d3e","S*4f","3e2d","4f4e","2f1h+","1i1h","S*2f","1g1f","2f1g+","1h1g","5d5e","S*1e","2d2c","N*2c"]),
+    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly23_7g8f"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","7g8f","8e8f","S*3a","2b3a","G*3c","2a3c","2g2f","8f8g+","2f2e","8g7h","7i7h","S*2g","P*4b"]),
+    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly23_S*1b"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","8b7b","S*1b","1a1b","G*3c","2b3c","2g2f","S*2g","1h2g","3d3e","S*3a","4b3a","2f2e","S*1f","1g1f","3c4d","S*2b"]),
     (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly22_4b3a"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","4b3a","G*3b"]),
-    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly22_4b3c"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","4b3c","6f6e","4c4d","S*2d","2c2d","G*2c","2b2c","2g2f"]),
-    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly21_7g8f"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","7g8f","8e8f","S*3a","2b3a","G*3c","2a3c","2g2f","8f8g+"]),
-    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly21_S*1b"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","S*1b","1a1b","G*3c","2b3c","2g2f","S*2g","1h2g","3d3e"]),
+    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly22_4b3c"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","6h7h","4b3c","6f6e","4c4d","S*2d","2c2d","G*2c","2b2c","2g2f","S*2g","1h2g","3d3e","S*3d","2c3d","2f2e","3d2e","7f7e","2e3f","3g3f","3e3f","S*3d","3c3d","5g5f","3f3g+","2i3g","8e8f","5f5e","8f8g+","5e5d","8g7h","7i7h","5c5d","3g2e","2d2e","P*3e","3d3e","P*3f","3e2d","7g4d","N*3e","3f3e","2a3c","4d3c+","3b3c","N*3d","3c3d","3e3d","S*2f","2g1f","2d3d","8i7g","2f2g","1f2g","S*2f","2g1f","2f2g","1f2g","G*2f","2g1h","2f1g","1h1g","N*2f","S*3e","3d3e","S*4f","3e2d","4f4e","2f1h+","1i1h","S*2f","1g1f","2f1g+","1h1g","5d5e","S*1e","2d2c","N*2c"]),
+    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly21_7g8f"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","7g8f","8e8f","S*3a","2b3a","G*3c","2a3c","2g2f","8f8g+","2f2e","S*2g","1h2g","3c2e","S*3c","3b3c","7f7e","2e1g+","2i1g","3d3e","N*3d","3c3d","5g5f","N*1e","2g1f","S*2e","1g2e","3d2e","1f2e","G*1d","2e3e","1d2d","P*4b"]),
+    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly21_S*1b"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","7a8b","S*1b","1a1b","G*3c","2b3c","2g2f","S*2g","1h2g","3d3e","S*3a","4b3a","2f2e","S*1f","1g1f","3c4d","S*2b"]),
     (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly20_4b3a"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","4b3a","G*3b"]),
-    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly20_4b3c"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","4b3c","6f6e","4c4d","S*2d","2c2d","G*2c","2b2c","2g2f"]),
-    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly19_7g8f"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","7g8f","8e8f","S*3a","2b3a","G*3c","2a3c","2g2f","8b8d"]),
-    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly19_S*1b"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","S*1b","1a1b","G*3c","2b3c","2g2f","8b8d","2f2e","8d5d"]),
+    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly20_4b3c"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","2h1h","4b3c","6f6e","4c4d","S*2d","2c2d","G*2c","2b2c","2g2f","8b8d","2f2e","8d5d","2e2d","5d8d","2d2c+","3b2c","S*2b","3c2b","P*2b"]),
+    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly19_7g8f"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","7g8f","8e8f","S*3a","2b3a","G*3c","2a3c","2g2f","8b8d","2f2e","8d5d","2e2d","5d8d","2d2c+","3b2c","P*4b"]),
+    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly19_S*1b"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7b7a","S*1b","1a1b","G*3c","2b3c","2g2f","8b8d","2f2e","8d5d","2e2d","5d8d","2d2c+","3b2c","P*4b"]),
     (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly18_4b3a"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","4b3a","G*3b"]),
-    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly18_4b3c"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","4b3c","6f6e","4c4d","S*2d","2c2d","G*2c","2b2c","2g2f"]),
-    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly17_7g8f"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","7g8f","8e8f","S*3a","2b3a","G*3c","2a3c","2g2f","8b8d"]),
-    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly17_S*1b"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","S*1b","1a1b","G*3c","2b3c","2g2f","8b8d","2f2e","8d5d"]),
-    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly16_4b3c"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","4b3c","6f6e","4c4d","S*2d","2c2d","G*2c","3b2c","2g2f"]),
+    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly18_4b3c"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","4b3c","6f6e","4c4d","S*2d","2c2d","G*2c","2b2c","2g2f","8b8d","2f2e","8d5d","2e2d","5d8d","2d2c+","3b2c","S*2b","3c2b","P*2b"]),
+    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly17_7g8f"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","7g8f","8e8f","S*3a","2b3a","G*3c","2a3c","2g2f","8b8d","2f2e","8d5d","2e2d","5d8d","2d2c+","3b2c","P*4b"]),
+    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly17_S*1b"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","3a2b","S*1b","1a1b","G*3c","2b3c","2g2f","8b8d","2f2e","8d5d","2e2d","5d8d","2d2c+","3b2c","P*4b"]),
+    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly16_4b3c"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","4b3c","6f6e","4c4d","S*2d","2c2d","G*2c","3b2c","2g2f","8b8d","2f2e","8d5d","2e2d","5d8d","2d2c+","3c2c","P*2d","2c2d","G*1e","2d1e","1g1f","1e1d","1f1e","1d2c","1e1d","8d5d","1d1c+","2b1c","P*2d","2c2d","3g3f","5d8d","3f3e","8d5d","3e3d","5d8d","P*2e","2d2e","2i1g","2e3d","5g5f","1c6h+","7i6h","8d5d","5f5e","5d8d","1g2e","3d2e","B*4c","P*3d","4c6a+","N*1f","6a6b","G*2h","3h3g","2h1i","S*2f","2e1d","2f1e","1d1e","G*2f","1e1d","2f1f","3d3e","N*1e","S*3f","3g2f","3f2g+","2f2g","S*3f","2g1g","3f4g+","S*2e","1d1c","2e1d","1c1d","1e2c+","1d2c","1f1e","1a1e","1g2f","G*1f","2f3e","S*2f","3e2e","2a3c","2e3f","2f3g+","3f3e","5c5d","5e5d","8d5d","7g4d","5d4d","3e4d","G*3d","R*2b"]),
     (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly16_4b4a"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","4h3h","4b4a","G*4b"]),
-    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly15_7g8f"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","7g8f","8e8f","G*3c","2b3c","7f7e","8b8d","8i7g","8d5d"]),
-    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly15_G*1b"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","G*1b","1a1b","7f7e","8b8d","2g2f","8d5d","3h2g","5d8d"]),
+    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly15_7g8f"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","7g8f","8e8f","G*3c","2b3c","7f7e","8b8d","8i7g","8d5d","2g2f","5d8d","3h2g","8d5d","2g1f","5d8d","1f1e","3c1e","2f2e","8d5d","2e2d","5d8d","2d2c+","3b2c","P*4b"]),
+    (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly15_G*1b"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","5i4h","5a4b","G*1b","1a1b","7f7e","8b8d","2g2f","8d5d","3h2g","5d8d","2g1f","8d5d","1f1e","5d8d","1e2d","2c2d","2f2e","8d5d","2e2d","5d8d","P*4b"]),
     (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly13_7g8f"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","3i3h","4a3b","7g8f","8e8f","8g8f","8b8d","P*5b"]),
     (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly11_7g8f"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","4i4h","7a6b","7g8f","8e8f","8g8f","8b8d","P*5b"]),
     (("Start", "Shikenbisha_StratifiedEquilibrium_DevPly09_7g8f"), ["7g7f","3c3d","6g6f","8c8d","2h6h","8d8e","8h7g","6b6c","7g8f","8e8f","8g8f","8b8d","P*5b"]),
@@ -2900,24 +7052,24 @@ runtimePaths = Map.fromList
     (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly23_7f7d"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","1g1f","1c1d","3g3f","2b3c","7h7f","4b5a","7f7d","7c7d","S*4b"]),
     (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly22_B*1e"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","1g1f","1c1d","3g3f","2b3c","7h7f","B*1e","P*4b"]),
     (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly22_B*1g"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","1g1f","1c1d","3g3f","2b3c","7h7f","B*1g","P*4b"]),
-    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly21_7g8f"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","1g1f","1c1d","3g3f","2b3c","7g8f","8e8f","S*3a","4b3a","2g2f","8b8d","2f2e","8d5d"]),
-    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly21_7g4d"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","1g1f","1c1d","3g3f","2b3c","7g4d","3c4d","S*3a","4b3a","2g2f","8b8d","2f2e","8d5d"]),
-    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly20_2a3c"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","1g1f","1c1d","3g3f","2a3c","7g3c+","2b3c","N*5d","5c5d","S*3a","4b3a","2g2f"]),
+    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly21_7g8f"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","1g1f","1c1d","3g3f","2b3c","7g8f","8e8f","S*3a","4b3a","2g2f","8b8d","2f2e","8d5d","2e2d","5d8d","2d2c+","3b2c","P*3b"]),
+    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly21_7g4d"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","1g1f","1c1d","3g3f","2b3c","7g4d","3c4d","S*3a","4b3a","2g2f","8b8d","2f2e","8d5d","2e2d","5d8d","2d2c+","3b2c","P*3b"]),
+    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly20_2a3c"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","1g1f","1c1d","3g3f","2a3c","7g3c+","2b3c","N*5d","5c5d","S*3a","4b3a","2g2f","8b8d","2f2e","S*1g","2i1g","3c4d","S*2b"]),
     (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly20_4b3a"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","1g1f","1c1d","3g3f","4b3a","S*2b"]),
-    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly19_7g8f"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","1g1f","1c1d","7g8f","8e8f","S*3a","2b3a","2g2f","8b8d","2f2e","8d5d"]),
-    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly19_7g4d"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","1g1f","1c1d","7g4d","4c4d","S*3a","2b3a","2g2f","8b8d","2f2e","8d5d"]),
-    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly18_2a3c"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","1g1f","2a3c","7g3c+","2b3c","N*5d","5c5d","S*3a","4b3a","2g2f"]),
+    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly19_7g8f"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","1g1f","1c1d","7g8f","8e8f","S*3a","2b3a","2g2f","8b8d","2f2e","8d5d","2e2d","5d8d","2d2c+","3b2c","P*4b"]),
+    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly19_7g4d"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","1g1f","1c1d","7g4d","4c4d","S*3a","2b3a","2g2f","8b8d","2f2e","8d5d","2e2d","5d8d","2d2c+","3b2c","P*4b"]),
+    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly18_2a3c"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","1g1f","2a3c","7g3c+","2b3c","N*5d","5c5d","S*3a","4b3a","2g2f","8b8d","2f2e","N*3f","3g3f","S*1g","N*2c"]),
     (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly18_4b3a"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","1g1f","4b3a","S*2b"]),
-    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly17_7g8f"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","7g8f","8e8f","S*3a","2b3a","2g2f","8b8d","2f2e","8d5d"]),
-    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly17_7g4d"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","7g4d","4c4d","S*3a","2b3a","2g2f","8b8d","2f2e","8d5d"]),
-    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly16_2a3c"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","2a3c","7g3c+","2b3c","N*5d","5c5d","S*3a","4b3a","2g2f"]),
+    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly17_7g8f"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","7g8f","8e8f","S*3a","2b3a","2g2f","8b8d","2f2e","8d5d","2e2d","5d8d","2d2c+","3b2c","P*4b"]),
+    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly17_7g4d"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","7a6b","7g4d","4c4d","S*3a","2b3a","2g2f","8b8d","2f2e","8d5d","2e2d","5d8d","2d2c+","3b2c","P*4b"]),
+    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly16_2a3c"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","2a3c","7g3c+","2b3c","N*5d","5c5d","S*3a","4b3a","2g2f","8b8d","2f2e","N*1f","1g1f","S*1g","N*2c"]),
     (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly16_4b3a"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","3h2h","4b3a","S*2b"]),
-    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly15_7g8f"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","7g8f","8e8f","S*3a","2b3a","2g2f","8b8d","2f2e","8d5d"]),
-    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly15_7g4d"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","7g4d","4c4d","S*3a","2b3a","2g2f","8b8d","2f2e","8d5d"]),
-    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly14_2a3c"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","2a3c","7g3c+","2b3c","N*5d","5c5d","S*5a","6a5a","2g2f"]),
-    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly14_2b6f"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","2b6f","7g6f","8b5b","6f1a+","2a3c","1a3c","3b3c","N*5d"]),
-    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly13_7g8f"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","7g8f","8e8f","S*3c","2b3c","8i7g","3c7g+","6h7g","8b8d"]),
-    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly13_7g4d"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","7g4d","2b4d","S*3c","4d3c","8i7g","3c7g+","6h7g","8b8d"]),
+    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly15_7g8f"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","7g8f","8e8f","S*3a","2b3a","2g2f","8b8d","2f2e","8d5d","2e2d","5d8d","2d2c+","3b2c","P*4b"]),
+    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly15_7g4d"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","3a2b","7g4d","4c4d","S*3a","2b3a","2g2f","8b8d","2f2e","8d5d","2e2d","5d8d","2d2c+","3b2c","P*4b"]),
+    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly14_2a3c"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","2a3c","7g3c+","2b3c","N*5d","5c5d","S*5a","6a5a","2g2f","3c9i+","2f2e","9i8i","2e2d","8i7h","6i7h","8b8d","2d2c+","3b2c","P*4b"]),
+    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly14_2b6f"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","4h3h","2b6f","7g6f","8b5b","6f1a+","2a3c","1a3c","3b3c","N*5d","5c5d","S*5a","6a5a","B*7e","N*5c","7e5c+","5b5c","N*2d","2c2d","2g2f","N*4f","4g4f","S*2g","3h2g","3d3e","N*3d","3c3d","S*3c","4b3c","2f2e","S*3f","3g3f","2d2e","3f3e","2e2f","2g2f","3d3e","2f3e","P*3d","3e2e","P*2d","2e1e","3d3e","S*2b","3a2b","7f7e","S*1d","1e1f","1d2e","1f1e","2e2f","1e2f","2d2e","2f2e","P*2d","2e3e","5d5e","7h7f","5c5d","S*3d","5d3d","3e2f","3d5d","P*3d","5d3d","P*3e","3d5d","L*3d","3c2c","G*3c","2b3c","3d3c+","2c3c","S*3d","5d3d","3e3d","3c3d","R*3b"]),
+    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly13_7g8f"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","7g8f","8e8f","S*3c","2b3c","8i7g","3c7g+","6h7g","8b8d","7g6f","8d5d","6f5e","5d5e","7f7e","5e5d","7h7f","5d8d","7f5f","8d5d","5f5d","5c5d","R*4b"]),
+    (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly13_7g4d"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","5a4b","7g4d","2b4d","S*3c","4d3c","8i7g","3c7g+","6h7g","8b8d","7g6f","8d5d","6f5e","5d5e","7f7e","5e5d","7h7f","5d8d","7f5f","8d5d","5f5d","5c5d","R*4b"]),
     (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly12_2a3c"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","2a3c","S*4b"]),
     (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly12_2b6f"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","5i4h","2b6f","S*4b"]),
     (("Start", "Sankenbisha_StratifiedEquilibrium_DevPly11_7g8f"), ["7g7f","3c3d","7i6h","8c8d","2h7h","8d8e","8h7g","6b6c","3i4h","4a3b","7g8f","8e8f","8i7g","2b7g+","6h7g","8b8d","B*6b"]),
@@ -2995,22 +7147,22 @@ runtimePaths = Map.fromList
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly45_2c3c"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","2b3a","2a2c","4b3b","2c3c","3b3c","P*8b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly44_1a1b"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","2b3a","2a2c","1a1b","P*8b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly44_1a1c"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","2b3a","2a2c","1a1c","P*8b"]),
-    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly43_2a2b"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","2b3a","2a2b","3a2b","N*7d","7c7d","S*7a","8b7a","5f5e","N*5f"]),
-    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly43_2a1b"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","2b3a","2a1b","1a1b","N*7d","7c7d","S*7a","8b7a","5f5e","N*5f"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly43_2a2b"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","2b3a","2a2b","3a2b","N*7d","7c7d","S*7a","8b7a","5f5e","N*5f","5g5f","S*5g","N*6c"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly43_2a1b"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","2b3a","2a1b","1a1b","N*7d","7c7d","S*7a","8b7a","5f5e","N*5f","5g5f","S*5g","N*6c"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly42_1a1b"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","1a1b","2a8a","8b8a","S*7b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly42_3d3e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2a+","3d3e","2a8a","8b8a","S*7b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly41_2h2d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2d","2c2d","S*7a","8b7a","5f5e","S*5i","6h5i","S*5h","S*6b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly41_2h2c+"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","3b4b","2h2c+","2b2c","P*8b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly40_2a3c"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","2a3c","4b5b","S*5i","R*8b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly40_2b3a"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","5c4b+","2b3a","4b5b","S*5i","R*8b"]),
-    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly39_2h2d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","2h2d","2c2d","S*7a","8b9b","7a8b+","7b8b","5c7a+","S*5i"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly39_2h2d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","2h2d","2c2d","S*7a","8b9b","7a8b+","7b8b","5c7a+","S*5i","6h5i","S*5h","4h5h","B*9e","8i7g","9e7g+","7h7g","R*2i","S*4i","2i4i+","5i4i","S*3h","R*9b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly39_2h2c+"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","5a5b","2h2c+","2b2c","P*8b"]),
-    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly38_2b3a"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","2b3a","5c3a+","5a3a","2h2f","S*5i","6h5i","B*9e","8i7g"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly38_2b3a"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","2b3a","5c3a+","5a3a","2h2f","S*5i","6h5i","B*9e","8i7g","9e7g+","7h7g","5d5e","S*7a","8b7a","S*6b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly38_S*1e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","B*5c","S*1e","1f1e","5a5c","2h2f","5d5e","5f5e","B*9e","P*8b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly37_2h2d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","2h2d","2c2d","S*7a","8b7a","B*8b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly37_2h2c+"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","3a2b","2h2c+","2b2c","P*8b"]),
-    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly36_1a1b"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","1a1b","2b3b","3a3b","2h2f","S*5i","6h5i","5d5e","S*7a"]),
-    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly36_1a1c"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","1a1c","2b3b","3a3b","2h2f","S*5i","6h5i","5d5e","S*7a"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly36_1a1b"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","1a1b","2b3b","3a3b","2h2f","S*5i","6h5i","5d5e","S*7a","8b7a","G*7b"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly36_1a1c"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","8h2b+","1a1c","2b3b","3a3b","2h2f","S*5i","6h5i","5d5e","S*7a","8b7a","G*7b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly35_2h2d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","2h2d","2b8h+","7i8h","2c2d","S*7a","8b7a","B*8b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly35_2h2c+"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e5a","2h2c+","2b8h+","P*8b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly34_5e4e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","5c4d","3g4f","4a3b","2e2d","2c2d","2h2d","P*2c","2d2h","5a6b","6i7h","6b7b","5i6h","7b8b","4i4h","6a7b","1g1f","1c1d","2i3g","4d5e","4f5e","5b5e","P*5f","5e4e","8h2b+","3a2b","3g4e","S*5i","R*8b"]),
@@ -3050,14 +7202,14 @@ runtimePaths = Map.fromList
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly12_2b6f"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","2b6f","8h6f","5c4d","B*6b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly12_2b7g+"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","3h3g","2b7g+","8h7g","5c4d","B*6b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly11_8h5e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","8h5e","2b5e","2h2f","5e1i+","3h3g","1i3g","2i3g","S*4h","B*6b"]),
-    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly11_8h4d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","8h4d","5c4d","2h2f","4d5e","3h2g","B*9e","7i6h","9e6h+"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly11_8h4d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","6b5c","8h4d","5c4d","2h2f","4d5e","3h2g","B*9e","7i6h","9e6h+","6i6h","S*4h","B*6b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly10_2b6f"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","2b6f","8h6f","3a2b","B*6b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly10_2b7g+"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","3i3h","2b7g+","8h7g","3a2b","B*6b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly09_8h5e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","8h5e","2b5e","2h2f","5e1i+","3i2h","1i2h","2f2h","S*4h","B*6b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly09_8h4d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","7a6b","8h4d","2b4d","2h5h","4d9i+","7i8h","9i8h","5h8h","S*4h","B*6b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly08_2b6f"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","2b6f","8h6f","3a2b","B*6b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly08_2b7g+"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","3g3f","2b7g+","8h7g","3a2b","B*6b"]),
-    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly07_8h5e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","8h5e","2b5e","2h2f","5e9i+","2f5f","9i8i","5f2f","8i7i"]),
+    (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly07_8h5e"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","8h5e","2b5e","2h2f","5e9i+","2f5f","9i8i","5f2f","8i7i","6i7i","S*4h","B*6b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly07_8h4d"), ["7g7f","3c3d","2g2f","5c5d","2f2e","8b5b","8h4d","2b4d","2h5h","4d9i+","7i8h","9i8h","5h8h","S*4h","B*6b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly06_2b6f"), ["7g7f","3c3d","2g2f","5c5d","2f2e","2b6f","8h6f","8b5b","B*6b"]),
     (("Start", "GoteGokigen_IronDefense_Equilibrium_DevPly06_2b7g+"), ["7g7f","3c3d","2g2f","5c5d","2f2e","2b7g+","8h7g","8b5b","B*6b"]),
@@ -3082,54 +7234,54 @@ runtimePaths = Map.fromList
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly39_B*1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","3g3f","8e5e","B*1c","5e5g+","1c5g+","5c4d","R*3b"]),
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly38_8e7e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","3g3f","8e7e","B*4b"]),
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly38_8e8f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","3g3f","8e8f","B*4b"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly37_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","B*1b","1a1b","5g5f","8e8d","5f2f","5d5e","7f7e","8d5d"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly37_B*1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","B*1c","2b1c","5g5f","8e8d","5f2f","5d5e","7f7e","8d5d"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly37_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","B*1b","1a1b","5g5f","8e8d","5f2f","5d5e","7f7e","8d5d","2f7f","5d8d","2g2f","8d5d","3h2g","5d8d","2g3f","8d5d","3f2e","5d8d","2e1d","1b1d","P*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly37_B*1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","8d8e","B*1c","2b1c","5g5f","8e8d","5f2f","5d5e","7f7e","8d5d","2f7f","5d8d","2g2f","8d5d","3h2g","5d8d","2g3f","8d5d","3f2e","5d8d","2e1d","1c1d","P*3b"]),
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly36_1a1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","1a1b","B*4b"]),
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly36_1a1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","5h4h","1a1c","B*4b"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly35_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","B*1b","1a1b","5g5f","5d5e","5f2f","8d5d","7f7e","5d8d"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly35_B*1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","B*1c","2b1c","5g5f","5d5e","5f2f","8d5d","7f7e","5d8d"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly35_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","B*1b","1a1b","5g5f","5d5e","5f2f","8d5d","7f7e","5d8d","2f7f","8d5d","2g2f","5d8d","3h2g","8d5d","2g3f","5d8d","3f2e","8d5d","2e1d","1b1d","P*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly35_B*1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d8d","B*1c","2b1c","5g5f","5d5e","5f2f","8d5d","7f7e","5d8d","2f7f","8d5d","2g2f","5d8d","3h2g","8d5d","2g3f","5d8d","3f2e","8d5d","2e1d","1c1d","P*3b"]),
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly34_7d7e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","7d7e","B*4b"]),
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly34_B*1e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","6h5h","B*1e","B*4b"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly33_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","B*1b","1a1b","5g5f","7d8d","5f2f","5d5e","7f7e","8d5d"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly33_B*1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","B*1c","2b1c","5g5f","7d8d","5f2f","5d5e","7f7e","8d5d"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly33_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","B*1b","1a1b","5g5f","7d8d","5f2f","5d5e","7f7e","8d5d","2f7f","5d8d","2g2f","8d5d","3h2g","5d8d","2g3f","8d5d","3f2e","5d8d","2e1d","1b1d","P*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly33_B*1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d7d","B*1c","2b1c","5g5f","7d8d","5f2f","5d5e","7f7e","8d5d","2f7f","5d8d","2g2f","8d5d","3h2g","5d8d","2g3f","8d5d","3f2e","5d8d","2e1d","1c1d","P*3b"]),
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly32_8d8f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d8f","B*4b"]),
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly32_8d8g+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","5h5g","8d8g+","B*4b"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly31_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","B*1b","1a1b","5h5f","5d5e","5f2f","8d5d","7f7e","5d8d"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly31_B*1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","B*1c","2b1c","5h5f","5d5e","5f2f","8d5d","7f7e","5d8d"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly31_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","B*1b","1a1b","5h5f","5d5e","5f2f","8d5d","7f7e","5d8d","2f7f","8d5d","2g2f","5d8d","3h2g","8d5d","2g3f","5d8d","3f2e","8d5d","2e1d","1b1d","P*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly31_B*1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8d","B*1c","2b1c","5h5f","5d5e","5f2f","8d5d","7f7e","5d8d","2f7f","8d5d","2g2f","5d8d","3h2g","8d5d","2g3f","5d8d","3f2e","8d5d","2e1d","1c1d","P*3b"]),
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly30_8b8f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8f","B*4b"]),
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly30_8b8g+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","5f5e","8b8g+","B*4b"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly29_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","B*1b","1a1b","5f5e","8b8d","5h5f","5d5e","5f2f","8d5d"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly29_B*1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","B*1c","2b1c","5f5e","8b8d","5h5f","5d5e","5f2f","8d5d"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly29_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","B*1b","1a1b","5f5e","8b8d","5h5f","5d5e","5f2f","8d5d","7f7e","5d8d","2f7f","8d5d","2g2f","5d8d","3h2g","8d5d","2g3f","5d8d","3f2e","8d5d","2e1d","1b1d","P*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly29_B*1c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","1c1d","B*1c","2b1c","5f5e","8b8d","5h5f","5d5e","5f2f","8d5d","7f7e","5d8d","2f7f","8d5d","2g2f","5d8d","3h2g","8d5d","2g3f","5d8d","3f2e","8d5d","2e1d","1c1d","P*3b"]),
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly28_8b8f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","8b8f","B*4b"]),
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly28_8b8g+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","1g1f","8b8g+","B*4b"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly27_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","B*1b","1a1b","5f5e","8b8d","5h5f","5d5e","5f2f","8d5d"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly27_B*1d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","B*1d","1c1d","5f5e","8b8d","5h5f","5d5e","5f2f","8d5d"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly27_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","B*1b","1a1b","5f5e","8b8d","5h5f","5d5e","5f2f","8d5d","7f7e","5d8d","2f7f","8d5d","2g2f","5d8d","3h2g","8d5d","2g1f","5d8d","1f1e","8d5d","1e1d","1c1d","2f2e","5d8d","7f2f","8d5d","2e2d","5d8d","2d2c+","2b2c","P*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly27_B*1d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","6b5c","B*1d","1c1d","5f5e","8b8d","5h5f","5d5e","5f2f","8d5d","7f7e","5d8d","2f7f","8d5d","2g2f","5d8d","3h2g","8d5d","2g1f","5d8d","1f1e","1d1e","2f2e","8d5d","7f2f","5d8d","2e2d","8d5d","2d2c+","2b2c","P*3b"]),
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly26_8b8f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","8b8f","B*4b"]),
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly26_8b8g+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","4i3i","8b8g+","B*4b"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly25_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","B*1b","1a1b","5f5e","8b8d","5h5f","5d5e","5f2f","8d5d"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly25_B*1d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","B*1d","1c1d","5f5e","8b8d","5h5f","5d5e","5f2f","8d5d"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly25_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","B*1b","1a1b","5f5e","8b8d","5h5f","5d5e","5f2f","8d5d","7f7e","5d8d","2f7f","8d5d","2g2f","5d8d","3h2g","8d5d","2g1f","5d8d","1f1e","8d5d","1e1d","1c1d","2f2e","5d8d","7f2f","8d5d","2e2d","5d8d","2d2c+","2b2c","P*3b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly25_B*1d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","5c5d","B*1d","1c1d","5f5e","8b8d","5h5f","5d5e","5f2f","8d5d","7f7e","5d8d","2f7f","8d5d","2g2f","5d8d","3h2g","8d5d","2g1f","5d8d","1f1e","1d1e","2f2e","8d5d","7f2f","5d8d","2e2d","8d5d","2d2c+","2b2c","P*3b"]),
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly24_8b8f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","8b8f","B*4b"]),
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly24_8b8g+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","3i2h","8b8g+","B*4b"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly23_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","B*1b","1a1b","2g2f","8b8d","3h2g","8d5d","2g1f","5d8d"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly23_B*1d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","B*1d","1c1d","2g2f","8b8d","3h2g","8d5d","2g1f","5d8d"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly22_4b3c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3c","5f5e","8b8d","5h5f","5c5d","5f2f","5d5e","B*1e"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly23_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","B*1b","1a1b","2g2f","8b8d","3h2g","8d5d","2g1f","5d8d","1f1e","8d5d","1e1d","1c1d","5f5e","5d8d","5h5f","S*2h","3i2h","5c5d","S*2b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly23_B*1d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3a","B*1d","1c1d","2g2f","8b8d","3h2g","8d5d","2g1f","5d8d","1f1e","1d1e","5f5e","S*2h","3i2h","5c5d","S*2b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly22_4b3c"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b3c","5f5e","8b8d","5h5f","5c5d","5f2f","5d5e","B*1e","2c2d","1e2d","3c2c","2d5g","P*2d","5g8d","3d3e","R*2b"]),
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly22_4b4a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","4h3i","4b4a","B*5b"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly21_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","B*1b","1a1b","5f5e","8b8d","5h5f","5c5d","5f2f","5d5e"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly21_B*1d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","B*1d","1c1d","5f5e","8b8d","5h5f","5c5d","5f2f","5d5e"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly21_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","B*1b","1a1b","5f5e","8b8d","5h5f","5c5d","5f2f","5d5e","7f7e","8d5d","2f7f","5d8d","8i7g","8d5d","7f2f","5d8d","7g6e","8d5d","6e5c+","6b5c","2f7f","5d8d","7f2f","N*3f","3g3f","8d5d","3h3g","5d8d","N*5d","8d5d","3g4f","5d8d","4f5e","5c4d","P*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly21_B*1d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4a3b","B*1d","1c1d","5f5e","8b8d","5h5f","5c5d","5f2f","5d5e","7f7e","8d5d","2f7f","5d8d","8i7g","8d5d","7f2f","5d8d","7g6e","8d5d","6e5c+","6b5c","2f7f","5d8d","7f2f","N*3f","3g3f","8d5d","3h3g","5d8d","N*5d","8d5d","3g4f","5d8d","4f5e","5c4d","P*4b"]),
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly20_2b3a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","2b3a","B*1e","2a3c","1e3c+","4b3c","N*3c"]),
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly20_4b3a"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","3i3h","4b3a","B*4b"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly19_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","B*1b","1a1b","5f5e","8b8d","5h5f","5c5d","5f2f","5d5e"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly19_B*1d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","B*1d","1c1d","5f5e","8b8d","5h5f","5c5d","5f2f","5d5e"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly18_5a5b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a5b","5f5e","8b8d","5h5f","5c5d","5f2f","5d5e","7f7e"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly19_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","B*1b","1a1b","5f5e","8b8d","5h5f","5c5d","5f2f","5d5e","7f7e","8d5d","2f7f","5d8d","8i7g","8d5d","7f2f","5d8d","7g6e","8d5d","6e5c+","6b5c","2f7f","5d8d","7f2f","N*3f","3g3f","8d5d","N*2d","2c2d","2f2d","5d8d","P*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly19_B*1d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a4b","B*1d","1c1d","5f5e","8b8d","5h5f","5c5d","5f2f","5d5e","7f7e","8d5d","2f7f","5d8d","8i7g","8d5d","7f2f","5d8d","7g6e","8d5d","6e5c+","6b5c","2f7f","5d8d","7f2f","N*3f","3g3f","8d5d","N*2d","2c2d","2f2d","5d8d","P*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly18_5a5b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","5a5b","5f5e","8b8d","5h5f","5c5d","5f2f","5d5e","7f7e","8d5d","2f7f","5d8d","7e7d","5e5f","7f5f","6b5c","P*5b"]),
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly18_8b8f"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","5i4h","8b8f","B*6b"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly17_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","B*1b","1a1b","8i7g","8b8d","2g2f","8d5d","5f5e","5d8d"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly17_B*1d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","B*1d","1c1d","8i7g","8b8d","2g2f","8d5d","5f5e","5d8d"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly16_5a5b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","5a5b","8i7g","8b8d","2g2f","8d5d","5f5e","5d8d","5h5f"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly16_5a6b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","5a6b","8i7g","8b8d","2g2f","8d5d","5f5e","5d8d","5h5f"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly15_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","B*1b","1a1b","8i7g","8b8d","2g2f","8d5d","5f5e","5d8d"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly15_B*1d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","B*1d","1c1d","8i7g","8b8d","2g2f","8d5d","5f5e","5d8d"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly14_5a4b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","5a4b","2b3a","4a3a","S*3c","2a3c","8i7g","8b8d","2g2f"]),
-    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly14_5a5b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","5a5b","2b3a","4a3a","S*4a","3a4a","8i7g","8b8d","2g2f"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly17_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","B*1b","1a1b","8i7g","8b8d","2g2f","8d5d","5f5e","5d8d","5h5f","5c5d","5e5d","P*5h","P*5b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly17_B*1d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","7a6b","B*1d","1c1d","8i7g","8b8d","2g2f","8d5d","5f5e","5d8d","5h5f","5c5d","5e5d","P*5h","P*5b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly16_5a5b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","5a5b","8i7g","8b8d","2g2f","8d5d","5f5e","5d8d","5h5f","5c5d","5e5d","P*5h","P*5b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly16_5a6b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","6i6h","5a6b","8i7g","8b8d","2g2f","8d5d","5f5e","5d8d","5h5f","5c5d","5e5d","P*5h","P*6b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly15_B*1b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","B*1b","1a1b","8i7g","8b8d","2g2f","8d5d","5f5e","5d8d","5h5f","5c5d","5e5d","P*5h","P*5b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly15_B*1d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","3a2b","B*1d","1c1d","8i7g","8b8d","2g2f","8d5d","5f5e","5d8d","5h5f","5c5d","5e5d","P*5h","P*5b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly14_5a4b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","5a4b","2b3a","4a3a","S*3c","2a3c","8i7g","8b8d","2g2f","8d5d","5f5e","5d8d","5h5f","S*4h","3i4h","5c5d","5e5d","P*5h","P*4b"]),
+    (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly14_5a5b"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h2b+","5a5b","2b3a","4a3a","S*4a","3a4a","8i7g","8b8d","2g2f","8d5d","5f5e","5d8d","5h5f","S*4h","3i4h","5c5d","5e5d","P*5h","P*5b"]),
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly13_8h4d"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h4d","2b4d","8i7g","4d7g+","7h7g","8b8d","B*6b"]),
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly13_8h3c+"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","8f8b","8h3c+","2b3c","8i7g","3c7g+","7h7g","8b8d","B*6b"]),
     (("Start", "SenteKakuexchange_IronMino_Equilibrium_DevPly12_2b5e"), ["7g7f","3c3d","5g5f","8c8d","2h5h","8d8e","7i7h","8e8f","8g8f","8b8f","P*8g","2b5e","8h5e","8f8d","B*6b"]),
@@ -3234,13 +7386,13 @@ runtimePaths = Map.fromList
     (("Start", "SujichigaiBishop_Melee_DevPly08_B*1e"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","B*1e","1f1e","8b5b","B*6b"]),
     (("Start", "SujichigaiBishop_Melee_DevPly08_B*1g"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","B*1g","2i1g","8b5b","B*6b"]),
     (("Start", "SujichigaiBishop_Melee_DevPly07_4e3d"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","4e3d","8b5b","P*5b"]),
-    (("Start", "SujichigaiBishop_Melee_DevPly07_4e5d"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","4e5d","5c5d","2h5h","8b5b","8i7g","2a3c","2g2f","8c8d"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly07_4e5d"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","4e5d","5c5d","2h5h","8b5b","8i7g","2a3c","2g2f","8c8d","7f7e","3d3e","5g5f","5d5e","5f5e","8d8e","P*5b"]),
     (("Start", "SujichigaiBishop_Melee_DevPly06_B*1f"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","B*1f","1g1f","8b5b","B*6b"]),
     (("Start", "SujichigaiBishop_Melee_DevPly06_B*1h"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","B*1h","1i1h","8b5b","B*6b"]),
-    (("Start", "SujichigaiBishop_Melee_DevPly05_B*1b"), ["7g7f","3c3d","8h2b+","3a2b","B*1b","1a1b","2h5h","8b5b","8i7g","2a3c","2g2f","8c8d"]),
-    (("Start", "SujichigaiBishop_Melee_DevPly05_B*1d"), ["7g7f","3c3d","8h2b+","3a2b","B*1d","1c1d","2h5h","8b5b","8i7g","2a3c","2g2f","8c8d"]),
-    (("Start", "SujichigaiBishop_Melee_DevPly04_5a4b"), ["7g7f","3c3d","8h2b+","5a4b","2b3a","4a3a","S*3c","2a3c","2h5h","S*4h","3i4h"]),
-    (("Start", "SujichigaiBishop_Melee_DevPly04_5a5b"), ["7g7f","3c3d","8h2b+","5a5b","2b3a","4a3a","S*4a","3a4a","2h5h","S*4h","3i4h"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly05_B*1b"), ["7g7f","3c3d","8h2b+","3a2b","B*1b","1a1b","2h5h","8b5b","8i7g","2a3c","2g2f","8c8d","7f7e","3d3e","5g5f","5c5d","5f5e","5d5e","2f2e","5b5d","2e2d","5d3d","5h5e","4a5b","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly05_B*1d"), ["7g7f","3c3d","8h2b+","3a2b","B*1d","1c1d","2h5h","8b5b","8i7g","2a3c","2g2f","8c8d","7f7e","3d3e","5g5f","5c5d","5f5e","5d5e","2f2e","5b5d","2e2d","5d3d","5h5e","4a5b","P*5b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly04_5a4b"), ["7g7f","3c3d","8h2b+","5a4b","2b3a","4a3a","S*3c","2a3c","2h5h","S*4h","3i4h","8b5b","S*5a","6a5a","8i7g","S*6h","7i6h","3d3e","S*2a","3a2a","2g2f","S*3h","4i3h","5c5d","S*3a","2a3a","B*7e","S*5c","7e5c+","5b5c","S*2a","3a2a","7f7e","5d5e","5g5f","5c5d","5f5e","5d3d","P*4b"]),
+    (("Start", "SujichigaiBishop_Melee_DevPly04_5a5b"), ["7g7f","3c3d","8h2b+","5a5b","2b3a","4a3a","S*4a","3a4a","2h5h","S*4h","3i4h","B*9e","7i6h","9e6h+","5h6h","S*5h","4i5h","3d3e","S*3a","4a3a","S*4a","3a4a","8i7g","S*3h","2g2f","3h2i+","7f7e","2i1i","7e7d","7c7d","5g5f","N*5g","4h5g","S*4h","5g4h","2a3c","N*4d","4c4d","S*4c","5b4c","5f5e","8b5b","2f2e","3c2e","5e5d","2e3g+","4h3g","S*4h","N*4c"]),
     (("Start", "SujichigaiBishop_Melee_DevPly03_8h4d"), ["7g7f","3c3d","8h4d","2b4d","2h5h","4d9i+","7i8h","9i8h","5h8h","S*4h","B*6b"]),
     (("Start", "SujichigaiBishop_Melee_DevPly03_8h3c+"), ["7g7f","3c3d","8h3c+","2b3c","2h5h","3c9i+","7i8h","9i8h","5h8h","S*4h","B*6b"]),
     (("Start", "SujichigaiBishop_Melee"), ["7g7f","3c3d","8h2b+","3a2b","B*4e","1c1d","1g1f","1d1e","1f1e","2a1c","4e6c+","1c2e","6c4a","5a4a","G*4b","8b4b","1e1d","G*5h","2h5h","2b3c","1d1c+","1a1b","1c1b","2e1g+","1b1a","1g1h","1a2a","1h1i","G*3a","4a5a","2a1a","1i2i","1a2a","2i3i","2a1a","3i4i","P*5b"]),
@@ -3367,12 +7519,12 @@ runtimePaths = Map.fromList
     (("Start", "EarlyClimbingSilver_Melee_DevPly11_8h2b+"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","2a1c","8h2b+","3a2b","B*6b"]),
     (("Start", "EarlyClimbingSilver_Melee_DevPly10_1a1d"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","1a1d","P*5b"]),
     (("Start", "EarlyClimbingSilver_Melee_DevPly10_1a1e"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","1f1e","1a1e","P*5b"]),
-    (("Start", "EarlyClimbingSilver_Melee_DevPly09_8h4d"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","8h4d","2b4d","3h2g","4d9i+","2h5h","9i8i","2g3f","8i7i"]),
-    (("Start", "EarlyClimbingSilver_Melee_DevPly09_8h3c+"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","8h3c+","2b3c","3h2g","3c9i+","2h5h","9i8i","2g3f","8i7i"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly09_8h4d"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","8h4d","2b4d","3h2g","4d9i+","2h5h","9i8i","2g3f","8i7i","6i7i","S*4h","B*6b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly09_8h3c+"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","1d1e","8h3c+","2b3c","3h2g","3c9i+","2h5h","9i8i","2g3f","8i7i","6i7i","S*4h","B*6b"]),
     (("Start", "EarlyClimbingSilver_Melee_DevPly08_2b6f"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","2b6f","8h6f","8b5b","B*6b"]),
     (("Start", "EarlyClimbingSilver_Melee_DevPly08_2b7g+"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","1g1f","2b7g+","8h7g","8b5b","B*6b"]),
-    (("Start", "EarlyClimbingSilver_Melee_DevPly07_8h4d"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","8h4d","2b4d","3h2g","4d9i+","2h5h","9i8i","2g3f","8i7i"]),
-    (("Start", "EarlyClimbingSilver_Melee_DevPly07_8h3c+"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","8h3c+","2b3c","3h2g","3c9i+","2h5h","9i8i","2g3f","8i7i"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly07_8h4d"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","8h4d","2b4d","3h2g","4d9i+","2h5h","9i8i","2g3f","8i7i","6i7i","S*4h","B*6b"]),
+    (("Start", "EarlyClimbingSilver_Melee_DevPly07_8h3c+"), ["7g7f","3c3d","2g2f","8c8d","3i3h","1c1d","8h3c+","2b3c","3h2g","3c9i+","2h5h","9i8i","2g3f","8i7i","6i7i","S*4h","B*6b"]),
     (("Start", "EarlyClimbingSilver_Melee_DevPly06_2b6f"), ["7g7f","3c3d","2g2f","8c8d","3i3h","2b6f","8h6f","8b5b","B*6b"]),
     (("Start", "EarlyClimbingSilver_Melee_DevPly06_2b7g+"), ["7g7f","3c3d","2g2f","8c8d","3i3h","2b7g+","8h7g","8b5b","B*6b"]),
     (("Start", "EarlyClimbingSilver_Melee_DevPly05_8h4d"), ["7g7f","3c3d","2g2f","8c8d","8h4d","2b4d","2h5h","4d9i+","7i8h","9i8h","5h8h","S*4h","B*6b"]),
@@ -3620,11 +7772,11 @@ runtimePaths = Map.fromList
     (("Start", "UreshinoMelee_DevPly15_1i1g"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","1i1g","8b5b","B*6b"]),
     (("Start", "UreshinoMelee_DevPly15_2h1h"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","1f1g+","2h1h","1g1h","B*6b"]),
     (("Start", "UreshinoMelee_DevPly14_3c2e"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","3c2e","B*6b"]),
-    (("Start", "UreshinoMelee_DevPly14_5a4b"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","5a4b","2h5h","8b5b","8i7g","3d3e","7f7e","5c5d","5g5f"]),
+    (("Start", "UreshinoMelee_DevPly14_5a4b"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","2g2f","5a4b","2h5h","8b5b","8i7g","3d3e","7f7e","5c5d","5g5f","5d5e","5f5e","3c2e","P*4b"]),
     (("Start", "UreshinoMelee_DevPly13_1i1g"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","1i1g","1f1g+","B*6b"]),
     (("Start", "UreshinoMelee_DevPly13_1i1f"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","2a3c","1i1f","1a1f","B*6b"]),
-    (("Start", "UreshinoMelee_DevPly12_5a5b"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","5a5b","3c1a","3d3e","1a2a","3a3b","2a3b","4a3b","N*4d"]),
-    (("Start", "UreshinoMelee_DevPly12_5a6b"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","5a6b","3c1a","3d3e","1a2a","3a3b","2a3b","4a3b","N*5d"]),
+    (("Start", "UreshinoMelee_DevPly12_5a5b"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","5a5b","3c1a","3d3e","1a2a","3a3b","2a3b","4a3b","N*4d","4c4d","S*4a","5b4a","B*5b"]),
+    (("Start", "UreshinoMelee_DevPly12_5a6b"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","2b3c","5a6b","3c1a","3d3e","1a2a","3a3b","2a3b","4a3b","N*5d","5c5d","S*5a","6a5a","2h5h","S*4h","3i4h","5d5e","S*5c","6b5c","7f7e","8b5b","L*5d","5c5d","5g5f","5e5f","5h5f","N*5e","5f5e","5d5e","8i7g","5b5d","4h5g","5d3d","5g4f","5e4d","4f3e","3d3e","N*3f","3e3f","3g3f","S*4h","4i4h","S*5h","4h5h","B*1e","2g2f","1e2f","2i3g","2f3g+","5h4h","3g4h","5i4h","N*5f","4h3g","5f6h+","7h6h","N*2e","3g2f","2e1g+","1i1g","1f1g+","2f1g","S*1f","1g1f","P*1e","1f2f","G*1f","2f2e","L*2d","2e1d","L*1a","N*1c","1a1c","1d1c","N*3e","3f3e","3b2b","1c2b","P*3c","G*3d","3c3d","S*3c","4d3e","3c2d","2c2d","S*4d","4c4d","P*3f","3e3f","S*2e","2d2e","P*3g","3f3g","P*3h","3g3h","L*3i","3h3i","B*5g","S*4h","5g4h","3i4h","6h5h","4h5h","L*5i","5h5i","S*4h","5i4h","B*6f","S*5g","6f5g","4h5g","R*5b"]),
     (("Start", "UreshinoMelee_DevPly11_1i1g"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","1i1g","3a2b","B*6b"]),
     (("Start", "UreshinoMelee_DevPly11_1i1f"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1e1f","1i1f","3a2b","B*6b"]),
     (("Start", "UreshinoMelee_DevPly10_1a1b"), ["6i7h","3c3d","7g7f","8c8d","7i6h","1c1d","1g1f","1d1e","8h2b+","1a1b","B*6b"]),
