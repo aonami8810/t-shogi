@@ -872,8 +872,11 @@ evalTacticalFork plr st =
   in countForks plr - countForks opp
 
 -- | 移動先マスが相手の利きに晒されており、かつ味方の紐が付いていない（または安い駒で取られる）大悪手・タダ捨て手か判定
--- ★ ただし、王手をかける手、敵の守備駒（金銀飛角など）を捕獲する手、敵陣での大駒の成り捨て（大攻勢）、
---    数の攻め（味方の利き >= 相手の利き）による突破手は決してタダ捨て悪手ではない！
+-- | 移動先マスが相手の利きに晒されており、かつ味方の紐が付いていない（または安い駒で取られる）大悪手・タダ捨て手か判定
+-- ★ ただし、敵の守備駒（金銀飛角など）を捕獲する手、敵陣での大駒の成り捨て（大攻勢）、
+--    数の攻め（味方の利き >= 相手の利き）による突破手はタダ捨て悪手ではない！
+-- ★ 重要：大駒（飛、角、竜、馬）による「紐なし王手」や「安い駒で取られる王手」は、
+--    即詰みでない限り、絶対にタダ捨て大悪手（isMajorSuicideCheck）として判定・完全排除する！
 isBlunderMove :: State -> Move -> Bool
 isBlunderMove st m
   | isKingUnderAttack (turn st) (board st) = False -- 王手回避手はタダ捨て悪手ではない！
@@ -882,11 +885,11 @@ isBlunderMove st m
           opp = opponent plr
           bd = board st
           nextSt = applyMove m st
+          nextBd = board nextSt
           
-          -- 1. 王手（Check）をかける手は絶対にタダ捨て悪手ではない！（成り捨て王手など）
-          isCheck = isKingUnderAttack opp (board nextSt)
+          -- 相手玉に王手をかける手か
+          isCheck = isKingUnderAttack opp nextBd
           
-          -- 2. 敵の守備駒（金銀飛角など）を捕獲する手も大駒切り・成り捨ての強襲手！
           (toSq, ptMoved, isPromo) = case m of
             NormalMove from to promo ->
               case Map.lookup from bd of
@@ -899,18 +902,35 @@ isBlunderMove st m
             Just (Piece _ capPt) -> pieceValue capPt >= 350.0 -- 金・銀・飛・角・桂・と金等の重要駒を捕獲
             Nothing              -> False
           
+          -- 着手した駒が大駒（飛車・角行・竜王・竜馬）か
+          isMajorPiece = ptMoved `elem` [Rook, PRook, Bishop, PBishop]
+          
+          -- 着手マスへの相手の利き（相手玉自身の隣接利きを含む）
+          oppAttackers = getPiecesCovering opp toSq nextBd
+          friendlyDefenders = getPiecesCovering plr toSq nextBd
+          
+          -- ★ 大駒のただ捨て王手（無駄王手）の完全検出：
+          -- 1. 大駒で王手をかけているが、味方の紐が全くないマスで相手の利き（玉や守備駒）に飛び込んでいる
+          isMajorSuicideCheck =
+            isCheck && isMajorPiece && not (null oppAttackers) && null friendlyDefenders && not isCapturingValuable
+          
+          -- 2. 大駒で王手をかけているが、相手の安い駒（歩、香、桂、銀）で取られる大損交換王手
+          hasCheapAttacker = any (\(_, Piece _ opt) -> opt `elem` [Pawn, Lance, Knight, Silver]) oppAttackers
+          isMajorCheapTradeCheck =
+            isCheck && isMajorPiece && hasCheapAttacker && not isCapturingValuable
+          
           -- 3. 敵陣での大駒（飛車・角）の成り捨て（龍・馬を作る強襲）
           isMajorPromotion = isPromo && ptMoved `elem` [Rook, Bishop]
           
           -- 4. 数の攻めが成立しているマス（味方の利き >= 相手の利き）への突入
-          oppAttackers = getPiecesCovering opp toSq bd
-          nextBd = board nextSt
-          friendlyDefenders = getPiecesCovering plr toSq nextBd
           isNumericalSuperiority = length friendlyDefenders >= length oppAttackers
+          
           -- 相手の歩の利きがあるマスに桂馬・銀・金・角・飛が飛び込むのは、たとえ紐があってもタダ捨て・大損交換！
           hasEnemyPawnControl = any (\(_, Piece _ opt) -> opt == Pawn) oppAttackers
           isPawnFodder = hasEnemyPawnControl && ptMoved `elem` [Knight, Silver, Gold, Bishop, Rook] && not isCheck && not isCapturingValuable
-      in if isPawnFodder
+      in if isMajorSuicideCheck || isMajorCheapTradeCheck
+         then True -- 大駒のただ捨て王手・大損交換王手は100%絶対タダ捨て大悪手！
+         else if isPawnFodder
          then True -- 「桂馬の高跳び歩の餌食」等は絶対タダ捨て大悪手！
          else if isCheck || isCapturingValuable || (isMajorPromotion && not (null friendlyDefenders)) || isNumericalSuperiority
          then False -- これらは大駒の成り捨て・数の攻め・強襲手であり、タダ捨て悪手ではない！
@@ -1425,13 +1445,41 @@ searchAlphaBeta weights depth alpha beta st =
                    opp = opponent (turn st)
                    nextBd = board nextSt
                    isCheck = isKingUnderAttack opp nextBd
-                   checkBonus = if isCheck then 400.0 else 0.0
+                   
+                   -- ★ 大駒のただ捨て王手の完全検知と強烈ペナルティ排除
+                   (toSq, ptMoved, isPromo) = case m of
+                     NormalMove _ t p ->
+                       case Map.lookup t nextBd of
+                         Just (Piece _ pt) -> (t, pt, p)
+                         Nothing           -> (t, Pawn, False)
+                     DropMove pt t    -> (t, pt, False)
+                   isMajor = ptMoved `elem` [Rook, PRook, Bishop, PBishop]
+                   oppAttackers = getPiecesCovering opp toSq nextBd
+                   friendlyDefenders = getPiecesCovering (turn st) toSq nextBd
+                   targetCaptured = Map.lookup toSq (board st)
+                   isCapturingValuable = case targetCaptured of
+                     Just (Piece _ capPt) -> pieceValue capPt >= 350.0
+                     Nothing              -> False
+                   
+                   -- 紐なしで敵の利きのマスに大駒で飛び込む王手（タダ取られ王手）
+                   isMajorSuicideCheck = isCheck && isMajor && not (null oppAttackers) && null friendlyDefenders && not isCapturingValuable
+                   -- 相手の歩・香・桂・銀などの安い駒で大駒を取られる大損交換王手
+                   hasCheapAttacker = any (\(_, Piece _ opt) -> opt `elem` [Pawn, Lance, Knight, Silver]) oppAttackers
+                   isMajorCheapTradeCheck = isCheck && isMajor && hasCheapAttacker && not isCapturingValuable
+                   
+                   -- 大駒のタダ捨て王手・大損交換王手なら、王手ボーナスをゼロにし、-10000点ペナルティ！
+                   checkBonus = if isMajorSuicideCheck || isMajorCheapTradeCheck
+                                then -10000.0
+                                else if isCheck then 400.0 else 0.0
                    forkBonus = if isForkMove st m then 450.0 else 0.0
                    
+                   -- ★ QEGTB（商空間エンドゲームテーブル）の配置空間と同値になる手への優先ボーナス！
+                   quotientEquivBonus = evalQuotientEquivalence st m
+                   
                    -- ★ とびごま（飛、竜、角、馬、桂、香）の潜在的な利きを活かした戦術ボーナス
-                   (fromSq, toSq) = case m of
-                     NormalMove f t _ -> (Just f, t)
-                     DropMove _ t     -> (Nothing, t)
+                   fromSq = case m of
+                     NormalMove f _ _ -> Just f
+                     DropMove _ _     -> Nothing
                    
                    -- 1. 開き王手（Discovered Check）：自駒を動かしたマス自身ではなく、背後の飛び駒（飛・角・香）から敵玉に王手がかかった手！
                    isDiscoveredCheck = isCheck && case fromSq of
@@ -1474,7 +1522,7 @@ searchAlphaBeta weights depth alpha beta st =
                          Nothing -> 0.0
                    
                    -- 大駒の成り捨て・重要駒破壊・打ち込み・数の攻めボーナス
-                   tacticalBonus = case m of
+                   tacticalBonus = if isMajorSuicideCheck || isMajorCheapTradeCheck then 0.0 else case m of
                      -- 大駒の成り（王手を伴う成り捨てなら超特大加点！）
                      NormalMove _ _ True -> if isCheck then 500.0 else 240.0
                      -- 敵玉近傍への大駒・金銀の打ち込み（王手ならさらに加点）
@@ -1495,7 +1543,7 @@ searchAlphaBeta weights depth alpha beta st =
                    
                    s = evaluateState weights (turn st) nextSt
                in s + blunderPen + lancePen + checkBonus + forkBonus + tacticalBonus
-                  + discoveredBonus + rayUnblockBonus + potentialAlignBonus
+                  + discoveredBonus + rayUnblockBonus + potentialAlignBonus + quotientEquivBonus
              orderedMoves = sortBy (\m1 m2 -> compare (scoreMove m2) (scoreMove m1)) effectiveMoves
              -- 王手をかけられているときはすべての王手回避手を読み、それ以外は上位14手を深く読む
              topMoves = if inCheck then effectiveMoves else take (if depth >= 2 then 14 else 10) orderedMoves
@@ -1763,6 +1811,57 @@ lookupQuotientTablebase st =
 
 -- | USI の go コマンド引数から思考時間上限（マイクロ秒）を計算
 -- byoyomi (秒読み) の秒数を上限とし、通信・I/Oラグ（150ms）を差し引いて切れ負けを完全防止
+-- | 指し手を指した結果の局面が、QEGTB（商空間エンドゲームテーブル）の配置空間と同値であるか判定・評価
+-- 1. 指した後の局面で自分手番と仮定した場合にQEGTB即詰み（DTM 1 または 3）になる手（詰めろ・QEGTB直接誘導）
+-- 2. 相手玉の脱出可能トポロジー（Escape Topology）を縮約し、頭金・腹金・吊るし桂の前提空間へと収束させる手
+-- 3. 相手玉の隣接マスに味方の紐（支え）を新設してQEGTBイデアルを構築する手
+evalQuotientEquivalence :: State -> Move -> Double
+evalQuotientEquivalence st m =
+  let plr = turn st
+      opp = opponent plr
+      curBd = board st
+      nextSt = applyMove m st
+      nextBd = board nextSt
+      
+      -- 1. 指し手を指した後の局面で、自分が手番なら即座にQEGTB即詰み（DTM 1 または 3）になるか（詰めろ・QEGTB同値空間への直接突入）
+      stHypotheticalMyTurn = nextSt { turn = plr }
+      qegtbDirectHitScore = case lookupQuotientTablebase stHypotheticalMyTurn of
+        Just (dtm, _) ->
+          -- DTM 1（頭金・腹金・吊るし桂等の即詰み同値空間に遷移）なら超特大ボーナス！
+          if dtm == 1 then 1800.0 else 1200.0
+        Nothing       -> 0.0
+      
+      -- 2. 相手玉の脱出トポロジー（Escape Topology）の縮約度
+      escapeReductionScore =
+        case (findKing opp curBd, findKing opp nextBd) of
+          (Just kCur, Just kNext) ->
+            let curEscapes = length (getKingEscapes opp kCur curBd)
+                nextEscapes = length (getKingEscapes opp kNext nextBd)
+                -- 脱出可能マスが0（完全包囲・退路なし）になった場合
+                zeroEscapeBonus = if nextEscapes == 0 then 600.0 else 0.0
+                -- 脱出可能マスを狭めた（トポロジー縮約）ボーナス
+                reducedBonus = if nextEscapes < curEscapes
+                               then fromIntegral (curEscapes - nextEscapes) * 220.0
+                               else 0.0
+            in zeroEscapeBonus + reducedBonus
+          _ -> 0.0
+      
+      -- 3. QEGTBイデアル構築（相手玉の隣接マスへの支え・紐の創出、頭金・腹金スペースの確保）
+      idealSupportScore =
+        case findKing opp nextBd of
+          Just (kx, ky) ->
+            let neighbors = [ (kx + dx, ky + dy)
+                            | dx <- [-1..1], dy <- [-1..1], (dx, dy) /= (0, 0)
+                            , not (isOutOfBounds (kx + dx, ky + dy))
+                            ]
+                -- 着手後に新たに味方の支え（紐）がついた隣接マスの数
+                newSupportedNeighbors = length [ sq | sq <- neighbors
+                                                    , isSquareUnderAttack plr sq nextBd
+                                                    , not (isSquareUnderAttack plr sq curBd) ]
+            in fromIntegral newSupportedNeighbors * 150.0
+          Nothing -> 0.0
+  in qegtbDirectHitScore + escapeReductionScore + idealSupportScore
+
 calcTimeLimitMicros :: Player -> [String] -> Int
 calcTimeLimitMicros ply tokens =
   let byo = case elemIndex "byoyomi" tokens of
