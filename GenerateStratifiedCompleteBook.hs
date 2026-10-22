@@ -104,6 +104,16 @@ baseBookMoves =
       , "B*5c", "3b4b", "5c4b+", "3a4b", "G*5a"
       ]
     )
+  , ( "SenteNakabisha_TokinAssault_Equilibrium"
+    , [ "7g7f", "3c3d", "5g5f", "8c8d", "2h5h", "8d8e", "5f5e", "6c6d", "5e5d", "7a6b"
+      , "5d5c+", "4a3b", "5c4b", "5a4b", "5i4h", "8e8f", "8g8f"
+      ]
+    )
+  , ( "GoteGokigen_TokinAssault_Equilibrium"
+    , [ "2g2f", "5c5d", "2f2e", "8b5b", "3g3f", "5d5e", "3i4h", "5e5f", "6i7h", "5f5g+"
+      , "4i3h", "5g5h"
+      ]
+    )
   , ( "SujichigaiBishop_Melee"
     , [ "7g7f", "3c3d", "8h2b+", "3a2b", "B*4e", "1c1d", "1g1f", "1d1e", "1f1e", "2a1c", "4e6c+", "1c2e", "6c4a", "5a4a", "G*4b", "8b4b", "1e1d", "G*5h", "2h5h", "2b3c", "1d1c+", "1a1b", "1c1b", "2e1g+", "1b1a", "1g1h", "1a2a", "1h1i", "G*3a", "4a5a", "2a1a", "1i2i", "1a2a", "2i3i", "2a1a" ]
     )
