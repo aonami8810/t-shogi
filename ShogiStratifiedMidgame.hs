@@ -25,6 +25,7 @@ module ShogiStratifiedMidgame
   , isOutOfBounds
   , isPathClear
   , canPieceReachTarget
+  , getPiecesCovering
   , isCoveredBy
   , isSquareUnderAttack
   , findKing

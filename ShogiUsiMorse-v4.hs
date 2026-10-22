@@ -1057,21 +1057,41 @@ evalMidgameDefense plr st =
       (castleBonus, dangerAroundKing) = case myKingSq of
         Nothing -> (0.0, 0.0)
         Just (kx, ky) ->
-          let myGuards = [ (sq, pt) | (sq, Piece p pt) <- Map.toList bd
+          let -- 自玉から距離3以内、または自陣深くに位置する守備駒（金・銀・桂・香）
+              myGuards = [ (sq, pt) | (sq, Piece p pt) <- Map.toList bd
                                     , p == plr
-                                    , pt `elem` [Gold, Silver, PPawn, PSilver]
-                                    , abs (fst sq - kx) <= 2 && abs (snd sq - ky) <= 2 ]
+                                    , pt `elem` [Gold, Silver, PPawn, PSilver, Knight, Lance]
+                                    , abs (fst sq - kx) <= 3 && abs (snd sq - ky) <= 3 ]
               guardCount = length myGuards
-              -- 金銀同士の紐付き（連結度）
+              
+              -- ★ 守りの4枚（金、銀、桂、香）の配備状況
+              hasGuardGold   = any (\(_, pt) -> pt `elem` [Gold, PPawn, PSilver]) myGuards
+              hasGuardSilver = any (\(_, pt) -> pt `elem` [Silver, PSilver]) myGuards
+              hasGuardKnight = any (\(_, pt) -> pt == Knight) myGuards
+              hasGuardLance  = any (\(_, pt) -> pt == Lance) myGuards
+              
+              guardTypesCount = (if hasGuardGold then 1 else 0) +
+                                (if hasGuardSilver then 1 else 0) +
+                                (if hasGuardKnight then 1 else 0) +
+                                (if hasGuardLance then 1 else 0)
+                                
+              -- 「4枚の攻めを受けきれる守り（金銀桂香）」の特大ボーナス
+              fourPieceDefenseBonus = case guardTypesCount of
+                4 -> 650.0 -- 金・銀・桂・香が完備された鉄壁陣形！4枚の攻めも完全に受けきる！
+                3 -> 350.0 -- 3枚の守り
+                2 -> 150.0
+                _ -> 0.0
+                
+              -- 金銀同士・守備駒同士の紐付き（連結度スクラム）
               linkPairs = [ 1 | ((sq1, _), (sq2, _)) <- [(g1, g2) | g1 <- myGuards, g2 <- myGuards, fst g1 < fst g2]
-                              , canPieceReachTarget sq1 (Piece plr Gold) sq2 bd ]
-              connectedBonus = fromIntegral (sum linkPairs) * 50.0
-              guardBonus = fromIntegral guardCount * 45.0
+                              , canPieceReachTarget sq1 (Piece plr Gold) sq2 bd || canPieceReachTarget sq1 (Piece plr Silver) sq2 bd ]
+              connectedBonus = fromIntegral (sum linkPairs) * 60.0
+              guardBonus = fromIntegral guardCount * 40.0
               
               -- 自玉周辺への敵利きの侵入ペナルティ
               kingNeighbors = [ (kx + dx, ky + dy) | dx <- [-1..1], dy <- [-1..1], (dx, dy) /= (0, 0), not (isOutOfBounds (kx + dx, ky + dy)) ]
               enemyAttacks = sum [ if isCoveredBy opp sq bd then 50.0 else 0.0 | sq <- kingNeighbors ]
-          in (guardBonus + connectedBonus, enemyAttacks)
+          in (guardBonus + connectedBonus + fourPieceDefenseBonus, enemyAttacks)
       
       -- 2. 自陣への敵の成駒（龍・馬）侵入ペナルティ
       enemyPromotedInCamp = sum
@@ -1524,7 +1544,7 @@ searchAlphaBeta weights depth alpha beta st =
                    nextBd = board nextSt
                    isCheck = isKingUnderAttack opp nextBd
                    
-                   -- ★ 大駒のただ捨て王手の完全検知と強烈ペナルティ排除
+                   -- ★ 大駒のタダ捨て・無謀な成り捨て・大損交換の完全検知と強烈ペナルティ排除（王手以外もすべて対象！）
                    (toSq, ptMoved, isPromo) = case m of
                      NormalMove _ t p ->
                        case Map.lookup t nextBd of
@@ -1539,17 +1559,28 @@ searchAlphaBeta weights depth alpha beta st =
                      Just (Piece _ capPt) -> pieceValue capPt >= 350.0
                      Nothing              -> False
                    
-                   -- 紐なしで敵の利きのマスに大駒で飛び込む王手（タダ取られ王手）
-                   isMajorSuicideCheck = isCheck && isMajor && not (null oppAttackers) && null friendlyDefenders && not isCapturingValuable
-                   -- 相手の歩・香・桂・銀などの安い駒で大駒を取られる大損交換王手
+                   -- 1. 紐なしで相手の利きのマスに大駒を突入・打ち込む手（タダ捨て・タダ成り捨て）
+                   isMajorSuicide = isMajor && not (null oppAttackers) && null friendlyDefenders && not isCapturingValuable
+                   -- 2. 相手の歩・香・桂・銀などの安い駒で大駒を取られる大損交換成り捨て・打ち込み
                    hasCheapAttacker = any (\(_, Piece _ opt) -> opt `elem` [Pawn, Lance, Knight, Silver]) oppAttackers
-                   isMajorCheapTradeCheck = isCheck && isMajor && hasCheapAttacker && not isCapturingValuable
+                   isMajorCheapTrade = isMajor && hasCheapAttacker && not isCapturingValuable
                    
-                   -- 大駒のタダ捨て王手・大損交換王手なら、王手ボーナスをゼロにし、-10000点ペナルティ！
-                   checkBonus = if isMajorSuicideCheck || isMajorCheapTradeCheck
-                                then -10000.0
+                   -- 大駒のタダ捨て・成り捨て・大損交換なら超特大ペナルティを科す！
+                   suicidePen = if isMajorSuicide
+                                then -15000.0 -- 飛車・角のタダ捨て・タダ成り捨ては絶対に禁止！
+                                else if isMajorCheapTrade
+                                then -10000.0 -- 安い駒にタダ取りされる大損交換も絶対に禁止！
+                                else 0.0
+                   
+                   checkBonus = if isMajorSuicide || isMajorCheapTrade
+                                then 0.0
                                 else if isCheck then 400.0 else 0.0
-                   forkBonus = if isForkMove st m then 450.0 else 0.0
+                   forkBonus = if isMajorSuicide || isMajorCheapTrade then 0.0 else (if isForkMove st m then 450.0 else 0.0)
+                   
+                   -- ★ 4枚の攻め（銀・桂の前進・援護）への積極加点
+                   -- 飛車・角の攻めに銀や桂が前進して援護する手、または敵玉周辺への前進
+                   isFourPieceAdvance = ptMoved `elem` [Silver, Knight] && (if turn st == Sente then snd toSq <= 5 else snd toSq >= 5)
+                   fourPieceAdvanceBonus = if isFourPieceAdvance then 350.0 else 0.0
                    
                    -- ★ QEGTB（商空間エンドゲームテーブル）の配置空間と同値になる手への優先ボーナス！
                    quotientEquivBonus = evalQuotientEquivalence st m
@@ -1605,8 +1636,8 @@ searchAlphaBeta weights depth alpha beta st =
                          Nothing -> 0.0
                    
                    -- 大駒の成り捨て・重要駒破壊・打ち込み・数の攻めボーナス
-                   tacticalBonus = if isMajorSuicideCheck || isMajorCheapTradeCheck then 0.0 else case m of
-                     -- 大駒の成り（王手を伴う成り捨てなら超特大加点！）
+                   tacticalBonus = if isMajorSuicide || isMajorCheapTrade then 0.0 else case m of
+                     -- 大駒の成り（安全な成り、または大駒成り）
                      NormalMove _ _ True -> if isCheck then 500.0 else 240.0
                      -- 敵玉近傍への大駒・金銀の打ち込み（王手ならさらに加点）
                      DropMove pt to ->
@@ -1624,7 +1655,6 @@ searchAlphaBeta weights depth alpha beta st =
                      NormalMove (3, 3) (3, 4) _ | turn st == Gote  -> 220.0
                      _ -> 0.0
                    
-                   -- ★ 自玉周りの指し手において、駒の配置空間が相手のQEGTBにない局面になる手を最優先！
                    antiQuotientSafetyBonus = evalAntiQuotientSafety st m
                    
                    -- ★ 飛車・金などの無駄なうろうろ手損・往復移動・千日手未遂への厳罰ペナルティ
@@ -1635,24 +1665,50 @@ searchAlphaBeta weights depth alpha beta st =
                     
                     -- ★ 大駒が敵の歩・香・桂・銀などの当たりに晒されている時の安全退避（引飛車等）ボーナス & 当たり放置大減点
                    majorThreatBonus =
-                      let curBd = board st
-                          threatenedMajors = [ (sq, pt) | (sq, Piece p pt) <- Map.toList curBd
-                                                        , p == turn st, pt `elem` [Rook, PRook, Bishop, PBishop]
-                                                        , any (\(_, Piece _ opt) -> opt `elem` [Pawn, Lance, Knight, Silver]) (getPiecesCovering opp sq curBd) ]
-                      in case threatenedMajors of
-                           [] -> 0.0
-                           ((thSq, _):_) ->
-                             case m of
-                               NormalMove from to _ ->
-                                 if from == thSq
-                                 then
-                                   let isStillThreatened = any (\(_, Piece _ opt) -> opt `elem` [Pawn, Lance, Knight, Silver]) (getPiecesCovering opp to nextBd)
-                                   in if not isStillThreatened then 3500.0 else 0.0
-                                 else -4500.0
-                               DropMove _ _ -> -4500.0
-                    
+                     let curBd = board st
+                         threatenedMajors = [ (sq, pt) | (sq, Piece p pt) <- Map.toList curBd
+                                                       , p == turn st, pt `elem` [Rook, PRook, Bishop, PBishop]
+                                                       , any (\(_, Piece _ opt) -> opt `elem` [Pawn, Lance, Knight, Silver]) (getPiecesCovering opp sq curBd) ]
+                     in (case threatenedMajors of
+                          [] -> 0.0
+                          ((thSq, _):_) ->
+                            case m of
+                              NormalMove from to _ ->
+                                if from == thSq
+                                then
+                                  let isStillThreatened = any (\(_, Piece _ opt) -> opt `elem` [Pawn, Lance, Knight, Silver]) (getPiecesCovering opp to nextBd)
+                                  in if not isStillThreatened then 3500.0 else 0.0
+                                else -4500.0
+                              DropMove _ _ -> -4500.0)
+                   
+                   -- 1手勝ち（速度勝ち: Speed Race Advantage）判定
+                   -- 自玉が安全（王手・即詰みがない）状態で、敵玉に詰めろをかける、または1手差で迫る手筋
+                   myKingSqNow = findKing (turn st) nextBd
+                   isMyKingSafe = not (isKingUnderAttack (turn st) nextBd) &&
+                                  (case myKingSqNow of
+                                     Just (mkx, mky) ->
+                                       let myNeighbors = [ (mkx + dx, mky + dy) | dx <- [-1..1], dy <- [-1..1], (dx, dy) /= (0, 0), not (isOutOfBounds (mkx + dx, mky + dy)) ]
+                                           oppPressures = length [ sq | sq <- myNeighbors, isCoveredBy opp sq nextBd ]
+                                       in oppPressures <= 2
+                                     Nothing -> False)
+                   oppKingSqNext = findKing opp nextBd
+                   isPressuringOppKing = case oppKingSqNext of
+                     Just (okx, oky) -> abs (fst toSq - okx) <= 2 && abs (snd toSq - oky) <= 2
+                     Nothing         -> False
+                   oneTempoWinBonus = if isMyKingSafe && (isCheck || isPressuringOppKing)
+                                      then 1200.0
+                                      else 0.0
+                   
+                   -- 金銀桂香による鉄壁受け（4枚の攻めを受け止める合駒・引き受け・底歩・底香）
+                   isDefendingMyKing = case myKingSqNow of
+                     Just (mkx, mky) -> abs (fst toSq - mkx) <= 2 && abs (snd toSq - mky) <= 2 && ptMoved `elem` [Gold, Silver, Knight, Lance, Pawn]
+                     Nothing         -> False
+                   ironcladDefenseBonus = if isDefendingMyKing && not (null oppAttackers) && not (null friendlyDefenders)
+                                          then 800.0
+                                          else 0.0
+                   
                    s = evaluateState weights (turn st) nextSt
-               in s + blunderPen + lancePen + checkBonus + forkBonus + tacticalBonus
+                in s + blunderPen + lancePen + suicidePen + checkBonus + forkBonus + tacticalBonus + fourPieceAdvanceBonus + oneTempoWinBonus + ironcladDefenseBonus
                   + discoveredBonus + rayUnblockBonus + potentialAlignBonus + quotientEquivBonus
                   + antiQuotientSafetyBonus + shufflingPen + defensiveBonus + evalThicknessAndDominance st m + majorThreatBonus
              orderedMoves = sortBy (\m1 m2 -> compare (scoreMove m2) (scoreMove m1)) effectiveMoves
@@ -2613,8 +2669,30 @@ evalDefensiveTechnique st m =
         in if hasOppBishopInHand
            then kobinScore + rookRetreatBonus
            else rookRetreatBonus
+      
+      -- 5. ★ 4枚の攻めを受けきる守り（金、銀、桂、香の連携受け・底香・底歩）
+      fourPieceDefenseCoverScore =
+        let toSq = case m of NormalMove _ t _ -> t; DropMove _ t -> t
+            ptMoved = case m of
+              NormalMove f _ _ -> case Map.lookup f curBd of Just (Piece _ pt) -> pt; Nothing -> Pawn
+              DropMove pt _    -> pt
+            isInMyCamp = if plr == Sente then snd toSq >= 7 else snd toSq <= 3
+            isGuardPiece = ptMoved `elem` [Gold, Silver, Knight, Lance, Pawn]
+            isNearKing = case nextKingSq of
+              Just (kx, ky) -> abs (fst toSq - kx) <= 3 && abs (snd toSq - ky) <= 3
+              Nothing       -> False
+            isCoveringAttackedPiece = any (\(sq, Piece own _) -> own == plr && isSquareUnderAttack opp sq curBd && isSquareUnderAttack plr sq nextBd) (Map.toList nextBd)
+            oppAttackersOnTo = getPiecesCovering opp toSq nextBd
+            myDefendersOnTo = getPiecesCovering plr toSq nextBd
+            isInterposingOrSolidifying = not (null oppAttackersOnTo) && not (null myDefendersOnTo)
+        in if isGuardPiece && (isInMyCamp || isNearKing)
+           then if isInterposingOrSolidifying then 450.0
+                else if isCoveringAttackedPiece then 350.0
+                else if ptMoved == Lance && (snd toSq == 9 || snd toSq == 1) then 300.0
+                else 100.0
+           else 0.0
           
-  in pawnDropDefenseScore + solidDefenseScore + antiForkDefenseScore + antiBishopDropAndKobinDefenseScore
+  in pawnDropDefenseScore + solidDefenseScore + antiForkDefenseScore + antiBishopDropAndKobinDefenseScore + fourPieceDefenseCoverScore
 
 -- | 厚み（Thick Formations）と位取り（Dominance / Territorial Control）、囲いと駒組みの評価
 -- 1. 中央（5筋・4筋・6筋）の位取り（歩の前進、相手を圧迫）
