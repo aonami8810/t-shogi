@@ -281,6 +281,41 @@ isPathClear (x1, y1) (x2, y2) bd =
       path = takeWhile (/= (x2, y2)) $ drop 1 $ iterate (\(cx, cy) -> (cx + dx, cy + dy)) (x1, y1)
   in all (\sq -> not (Map.member sq bd)) path
 
+-- | 飛び駒の障害駒を一定数まで透過するX-Ray（潜在的射線）判定
+isXRayPathClear :: Square -> Square -> Board -> Int -> Bool
+isXRayPathClear (x1, y1) (x2, y2) bd maxObstacles =
+  let dx = signum (x2 - x1)
+      dy = signum (y2 - y1)
+      path = takeWhile (/= (x2, y2)) $ drop 1 $ iterate (\(cx, cy) -> (cx + dx, cy + dy)) (x1, y1)
+      obstacles = [ sq | sq <- path, Map.member sq bd ]
+  in length obstacles <= maxObstacles
+
+-- | (x1, y1) から targetSq の間にある障害駒とその座標のリスト
+getObstaclesOnPath :: Square -> Square -> Board -> [(Square, Piece)]
+getObstaclesOnPath (x1, y1) (x2, y2) bd =
+  let dx = signum (x2 - x1)
+      dy = signum (y2 - y1)
+      path = takeWhile (/= (x2, y2)) $ drop 1 $ iterate (\(cx, cy) -> (cx + dx, cy + dy)) (x1, y1)
+  in [ (sq, p) | sq <- path, Just p <- [Map.lookup sq bd] ]
+
+-- | 飛び駒（飛、竜、角、馬、香車）が targetSq を直接または障害駒1枚越しに潜在的に射程に捉えているか
+canPieceXRayTarget :: Square -> Piece -> Square -> Board -> Bool
+canPieceXRayTarget (x, y) (Piece plr pt) targetSq bd =
+  let dx = fst targetSq - x
+      dy = snd targetSq - y
+      absDx = abs dx
+      absDy = abs dy
+      dirY = if plr == Sente then -1 else 1
+      isNotSelf = absDx /= 0 || absDy /= 0
+  in case pt of
+    Rook    -> (dx == 0 || dy == 0) && isNotSelf && isXRayPathClear (x, y) targetSq bd 1
+    PRook   -> ((dx == 0 || dy == 0) && isNotSelf && isXRayPathClear (x, y) targetSq bd 1) || (absDx <= 1 && absDy <= 1 && isNotSelf)
+    Bishop  -> (absDx == absDy) && isNotSelf && isXRayPathClear (x, y) targetSq bd 1
+    PBishop -> ((absDx == absDy) && isNotSelf && isXRayPathClear (x, y) targetSq bd 1) || (absDx <= 1 && absDy <= 1 && isNotSelf)
+    Lance   -> dx == 0 && (dy * dirY > 0) && isXRayPathClear (x, y) targetSq bd 1
+    _       -> False
+
+
 -- | 駒の利き判定（ある駒が任意のマス targetSq に利いているか）
 canPieceReachTarget :: Square -> Piece -> Square -> Board -> Bool
 canPieceReachTarget (x, y) (Piece plr pt) targetSq bd =
@@ -401,6 +436,7 @@ data MidgameWeights = MidgameWeights
   , wDistanceToMate   :: !Double -- 詰み筋までの距離（DTM短縮・QEGTB接続）重み (標準 5.0)
   , wNumericalAssault :: !Double -- 数の攻め（特定地点への利きの集中・突破、局所的数の優位）重み (標準 2.0)
   , wTacticalFork     :: !Double -- 両取り（角・桂・銀・飛車による二重威嚇）重み (標準 1.8)
+  , wPotentialRays    :: !Double -- とびごま（飛、竜、角、馬、桂、香）の潜在的利き・X-Ray・開き王手重み (標準 2.2)
   } deriving (Show, Read, Eq)
 
 defaultWeights :: MidgameWeights
@@ -417,6 +453,7 @@ defaultWeights = MidgameWeights
   , wDistanceToMate   = 5.0
   , wNumericalAssault = 2.0
   , wTacticalFork     = 1.8
+  , wPotentialRays    = 2.2
   }
 
 -- | 設定ファイルから中盤学習重みを読み込む（存在しない場合は defaultWeights）
@@ -838,52 +875,54 @@ evalTacticalFork plr st =
 -- ★ ただし、王手をかける手、敵の守備駒（金銀飛角など）を捕獲する手、敵陣での大駒の成り捨て（大攻勢）、
 --    数の攻め（味方の利き >= 相手の利き）による突破手は決してタダ捨て悪手ではない！
 isBlunderMove :: State -> Move -> Bool
-isBlunderMove st m =
-  let plr = turn st
-      opp = opponent plr
-      bd = board st
-      nextSt = applyMove m st
-      
-      -- 1. 王手（Check）をかける手は絶対にタダ捨て悪手ではない！（成り捨て王手など）
-      isCheck = isKingUnderAttack opp (board nextSt)
-      
-      -- 2. 敵の守備駒（金銀飛角など）を捕獲する手も大駒切り・成り捨ての強襲手！
-      (toSq, ptMoved, isPromo) = case m of
-        NormalMove from to promo ->
-          case Map.lookup from bd of
-            Just (Piece _ pt) -> (to, pt, promo)
-            Nothing           -> (to, Pawn, False)
-        DropMove pt to       -> (to, pt, False)
-      
-      targetCaptured = Map.lookup toSq bd
-      isCapturingValuable = case targetCaptured of
-        Just (Piece _ capPt) -> pieceValue capPt >= 350.0 -- 金・銀・飛・角・桂・と金等の重要駒を捕獲
-        Nothing              -> False
-      
-      -- 3. 敵陣での大駒（飛車・角）の成り捨て（龍・馬を作る強襲）
-      isMajorPromotion = isPromo && ptMoved `elem` [Rook, Bishop]
-      
-      -- 4. 数の攻めが成立しているマス（味方の利き >= 相手の利き）への突入
-      oppAttackers = getPiecesCovering opp toSq bd
-      nextBd = board nextSt
-      friendlyDefenders = getPiecesCovering plr toSq nextBd
-      isNumericalSuperiority = length friendlyDefenders >= length oppAttackers
-      -- 相手の歩の利きがあるマスに桂馬・銀・金・角・飛が飛び込むのは、たとえ紐があってもタダ捨て・大損交換！
-      hasEnemyPawnControl = any (\(_, Piece _ opt) -> opt == Pawn) oppAttackers
-      isPawnFodder = hasEnemyPawnControl && ptMoved `elem` [Knight, Silver, Gold, Bishop, Rook] && not isCheck && not isCapturingValuable
-  in if isPawnFodder
-     then True -- 「桂馬の高跳び歩の餌食」等は絶対タダ捨て大悪手！
-     else if isCheck || isCapturingValuable || (isMajorPromotion && not (null friendlyDefenders)) || isNumericalSuperiority
-     then False -- これらは大駒の成り捨て・数の攻め・強襲手であり、タダ捨て悪手ではない！
-     else
-       if null oppAttackers
-       then False
-       else
-         let minOppVal = minimum [ pieceValue oppPt | (_, Piece _ oppPt) <- oppAttackers ]
-             movedVal  = pieceValue ptMoved
-         in if null friendlyDefenders
-            then ptMoved /= Pawn -- 紐なしで歩以外の駒を敵の利きに無意味に飛び込ませるのはタダ捨て
-            else (movedVal > minOppVal + 200.0) -- 紐があっても、安い駒で取られる損交換は排除！
+isBlunderMove st m
+  | isKingUnderAttack (turn st) (board st) = False -- 王手回避手はタダ捨て悪手ではない！
+  | otherwise =
+      let plr = turn st
+          opp = opponent plr
+          bd = board st
+          nextSt = applyMove m st
+          
+          -- 1. 王手（Check）をかける手は絶対にタダ捨て悪手ではない！（成り捨て王手など）
+          isCheck = isKingUnderAttack opp (board nextSt)
+          
+          -- 2. 敵の守備駒（金銀飛角など）を捕獲する手も大駒切り・成り捨ての強襲手！
+          (toSq, ptMoved, isPromo) = case m of
+            NormalMove from to promo ->
+              case Map.lookup from bd of
+                Just (Piece _ pt) -> (to, pt, promo)
+                Nothing           -> (to, Pawn, False)
+            DropMove pt to       -> (to, pt, False)
+          
+          targetCaptured = Map.lookup toSq bd
+          isCapturingValuable = case targetCaptured of
+            Just (Piece _ capPt) -> pieceValue capPt >= 350.0 -- 金・銀・飛・角・桂・と金等の重要駒を捕獲
+            Nothing              -> False
+          
+          -- 3. 敵陣での大駒（飛車・角）の成り捨て（龍・馬を作る強襲）
+          isMajorPromotion = isPromo && ptMoved `elem` [Rook, Bishop]
+          
+          -- 4. 数の攻めが成立しているマス（味方の利き >= 相手の利き）への突入
+          oppAttackers = getPiecesCovering opp toSq bd
+          nextBd = board nextSt
+          friendlyDefenders = getPiecesCovering plr toSq nextBd
+          isNumericalSuperiority = length friendlyDefenders >= length oppAttackers
+          -- 相手の歩の利きがあるマスに桂馬・銀・金・角・飛が飛び込むのは、たとえ紐があってもタダ捨て・大損交換！
+          hasEnemyPawnControl = any (\(_, Piece _ opt) -> opt == Pawn) oppAttackers
+          isPawnFodder = hasEnemyPawnControl && ptMoved `elem` [Knight, Silver, Gold, Bishop, Rook] && not isCheck && not isCapturingValuable
+      in if isPawnFodder
+         then True -- 「桂馬の高跳び歩の餌食」等は絶対タダ捨て大悪手！
+         else if isCheck || isCapturingValuable || (isMajorPromotion && not (null friendlyDefenders)) || isNumericalSuperiority
+         then False -- これらは大駒の成り捨て・数の攻め・強襲手であり、タダ捨て悪手ではない！
+         else
+           if null oppAttackers
+           then False
+           else
+             let minOppVal = minimum [ pieceValue oppPt | (_, Piece _ oppPt) <- oppAttackers ]
+                 movedVal  = pieceValue ptMoved
+             in if null friendlyDefenders
+                then ptMoved /= Pawn -- 紐なしで歩以外の駒を敵の利きに無意味に飛び込ませるのはタダ捨て
+                else (movedVal > minOppVal + 200.0) -- 紐があっても、安い駒で取られる損交換は排除！
 
 -- | 中盤の攻め筋評価（成駒の破壊力、敵玉包囲度・玉頭圧力、敵陣への拠点・垂れ歩）
 evalMidgameAttack :: Player -> State -> Double
@@ -964,7 +1003,159 @@ evalMidgameDefense plr st =
     inMyCamp Sente y = y >= 7
     inMyCamp Gote  y = y <= 3
 
--- | 局面の総合評価：重み付き中盤攻防統合評価関数（駒の利き・手得・手損・駒得・駒損・金玉連携・詰み筋距離で最適化）
+-- | 飛び駒（飛、竜、角、馬、桂、香車）の潜在的な利き・X-Ray・影の利き・ピン・開き王手を活用した攻撃力評価
+evalPotentialRayAttack :: Player -> State -> Double
+evalPotentialRayAttack plr st =
+  let bd = board st
+      opp = opponent plr
+      
+      evalPlayerRays player =
+        let enemy = opponent player
+            eKingSq = findKing enemy bd
+            myPieces = [ (sq, pt) | (sq, Piece p pt) <- Map.toList bd, p == player ]
+            
+            -- A. 飛車・竜王（縦横の直通およびX-Ray影の利き）
+            evalRookRays (rx, ry) pt =
+              let isPromoted = pt == PRook
+                  orthoDirs = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+                  
+                  scanDir (dx, dy) =
+                    let lineSquares = takeWhile (not . isOutOfBounds)
+                                      [ (rx + d * dx, ry + d * dy) | d <- [1..8] ]
+                        piecesOnLine = [ (s, p) | s <- lineSquares, Just p <- [Map.lookup s bd] ]
+                    in case piecesOnLine of
+                         -- 直通射線
+                         [] -> 5.0 * fromIntegral (length lineSquares)
+                         -- 障害駒が1個だけ挟まっている：潜在的X-Ray射線！
+                         [((ox, oy), Piece opOpt opPt)] ->
+                           let dist = abs (ox - rx) + abs (oy - ry)
+                               discoveredBonus =
+                                 if opOpt == player
+                                 then case eKingSq of
+                                        Just (ekx, eky) | (dx == 0 && ekx == rx && signum (eky - ry) == dy) ||
+                                                          (dy == 0 && eky == ry && signum (ekx - rx) == dx) -> 180.0
+                                        _ -> 45.0
+                                 else 0.0
+                               pinBonus =
+                                 if opOpt == enemy
+                                 then case eKingSq of
+                                        Just (ekx, eky) | (dx == 0 && ekx == rx && signum (eky - ry) == dy) ||
+                                                          (dy == 0 && eky == ry && signum (ekx - rx) == dx) -> 150.0
+                                        _ -> if opPt `elem` [Rook, Bishop, PRook, PBishop, Gold, Silver] then 60.0 else 0.0
+                                 else 0.0
+                           in (15.0 / fromIntegral (dist + 1)) + discoveredBonus + pinBonus
+                         _ -> 0.0
+                  
+                  -- 敵玉と同じ筋・段に位置しているボーナス（王手筋の睨み）
+                  kingAlignBonus = case eKingSq of
+                    Just (ekx, eky) ->
+                      (if rx == ekx then 110.0 else 0.0) + (if ry == eky then 70.0 else 0.0)
+                    Nothing -> 0.0
+                  
+                  proBonus = if isPromoted then 80.0 else 0.0
+                  dirScores = sum [ scanDir dir | dir <- orthoDirs ]
+              in dirScores + kingAlignBonus + proBonus
+
+            -- B. 角行・竜馬（斜めの直通およびX-Ray影の利き・角睨み）
+            evalBishopRays (bx, by) pt =
+              let isPromoted = pt == PBishop
+                  diagDirs = [(1, 1), (1, -1), (-1, 1), (-1, -1)]
+                  
+                  scanDiag (dx, dy) =
+                    let lineSquares = takeWhile (not . isOutOfBounds)
+                                      [ (bx + d * dx, by + d * dy) | d <- [1..8] ]
+                        piecesOnLine = [ (s, p) | s <- lineSquares, Just p <- [Map.lookup s bd] ]
+                    in case piecesOnLine of
+                         [] -> 4.0 * fromIntegral (length lineSquares)
+                         [((ox, oy), Piece opOpt opPt)] ->
+                           let dist = max (abs (ox - bx)) (abs (oy - by))
+                               discoveredBonus =
+                                 if opOpt == player
+                                 then case eKingSq of
+                                        Just (ekx, eky) | abs (ekx - bx) == abs (eky - by) &&
+                                                          signum (ekx - bx) == dx && signum (eky - by) == dy -> 180.0
+                                        _ -> 45.0
+                                 else 0.0
+                               pinBonus =
+                                 if opOpt == enemy
+                                 then case eKingSq of
+                                        Just (ekx, eky) | abs (ekx - bx) == abs (eky - by) &&
+                                                          signum (ekx - bx) == dx && signum (eky - by) == dy -> 150.0
+                                        _ -> if opPt `elem` [Rook, Bishop, PRook, PBishop, Gold, Silver] then 60.0 else 0.0
+                                 else 0.0
+                           in (12.0 / fromIntegral (dist + 1)) + discoveredBonus + pinBonus
+                         _ -> 0.0
+                  
+                  kingDiagBonus = case eKingSq of
+                    Just (ekx, eky) ->
+                      if abs (bx - ekx) == abs (by - eky) then 120.0 else 0.0
+                    Nothing -> 0.0
+                  
+                  proBonus = if isPromoted then 80.0 else 0.0
+                  dirScores = sum [ scanDiag dir | dir <- diagDirs ]
+              in dirScores + kingDiagBonus + proBonus
+
+            -- C. 香車（縦の直通射線・串刺し・下段の香車の潜在力）
+            evalLanceRays (lx, ly) =
+              let pDir = if player == Sente then -1 else 1
+                  forwardSquares = takeWhile (not . isOutOfBounds)
+                                   [ (lx, ly + d * pDir) | d <- [1..8] ]
+                  piecesOnLine = [ (s, p) | s <- forwardSquares, Just p <- [Map.lookup s bd] ]
+                  
+                  kingColBonus = case eKingSq of
+                    Just (ekx, eky) | ekx == lx && (if player == Sente then eky < ly else eky > ly) ->
+                      case piecesOnLine of
+                        []   -> 200.0
+                        [_]  -> 130.0 -- 障害駒1個越しに敵玉を睨むX-Ray！
+                        [_,_]-> 60.0
+                        _    -> 20.0
+                    _ -> 0.0
+                  
+                  skewerBonus = case piecesOnLine of
+                    [((_, _), Piece opOpt _), ((_, _), Piece opOpt2 _)]
+                      | opOpt == enemy && opOpt2 == enemy -> 90.0
+                    _ -> 0.0
+                  
+                  baseMobility = fromIntegral (length forwardSquares) * 8.0
+              in baseMobility + kingColBonus + skewerBonus
+
+            -- D. 桂馬（駒飛び越え急襲・両取り・背後開通潜在力）
+            evalKnightRays (kx, ky) =
+              let pDir = if player == Sente then -1 else 1
+                  targetSquares = [ (kx - 1, ky + 2 * pDir), (kx + 1, ky + 2 * pDir) ]
+                  validTargets = filter (not . isOutOfBounds) targetSquares
+                  
+                  kingProximityBonus = case eKingSq of
+                    Just (ekx, eky) ->
+                      let dists = [ abs (tx - ekx) + abs (ty - eky) | (tx, ty) <- validTargets ]
+                      in if any (<= 2) dists then 90.0 else 0.0
+                    Nothing -> 0.0
+                  
+                  forkThreatBonus = sum
+                    [ let attackers = getPiecesCovering enemy (tx, ty) bd
+                      in if null attackers
+                         then case Map.lookup (tx, ty) bd of
+                                Just (Piece op pt) | op == enemy && pt `elem` [Gold, Silver, Rook, Bishop] -> 130.0
+                                _ -> 20.0
+                         else 0.0
+                    | (tx, ty) <- validTargets
+                    ]
+                  
+                  behindSq = (kx, ky - pDir)
+                  unblockBonus = case Map.lookup behindSq bd of
+                    Just (Piece p pt) | p == player && pt `elem` [Lance, Rook, PRook] -> 80.0
+                    _ -> 0.0
+              in kingProximityBonus + forkThreatBonus + unblockBonus
+
+            totalRooks   = sum [ evalRookRays sq pt   | (sq, pt) <- myPieces, pt `elem` [Rook, PRook] ]
+            totalBishops = sum [ evalBishopRays sq pt | (sq, pt) <- myPieces, pt `elem` [Bishop, PBishop] ]
+            totalLances  = sum [ evalLanceRays sq     | (sq, pt) <- myPieces, pt == Lance ]
+            totalKnights = sum [ evalKnightRays sq    | (sq, pt) <- myPieces, pt == Knight ]
+        in totalRooks + totalBishops + totalLances + totalKnights
+
+  in evalPlayerRays plr - evalPlayerRays opp
+
+-- | 局面の総合評価：重み付き中盤攻防統合評価関数（駒の利き・手得・手損・駒得・駒損・金玉連携・詰み筋距離・飛び駒潜在利きで最適化）
 evaluateState :: MidgameWeights -> Player -> State -> Double
 evaluateState weights player st =
   let opp = opponent player
@@ -983,10 +1174,11 @@ evaluateState weights player st =
       distanceToMateAdvantage = (evalDistanceToMate player st - evalDistanceToMate opp st) * wDistanceToMate weights
       numericalAssaultAdvantage = (evalNumericalAssault player st - evalNumericalAssault opp st) * wNumericalAssault weights
       tacticalForkAdvantage = evalTacticalFork player st * wTacticalFork weights
+      potentialRayAdvantage = evalPotentialRayAttack player st * wPotentialRays weights
   in materialAdvantage + morseAdvantage + attackAdvantage + defenseAdvantage
      + kakutoKeitoAdvantage + looseAdvantage + pieceControlAdvantage
      + tempoLossAdvantage + goldKingCoordAdvantage + distanceToMateAdvantage
-     + numericalAssaultAdvantage + tacticalForkAdvantage
+     + numericalAssaultAdvantage + tacticalForkAdvantage + potentialRayAdvantage
 
 
 -- | デフォルト重みでの評価関数（後方互換）
@@ -1177,10 +1369,15 @@ searchQuiescence weights qdepth alpha beta st =
           oppDefenders = getPiecesCovering opp toSq (board s)
           myAttackers = getPiecesCovering plr toSq (board nextS)
           isBreakthrough = length myAttackers > length oppDefenders
+          -- 飛び駒の潜在的射線の開通（ディスカバード・アタック）
+          isRayUnblock = case m of
+            NormalMove from _ _ ->
+              any (\(bsq, Piece bp bpt) -> bp == plr && bpt `elem` [Rook, PRook, Bishop, PBishop, Lance] && canPieceXRayTarget bsq (Piece bp bpt) from (board s)) (Map.toList (board s))
+            _ -> False
       in case m of
-           -- 1. 相手の駒を取る手、大駒成り、王手、両取り、数の攻め突破
+           -- 1. 相手の駒を取る手、大駒成り、王手、両取り、数の攻め突破、射線開通
            NormalMove _ to promo ->
-             Map.member to (board s) || promo || isCheck || isFork || isBreakthrough
+             Map.member to (board s) || promo || isCheck || isFork || isBreakthrough || isRayUnblock
            -- 2. 持ち駒の打ち込み（王手、両取り、敵玉周辺への打ち込み、急所打ち込み、数の攻め突破）
            DropMove pt to ->
              isCheck || isFork || isBreakthrough || (case findKing opp (board s) of
@@ -1200,14 +1397,17 @@ searchAlphaBeta :: MidgameWeights -> Int -> Double -> Double -> State -> (Double
 searchAlphaBeta weights 0 alpha beta st =
   (searchQuiescence weights 2 alpha beta st, Nothing)
 searchAlphaBeta weights depth alpha beta st =
-  let rawMoves = generateMoves st
+  let inCheck = isKingUnderAttack (turn st) (board st)
+      rawMoves = generateMoves st
       f5Moves = f5SyzygyFilter st rawMoves
       (_sennichite, safeMoves) = partition (\m -> 
         let nextSt = applyMove m st
         in isSennichite (positionKey nextSt) (history nextSt)
         ) f5Moves
-      -- ★ 角頭歩突き (8g8f, 2c2d) および無駄な香車上がりなどの手損手は探索候補から完全除外
-      nonKakutoMoves = filter (\m -> not (isPushingKakutoPawn st m) && not (isFutileLanceLift st m)) safeMoves
+      -- ★ 王手されている局面では一切の除外を行わずすべての王手回避手を検討する
+      nonKakutoMoves = if inCheck
+                       then safeMoves
+                       else filter (\m -> not (isPushingKakutoPawn st m) && not (isFutileLanceLift st m)) safeMoves
       effectiveMoves = if null nonKakutoMoves then safeMoves else nonKakutoMoves
   in if null f5Moves
      then (-10000.0, Nothing) -- 詰み
@@ -1218,14 +1418,60 @@ searchAlphaBeta weights depth alpha beta st =
          let scoreMove m =
                let isBlunder = isBlunderMove st m
                    blunderPen = if isBlunder then -2000.0 else 0.0
-                   isFutileLance = isFutileLanceLift st m
+                   isFutileLance = if inCheck then False else isFutileLanceLift st m
                    lancePen = if isFutileLance then -5000.0 else 0.0
                    
                    nextSt = applyMove m st
                    opp = opponent (turn st)
-                   isCheck = isKingUnderAttack opp (board nextSt)
+                   nextBd = board nextSt
+                   isCheck = isKingUnderAttack opp nextBd
                    checkBonus = if isCheck then 400.0 else 0.0
                    forkBonus = if isForkMove st m then 450.0 else 0.0
+                   
+                   -- ★ とびごま（飛、竜、角、馬、桂、香）の潜在的な利きを活かした戦術ボーナス
+                   (fromSq, toSq) = case m of
+                     NormalMove f t _ -> (Just f, t)
+                     DropMove _ t     -> (Nothing, t)
+                   
+                   -- 1. 開き王手（Discovered Check）：自駒を動かしたマス自身ではなく、背後の飛び駒（飛・角・香）から敵玉に王手がかかった手！
+                   isDiscoveredCheck = isCheck && case fromSq of
+                     Just _ ->
+                       let oppK = findKing opp nextBd
+                           movedPiece = Map.lookup toSq nextBd
+                       in case (oppK, movedPiece) of
+                            (Just kSq, Just p) -> not (canPieceReachTarget toSq p kSq nextBd)
+                            _                  -> False
+                     Nothing -> False
+                   discoveredBonus = if isDiscoveredCheck then 600.0 else 0.0
+                   
+                   -- 2. 潜在的射線の開放（Unblocking Ray）：駒を動かしたことで、背後の飛・角・香の射線が開通した
+                   rayUnblockBonus = case fromSq of
+                     Just f ->
+                       let behindPieces = [ bsq | (bsq, Piece bp bpt) <- Map.toList (board st)
+                                                , bp == turn st, bpt `elem` [Rook, PRook, Bishop, PBishop, Lance]
+                                                , canPieceXRayTarget bsq (Piece bp bpt) f (board st) ]
+                       in if not (null behindPieces) then 280.0 else 0.0
+                     Nothing -> 0.0
+                   
+                   -- 3. 飛び駒を敵玉と同じライン（筋・段・斜め）に据える手、または桂馬の急襲
+                   potentialAlignBonus = case m of
+                     NormalMove _ to _ ->
+                       case findKing opp (board st) of
+                         Just (ekx, eky) ->
+                           let (tx, ty) = to
+                               isAligned = tx == ekx || ty == eky || abs (tx - ekx) == abs (ty - eky)
+                           in if isAligned then 180.0 else 0.0
+                         Nothing -> 0.0
+                     DropMove pt to ->
+                       case findKing opp (board st) of
+                         Just (ekx, eky) ->
+                           let (tx, ty) = to
+                               isAligned = (pt `elem` [Rook, Lance] && tx == ekx) ||
+                                           (pt == Rook && ty == eky) ||
+                                           (pt == Bishop && abs (tx - ekx) == abs (ty - eky)) ||
+                                           (pt == Knight && abs (tx - ekx) <= 2 && abs (ty - eky) <= 2)
+                           in if isAligned then 220.0 else 0.0
+                         Nothing -> 0.0
                    
                    -- 大駒の成り捨て・重要駒破壊・打ち込み・数の攻めボーナス
                    tacticalBonus = case m of
@@ -1249,9 +1495,9 @@ searchAlphaBeta weights depth alpha beta st =
                    
                    s = evaluateState weights (turn st) nextSt
                in s + blunderPen + lancePen + checkBonus + forkBonus + tacticalBonus
+                  + discoveredBonus + rayUnblockBonus + potentialAlignBonus
              orderedMoves = sortBy (\m1 m2 -> compare (scoreMove m2) (scoreMove m1)) effectiveMoves
              -- 王手をかけられているときはすべての王手回避手を読み、それ以外は上位14手を深く読む
-             inCheck = isKingUnderAttack (turn st) (board st)
              topMoves = if inCheck then effectiveMoves else take (if depth >= 2 then 14 else 10) orderedMoves
          in loop topMoves alpha Nothing
   where
@@ -1561,31 +1807,49 @@ calcTimeLimitMicros ply tokens =
 
 -- | 反復深化探索 (byoyomi を上限とし、タイムアウトで打ち切り)
 searchBestMoveIterativeWithTimeout :: MidgameWeights -> Int -> State -> IO (Either String Move, State)
-searchBestMoveIterativeWithTimeout weights timeLimitMicros state =
-  -- 1. まず詰み関与駒だけの商空間エンドゲームテーブル (QEGTB) を最優先照会
-  case lookupQuotientTablebase state of
+searchBestMoveIterativeWithTimeout weights timeLimitMicros state = do
+  let inCheck = isKingUnderAttack (turn state) (board state)
+      moves = generateMoves state
+      f5FilteredMoves = f5SyzygyFilter state moves
+      (_sennichiteMoves, safeMoves) = 
+        partition (\m -> 
+          let nextState = applyMove m state
+          in isSennichite (positionKey nextState) (history nextState)
+        ) f5FilteredMoves
+      -- ★ 王手されている局面では一切の除外を行わずすべての王手回避手を検討する
+      nonKakutoMoves = if inCheck
+                       then safeMoves
+                       else filter (\m -> not (isPushingKakutoPawn state m) && not (isFutileLanceLift state m)) safeMoves
+      effectiveMoves = if null nonKakutoMoves then safeMoves else nonKakutoMoves
+
+      -- ★ QEGTB（商空間エンドゲームテーブル）の王手無視・自殺手判定の完全防止：
+      --   自玉が現在王手されている場合、またはmateMoveが自玉を王手から救っていない場合は、
+      --   QEGTBの詰み手であっても絶対に採用せず、王手回避・正規探索に委ねる！
+      validEgtb = case lookupQuotientTablebase state of
+        Just (dtm, mateMove) ->
+          let safeMvs = f5SyzygyFilter state [mateMove]
+          in if inCheck
+             then Nothing
+             else case safeMvs of
+                    [safeM] | safeM `elem` effectiveMoves -> Just (dtm, safeM)
+                    _                                     -> Nothing
+        Nothing -> Nothing
+
+  case validEgtb of
     Just (dtm, mateMove) -> do
       putStrLn $ "info string quotient egtb hit dtm " ++ show dtm ++ " score mate " ++ show dtm ++ " pv " ++ showMove mateMove
       hFlush stdout
       return (Right mateMove, state)
-    Nothing ->
-      -- 2. 型レベル定跡（V-Path スライド）を照会
-      case lookupBookMove (moveHistory state) state of
+    Nothing -> do
+      -- 2. 型レベル定跡（V-Path スライド）を照会（自玉が王手されている時は定跡ではなく王手回避手を最優先）
+      let maybeBook = if inCheck then Nothing else lookupBookMove (moveHistory state) state
+      case maybeBook of
         Just bookMove -> do
           putStrLn $ "info string book hit pv " ++ showMove bookMove
           hFlush stdout
           return (Right bookMove, state)
         Nothing -> do
-          -- 2. 定跡外または定跡完了後は、反復深化α-β探索（Garsideキャッシュ + F5フィルター + タダ捨て防止 + 静止探索）
-          let moves = generateMoves state
-              f5FilteredMoves = f5SyzygyFilter state moves
-              (_sennichiteMoves, safeMoves) = 
-                partition (\m -> 
-                  let nextState = applyMove m state
-                  in isSennichite (positionKey nextState) (history nextState)
-                ) f5FilteredMoves
-              nonKakutoMoves = filter (\m -> not (isPushingKakutoPawn state m) && not (isFutileLanceLift state m)) safeMoves
-              effectiveMoves = if null nonKakutoMoves then safeMoves else nonKakutoMoves
+          -- 3. 定跡外または定跡完了後は、反復深化α-β探索（Garsideキャッシュ + F5フィルター + タダ捨て防止 + 静止探索）
           if null f5FilteredMoves
             then return (Left "resign", state)
             else if null effectiveMoves
@@ -1608,7 +1872,7 @@ searchBestMoveIterativeWithTimeout weights timeLimitMicros state =
                              | otherwise = do
                                  let (score, maybeMv) = searchAlphaBeta weights d (-99999.0) 99999.0 state
                                  case maybeMv of
-                                   Just mv -> do
+                                   Just mv | mv `elem` effectiveMoves -> do
                                      -- 遅延評価を解除して正格に評価を確定
                                      _ <- evaluate (score `seq` mv `seq` ())
                                      writeIORef bestRef (score, mv)
@@ -1617,18 +1881,24 @@ searchBestMoveIterativeWithTimeout weights timeLimitMicros state =
                                      if abs score >= 9000.0
                                        then return () -- 詰みを発見した場合は即座に着手
                                        else runIDS (d + 1)
-                                   Nothing -> return ()
+                                   _ -> return ()
                        runIDS 1
                  
                      -- タイムアウトした場合でも、直前までに探索が完了した最高深さの最善手を取得
-                     (bestScore, bestMove) <- readIORef bestRef
-                     let newCache = Map.insert (positionKey state) (bestScore, bestMove) (cache state)
+                     (bestScore, rawBestMove) <- readIORef bestRef
+                     -- 万全の安全保証：選択された手が f5FilteredMoves に含まれているか検証
+                     let bestMove = if rawBestMove `elem` f5FilteredMoves
+                                    then rawBestMove
+                                    else fallbackMove
+                         newCache = Map.insert (positionKey state) (bestScore, bestMove) (cache state)
                      return (Right bestMove, state { cache = newCache })
 
 -- 後方互換用：純粋探索
 searchBestMoveWithCache :: MidgameWeights -> State -> (Either String Move, State)
 searchBestMoveWithCache weights state =
-  case lookupBookMove (moveHistory state) state of
+  let inCheck = isKingUnderAttack (turn state) (board state)
+      maybeBook = if inCheck then Nothing else lookupBookMove (moveHistory state) state
+  in case maybeBook of
     Just bookMove ->
       (Right bookMove, state)
     Nothing ->
@@ -1639,7 +1909,9 @@ searchBestMoveWithCache weights state =
               let nextState = applyMove m state
               in isSennichite (positionKey nextState) (history nextState)
             ) f5FilteredMoves
-          nonKakutoMoves = filter (\m -> not (isPushingKakutoPawn state m) && not (isFutileLanceLift state m)) safeMoves
+          nonKakutoMoves = if inCheck
+                           then safeMoves
+                           else filter (\m -> not (isPushingKakutoPawn state m) && not (isFutileLanceLift state m)) safeMoves
           effectiveMoves = if null nonKakutoMoves then safeMoves else nonKakutoMoves
       in if null f5FilteredMoves
          then (Left "resign", state)
@@ -1651,10 +1923,10 @@ searchBestMoveWithCache weights state =
                _ ->
                  let (bestScore, maybeBestMove) = searchAlphaBeta weights 5 (-99999.0) 99999.0 state
                  in case maybeBestMove of
-                      Just bestMove ->
+                      Just bestMove | bestMove `elem` f5FilteredMoves ->
                         let newCache = Map.insert (positionKey state) (bestScore, bestMove) (cache state)
                         in (Right bestMove, state { cache = newCache })
-                      Nothing ->
+                      _ ->
                         case effectiveMoves of
                           (m:_) -> (Right m, state)
                           []    -> (Left "resign", state)
