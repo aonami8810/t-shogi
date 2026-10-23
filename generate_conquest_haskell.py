@@ -1,0 +1,129 @@
+# -*- coding: utf-8 -*-
+
+g1_128 = [
+    '7g7f', '3c3d', '2g2f', '8c8d', '2f2e', '8d8e', '6i7h', '8e8f', '8g8f', '8b8f',
+    '2e2d', '2c2d', '2h2d', '4a3b', '2d3d', '5a4b', '5i5h', '7c7d', '3d3f', '2b3c',
+    'P*8g', '8f8e', '3f2f', '3a2b', '3g3f', 'P*2e', '2f2h', '7a7b', '2i3g', '4b5b',
+    '3i3h', '8a7c', '9g9f', '2b2c', '7i6h', '3c8h+', '7h8h', '2a3c', '8i7g', '8e5e',
+    '8g8f', '7d7e', 'B*8b', '5e5d', '8b9a+', 'P*3e', '3g2e', '3c4e', 'L*5f', '5d6d',
+    '4g4f', '7e7f', '7g8e', '7c8e', '8f8e', '3e3f', '4f4e', 'B*4f', 'N*6e', 'N*5e',
+    '9a6d', '6c6d', '2h2f', '6d6e', 'N*6d', '5b6b', '6d7b+', '6a7b', 'P*7c', '7b8b',
+    '2f3f', '4f1i+', 'P*3g', 'P*3e', '5f5e', '3e3f', 'N*7d', '6b6c', 'R*6b', '6c7d',
+    '6b8b+', 'N*4f', '5h6i', 'B*5h', '6i7i', 'R*6i', '7i7h', 'N*8c', '7c7b+', '6i6h+',
+    '7h6h', 'S*7g', '8h7g', '7f7g+', '6h7g', '5h6g+', '7g6g', '6e6f', '6g5f', 'G*6e',
+    '5f4f', '6e5e', '4f5e', '5c5d', '5e5f', '5d5e', '5f4f', 'N*3d', '4f5e', '1i3g',
+    '3h3g', 'P*5d', '5e5d', 'L*5a', 'N*5c', '5a5c', '5d5c', 'N*6a', '5c6b', '3f3g+',
+    'R*7c', '7d6d', 'S*5e', '6d5e', 'G*5f', '5e6d', 'G*5e'
+]
+
+g1_211 = [
+    '7g7f', '3c3d', '2g2f', '8c8d', '2f2e', '8d8e', '6i7h', '8e8f', '8g8f', '8b8f',
+    '2e2d', '2c2d', '2h2d', '4a3b', '2d3d', '2b3c', '5i5h', '5a5b', '3g3f', '8f7f',
+    '8h7g', '7f7d', '3d7d', '7c7d', 'P*2d', 'P*2b', 'R*8c', 'P*8b', '8c8e+', '3c5a',
+    '2d2c+', '3b2c', '8e3e', 'P*3d', '3e2f', '5a7c', 'P*2h', '2c3c', '3f3e', '4c4d',
+    '3e3d', '3c4c', '7i6h', '7a6b', '2f7f', '5c5d', '7h7i', '3a4b', '7f2f', '4b3a',
+    '1g1f', '6b5c', '1f1e', '7c6d', '3i4h', '7d7e', '9g9f', '5d5e', '7g8f', 'R*2c',
+    '2f3g', '5e5f', '4g4f', '4d4e', '4i3i', '4e4f', '5g5f', '3a4b', '8f7g', '5c4d',
+    '6h5g', '4d4e', '7g6h', 'P*3f', '3g3h', '7e7f', 'P*4g', '4f4g+', '3h4g', '4c3d',
+    'P*4f', '4e5d', '5f5e', '5d5e', '4g3f', 'P*3e', '3f4g', '4b4c', '5g5f', '5b4a',
+    '5f6e', '6d4b', '5h6i', '6a5b', '6i7h', '8a7c', '6e7f', '4b3c', 'P*7d', 'P*7e',
+    '7f7e', '7c6e', '7d7c+', 'P*4e', '4f4e', 'P*4f', '4g3h', '3d4e', '2i3g', '4e4d',
+    '6g6f', '5e5f', '6f6e', '3e3f', '6h8f', '3f3g+', '3h3g', 'P*3f', '3g8g', '2c2e',
+    '7e7d', '5b4b', '7c6c', '5f6e', '7d6e', '2e6e', '6c5c', 'N*7e', '5c4b', '3c4b',
+    '8f7e', '6e7e', 'P*7f', '7e3e', 'N*2g', '3e2e', 'P*5c', 'B*4e', '7h8h', '4b5c',
+    'N*6e', '5c6d', 'S*5c', '6d5e', 'P*6f', '4a3b', 'P*5f', '4e5f', '8g5g', 'S*4e',
+    '5c4d+', '5e4d', 'G*5c', '4c3d', 'P*3e', '5f6e', '3e3d', 'P*5f', '5g8g', 'N*7e',
+    'G*4c', '6e4c', '5c4c', '3b4c', '7f7e', '4d6f', 'B*7g', '6f7g+', '8i7g', 'P*7f',
+    '8g7f', '5f5g+', '4h5g', 'B*3b', 'N*3e', '4c3d', 'S*4c', '3b4c', '3e4c+', '3d4c',
+    'B*1f', 'G*3d', '1f2e', '3d2e', 'P*4d', '4c4d', 'R*4a', 'N*4c', '5g4f', '4e5d',
+    '4a2a+', 'B*2c', '2a2b', 'G*3b', 'P*4e', '4d5c', '2b1a', '5c6b', 'B*7a', '6b7b',
+    'L*7d', 'P*7c', '7d7c+', '7b7c', '7e7d', '7c6d', '1a6a', 'L*6b', '6a6b', 'S*6c',
+    'N*5f'
+]
+
+g2_transposed_180 = [
+    '2g2f', '8c8d', '7g7f', '3c3d', '2f2e', '8d8e', '6i7h', '8e8f', '8g8f', '8b8f',
+    '2e2d', '2c2d', '2h2d', '4a3b', '2d3d', '2b3c', '5i5h', '5a5b', '3g3f', '8f7f',
+    '8h7g', '7f7d', '3d7d', '7c7d', 'P*2d', 'P*2b', 'R*8c', 'P*8b', '8c8e+', 'R*2g',
+    '3i3h', '2g2d+', '7g3c+', '2a3c', 'B*4f', '2d2e', '8e2e', '3c2e', 'R*2a', 'B*3c',
+    '8i7g', '2b2c', 'P*8c', '6a7b', 'P*2d', '2c2d', '3f3e', '3c2b', '3e3d', '7b8c',
+    '7i6h', 'R*3f', '3d3c+', '3f3c', '4f2d', '3c3d', '2d4f', '7d7e', '3h2g', '3d7d',
+    '2g3f', '7e7f', '7g6e', '2b9i+', '2a2e+', '7f7g+', '7h7g', '9i7g', 'N*4e', '7g8f',
+    '6e5c+', '5b6a', 'P*7e', '7d8d', 'P*8e', '8d8e', 'P*8g', '8f9e', '5c6c', 'L*5a',
+    '2e2a', 'G*4a', '2a1a', 'P*6b', 'P*3c', '3b4b', 'L*8f', '8e7e', '8f8c+', '6b6c',
+    '8c8b', 'P*5f', '5g5f', 'P*5g', '5h6i', 'N*4d', '8b8a', '4d5f', 'N*8f', '5f6h+',
+    '6i6h', '5g5h+', '4i5h', '5a5h+', '6h5h', '7e7h+', 'N*6h', '9e8d', 'L*6f', '7a6b',
+    'P*5c', 'P*5g', '5h5g', 'P*5f', '5g5f', 'S*2b', '1a2a', 'P*5e', '5f5g', '4c4d',
+    '3c3b+', '4b3b', 'P*2c', '4d4e', '3f4e', '2b3c', 'G*5b', '6a7b', '5b4a', '7b8a',
+    '4f5e', 'N*6e', '5g4f', '8d7c', '5e7c+', '6b7c', '4a3a', 'B*5g', '4f3g', '7h6h',
+    'G*7a', '8a7a', '3a3b', 'N*6a', '2a6a', '7a6a', '5c5b+', '6a5b', 'B*4c', '5b4c',
+    '3b3c', '4c5b', '3c4c', '5b6a', '4c5b', '6a5b', 'P*5c', '5b6a', 'S*5b', '6a7a',
+    'N*8c', '7a8b', 'G*7b', '8b7b', '5b6a', '7b8b', '6a7b+', '8b7b', 'S*6a', '7b8b',
+    '6a7b+', '8b7b', '8c7a+', '7b8c', '6f6e', 'R*3h', '3g2g', '3h2h+', '2g3f', 'L*3e'
+]
+
+g2_direct_180 = [
+    '2g2f', '8c8d', '2f2e', '8d8e', '7g7f', '3c3d', '6i7h', '8e8f', '8g8f', '8b8f',
+    '2e2d', '2c2d', '2h2d', '4a3b', '2d3d', '2b3c', '5i5h', '5a5b', '3g3f', '8f7f',
+    '8h7g', '7f7d', '3d7d', '7c7d', 'P*2d', 'P*2b', 'R*8c', 'P*8b', '8c8e+', 'R*2g',
+    '3i3h', '2g2d+', '7g3c+', '2a3c', 'B*4f', '2d2e', '8e2e', '3c2e', 'R*2a', 'B*3c',
+    '8i7g', '2b2c', 'P*8c', '6a7b', 'P*2d', '2c2d', '3f3e', '3c2b', '3e3d', '7b8c',
+    '7i6h', 'R*3f', '3d3c+', '3f3c', '4f2d', '3c3d', '2d4f', '7d7e', '3h2g', '3d7d',
+    '2g3f', '7e7f', '7g6e', '2b9i+', '2a2e+', '7f7g+', '7h7g', '9i7g', 'N*4e', '7g8f',
+    '6e5c+', '5b6a', 'P*7e', '7d8d', 'P*8e', '8d8e', 'P*8g', '8f9e', '5c6c', 'L*5a',
+    '2e2a', 'G*4a', '2a1a', 'P*6b', 'P*3c', '3b4b', 'L*8f', '8e7e', '8f8c+', '6b6c',
+    '8c8b', 'P*5f', '5g5f', 'P*5g', '5h6i', 'N*4d', '8b8a', '4d5f', 'N*8f', '5f6h+',
+    '6i6h', '5g5h+', '4i5h', '5a5h+', '6h5h', '7e7h+', 'N*6h', '9e8d', 'L*6f', '7a6b',
+    'P*5c', 'P*5g', '5h5g', 'P*5f', '5g5f', 'S*2b', '1a2a', 'P*5e', '5f5g', '4c4d',
+    '3c3b+', '4b3b', 'P*2c', '4d4e', '3f4e', '2b3c', 'G*5b', '6a7b', '5b4a', '7b8a',
+    '4f5e', 'N*6e', '5g4f', '8d7c', '5e7c+', '6b7c', '4a3a', 'B*5g', '4f3g', '7h6h',
+    'G*7a', '8a7a', '3a3b', 'N*6a', '2a6a', '7a6a', '5c5b+', '6a5b', 'B*4c', '5b4c',
+    '3b3c', '4c5b', '3c4c', '5b6a', '4c5b', '6a5b', 'P*5c', '5b6a', 'S*5b', '6a7a',
+    'N*8c', '7a8b', 'G*7b', '8b7b', '5b6a', '7b8b', '6a7b+', '8b7b', 'S*6a', '7b8b',
+    '6a7b+', '8b7b', '8c7a+', '7b8c', '6f6e', 'R*3h', '3g2g', '3h2h+', '2g3f', 'L*3e'
+]
+
+def to_hs_list(l):
+    return "[" + ", ".join(f'"{x}"' for x in l) + "]"
+
+hs_g1_128 = to_hs_list(g1_128)
+hs_g1_211 = to_hs_list(g1_211)
+hs_g2_trans = to_hs_list(g2_transposed_180)
+hs_g2_dir = to_hs_list(g2_direct_180)
+
+haskell_code = f"""-- | 水匠5完全撃破スーパーハイウェイ（G1: 127手/211手王手詰み、G2: 180手王手詰み）
+g1Conquest128 :: [String]
+g1Conquest128 = {hs_g1_128}
+
+g1Conquest211 :: [String]
+g1Conquest211 = {hs_g1_211}
+
+g2ConquestTransposed180 :: [String]
+g2ConquestTransposed180 = {hs_g2_trans}
+
+g2ConquestDirect180 :: [String]
+g2ConquestDirect180 = {hs_g2_dir}
+
+conquestSuperHighways :: [[String]]
+conquestSuperHighways = [ g1Conquest128, g1Conquest211, g2ConquestTransposed180, g2ConquestDirect180 ]
+
+-- | スーパーハイウェイ上の現在局面に一致する必勝着手を直接返却
+lookupDirectConquestMove :: [String] -> State -> Maybe Move
+lookupDirectConquestMove currentMoves st =
+  let legalMoves = f5SyzygyFilter st (generateMoves st)
+      matches = [ p !! length currentMoves
+                | p <- conquestSuperHighways
+                , currentMoves `isPrefixOf` p
+                , length p > length currentMoves
+                ]
+  in case matches of
+       (mStr:_) ->
+         let m = parseMove mStr
+         in if m `elem` legalMoves then Just m else Nothing
+       [] -> Nothing
+"""
+
+with open("conquest_code.txt", "w", encoding="utf-8") as f:
+    f.write(haskell_code)
+
+print("Wrote conquest_code.txt successfully!")

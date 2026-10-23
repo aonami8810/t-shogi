@@ -1,0 +1,93 @@
+# -*- coding: utf-8 -*-
+import subprocess
+
+SUISHO_EXE = r"C:\Suisho5-YaneuraOu-v7.5.0-windows\YaneuraOu_NNUE-tournament-clang++-zen2.exe"
+SUISHO_DIR = r"C:\Suisho5-YaneuraOu-v7.5.0-windows"
+
+class SuishoSession:
+    def __init__(self):
+        self.proc = subprocess.Popen(
+            [SUISHO_EXE],
+            cwd=SUISHO_DIR,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            encoding="utf-8",
+            errors="replace"
+        )
+        self.send("usi")
+        self.read_until("usiok")
+        self.send("isready")
+        self.read_until("readyok")
+
+    def send(self, cmd):
+        self.proc.stdin.write(cmd + "\n")
+        self.proc.stdin.flush()
+
+    def read_until(self, target):
+        lines = []
+        while True:
+            line = self.proc.stdout.readline()
+            if not line: break
+            line = line.strip()
+            lines.append(line)
+            if target in line: break
+        return lines
+
+    def analyze(self, moves, byoyomi_ms=1000, multipv=5):
+        self.send(f"setoption name MultiPV value {multipv}")
+        if moves:
+            self.send(f"position startpos moves {' '.join(moves)}")
+        else:
+            self.send("position startpos")
+        self.send(f"go btime 0 wtime 0 byoyomi {byoyomi_ms}")
+
+        bestmove = None
+        pv_map = {}
+        while True:
+            line = self.proc.stdout.readline()
+            if not line: break
+            line = line.strip()
+            if line.startswith("info") and "multipv" in line and "score" in line and "pv" in line:
+                parts = line.split()
+                if "multipv" in parts:
+                    idx = parts.index("multipv")
+                    mpv = int(parts[idx+1])
+                    pv_map[mpv] = line
+            if line.startswith("bestmove"):
+                bestmove = line.split()[1]
+                break
+        return bestmove, pv_map
+
+    def close(self):
+        try:
+            self.send("quit")
+            self.proc.wait(timeout=2)
+        except Exception:
+            self.proc.kill()
+
+if __name__ == "__main__":
+    session = SuishoSession()
+    try:
+        # 初手 2g2f に対する後手の手候補
+        print("=== Analyzing Ply 1: 2g2f ===")
+        bm, pvs = session.analyze(["2g2f"], byoyomi_ms=2000, multipv=5)
+        for k, v in sorted(pvs.items()):
+            print(f"PV {k}: {v}")
+
+        # もし 2手目 3c3d なら、水匠5(先手)の3手目は？
+        print("\n=== Analyzing Ply 2: 2g2f 3c3d ===")
+        bm, pvs = session.analyze(["2g2f", "3c3d"], byoyomi_ms=1000, multipv=5)
+        print("Bestmove for Suisho:", bm)
+        for k, v in sorted(pvs.items()):
+            print(f"PV {k}: {v}")
+
+        # もし 2手目 8c8d なら、水匠5(先手)の3手目は？
+        print("\n=== Analyzing Ply 2: 2g2f 8c8d ===")
+        bm, pvs = session.analyze(["2g2f", "8c8d"], byoyomi_ms=1000, multipv=5)
+        print("Bestmove for Suisho:", bm)
+        for k, v in sorted(pvs.items()):
+            print(f"PV {k}: {v}")
+    finally:
+        session.close()
