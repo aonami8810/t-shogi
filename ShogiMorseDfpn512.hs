@@ -676,13 +676,88 @@ generateAllLegalMoves st@State{..} =
       Just (Piece p _) -> p == turn
       Nothing          -> False
 
--- | 序中盤〜終盤を一気通貫に導くモース・リアプノフ評価ポテンシャル
---   ① 先後同型・平手初期局面では厳密に 0.0
---   ② 敵玉の防壁距離 D(K_enemy) の減少と、敵玉チェンバーへの射線接近を駆動
+-- | 序中盤〜終盤を一気通貫に導くモース・リアプノフ4段階制御戦略
+--   ① 制御バリア (Control Barrier): 自玉の単体テンソル積防壁 T(K_self) の確立
+--   ② 要の守備駒の偏微分標的化 (Keystone Sensitivity): ∂D(K_enemy)/∂P_i が最大の急所駒への射線集中
+--   ③ 上部ホライズン封鎖 (Horizon Pinching): 敵玉の前方3単体 (Δ_N, Δ_NW, Δ_NE) の退路遮断
+--   ④ 鞍点モース勾配 (Saddle-Point Max-Min Gradient): 相手の最善反撃後の ΔΦ を最大化
+
+-- | 敵玉の囲いにおける各守備駒 P_i の偏微分感度 ∂D(K)/∂P_i を算出（降順ソート）
+computeKeystoneSensitivities :: Player -> State -> [(Square, PieceType, Double)]
+computeKeystoneSensitivities defPlr st@State{..} =
+  case findKing defPlr board of
+    Nothing -> []
+    Just (kx, ky) ->
+      let baseD = evalKingDistance defPlr st
+          defenders =
+            [ (sq, pt)
+            | (sq, Piece p pt) <- Map.toList board
+            , p == defPlr, pt /= King
+            , abs (fst sq - kx) <= 3 && abs (snd sq - ky) <= 2
+            ]
+          sensList =
+            [ (sq, pt, max 0.0 (baseD - dWithout))
+            | (sq, pt) <- defenders
+            , let stWithout = st { board = Map.delete sq board }
+                  dWithout  = evalKingDistance defPlr stWithout
+            ]
+      in sortBy (\(_, _, s1) (_, _, s2) -> compare s2 s1) sensList
+
+-- | 指定マス target へ射線を照射している attacker 側の駒数
+countAttackersTo :: Player -> Square -> Board -> Int
+countAttackersTo attacker targetSq bd =
+  length [ () | (sq, pc@(Piece p _)) <- Map.toList bd
+              , p == attacker
+              , targetSq `elem` pieceAttacks sq pc bd ]
+
+-- | 敵の「要の守備駒 (Keystone)」に対する偏微分重み付き射線集中フラックス
+evalKeystoneTargetFlux :: Player -> State -> Double
+evalKeystoneTargetFlux attPlr st@State{..} =
+  let defPlr   = opponent attPlr
+      sensList = take 4 (computeKeystoneSensitivities defPlr st)
+      attSquares = [ sq | (sq, Piece p pt) <- Map.toList board, p == attPlr, pt /= King ]
+      manhattan (x1, y1) (x2, y2) = abs (x1 - x2) + abs (y1 - y2)
+  in sum
+       [ let directRays = fromIntegral (countAttackersTo attPlr sq board)
+             proximity  = sum [ 1.0 / (fromIntegral (manhattan aSq sq) + 1.0) | aSq <- attSquares ]
+         in sens * (25.0 * directRays + 4.0 * proximity)
+       | (sq, _, sens) <- sensList ]
+
+-- | 敵玉の上部脱出ゲート (前方3単体: Δ_N, Δ_NW, Δ_NE) の封鎖フラックス Ω_pinch
+evalHorizonPinchFlux :: Player -> Square -> Board -> Double
+evalHorizonPinchFlux defPlr (kx, ky) bd =
+  let attPlr = opponent defPlr
+      horizonDirs = [DirN, DirNW, DirNE]
+      gates =
+        [ (kx + dx, ky + dy)
+        | dir <- horizonDirs
+        , let (dx, dy) = dirVector defPlr dir
+        ]
+      pinchedCount = length
+        [ ()
+        | gSq <- gates
+        , not (isOutOfBounds gSq)
+        , isSquareUnderAttack attPlr gSq bd
+        ]
+  in fromIntegral pinchedCount * 35.0
+
+-- | モース・リアプノフ総合ポテンシャル Φ(S)
+--   平手初期局面・先後同型局面では全項が対称に相殺され厳密に 0.000000 となる
 evalMorseTrajectoryPotential :: Player -> State -> Double
 evalMorseTrajectoryPotential viewPlr st@State{..} =
-  let baseTopo = evaluateState viewPlr st
-      -- 駒得・成駒ポテンシャル（先後対称なため初期局面・同型局面では厳密に 0.0）
+  let enemyPlr = opponent viewPlr
+      -- ① 基底トポロジー防壁距離差 (D(self) - D(enemy)) * 150
+      baseTopo = evaluateState viewPlr st
+
+      -- ② 要の守備駒 (Keystone) への偏微分標的化フラックス差
+      keystoneDiff = evalKeystoneTargetFlux viewPlr st - evalKeystoneTargetFlux enemyPlr st
+
+      -- ③ 上部ホライズン封鎖 (Horizon Pinching) フラックス差
+      kSelf  = fromMaybe (5, if viewPlr  == Sente then 9 else 1) (findKing viewPlr  board)
+      kEnemy = fromMaybe (5, if enemyPlr == Sente then 9 else 1) (findKing enemyPlr board)
+      pinchDiff = evalHorizonPinchFlux enemyPlr kEnemy board - evalHorizonPinchFlux viewPlr kSelf board
+
+      -- ④ 駒得・成駒ポテンシャル差（先後対称）
       pieceVal pt = case pt of
         Pawn -> 100 ; Lance -> 300 ; Knight -> 350 ; Silver -> 500 ; Gold -> 600
         Bishop -> 800 ; Rook -> 1000 ; PPawn -> 600 ; PLance -> 600 ; PKnight -> 600
@@ -691,8 +766,57 @@ evalMorseTrajectoryPotential viewPlr st@State{..} =
       boardMat plr = sum [ pieceVal pt | (_, Piece p pt) <- Map.toList board, p == plr ]
       handMat  plr = sum [ handVal pt * fromIntegral cnt
                          | (pt, cnt) <- Map.toList (fromMaybe emptyHand (Map.lookup plr hands)) ]
-      matDiff = (boardMat viewPlr + handMat viewPlr) - (boardMat (opponent viewPlr) + handMat (opponent viewPlr))
-  in baseTopo + matDiff
+      matDiff = (boardMat viewPlr + handMat viewPlr) - (boardMat enemyPlr + handMat enemyPlr)
+      total   = baseTopo + keystoneDiff + pinchDiff + matDiff
+  in if abs total < 1e-9 then 0.0 else total
+
+-- | 現在のモース・リアプノフ戦略フェーズと敵玉の急所駒（Keystone）診断タグを生成
+describeMorsePhase :: State -> String
+describeMorsePhase st@State{..} =
+  let me       = turn
+      enemy    = opponent me
+      myKing   = fromMaybe (5, if me == Sente then 9 else 1) (findKing me board)
+      myShield = evalSyzygyTensorShield me myKing board
+      enemyD   = evalKingDistance enemy st
+      keyInfo  = case computeKeystoneSensitivities enemy st of
+                   ((sq, pt, sens):_) ->
+                     printf "Key=%s(%s,dD=%.2f)" (showSquare sq) (show (Piece enemy pt)) sens
+                   [] -> "Key=None"
+      phaseTag
+        | myShield < 0.90 && enemyD > 3.5 = "Phase1:Barrier"
+        | enemyD > 2.0                    = "Phase2:Keystone"
+        | otherwise                       = "Phase3:Pinch"
+  in phaseTag ++ " [" ++ keyInfo ++ "]"
+
+-- | 制御バリア重み付き・鞍点モース勾配 (Max-Min Saddle-Point Gradient) による指し手評価
+scoreMoveLyapunov :: State -> Move -> Double
+scoreMoveLyapunov st m =
+  let me       = turn st
+      enemy    = opponent me
+      myKing0  = fromMaybe (5, if me == Sente then 9 else 1) (findKing me (board st))
+      shield0  = evalSyzygyTensorShield me myKing0 (board st)
+      st1      = applyMove m st
+      myKing1  = fromMaybe (5, if me == Sente then 9 else 1) (findKing me (board st1))
+      shield1  = evalSyzygyTensorShield me myKing1 (board st1)
+      -- 制御バリア条件：自玉のテンソル積防壁が未完成 (< 0.90) の間は、囲い構築勾配 ΔT(K_self) を優先強化
+      barrierBonus =
+        if shield0 < 0.90 && shield1 > shield0
+        then (shield1 - shield0) * 180.0
+        else 0.0
+      oppMoves = if isKingUnderAttack enemy (board st1)
+                 then generateEvasionMoves st1
+                 else generateAllLegalMoves st1
+  in if null oppMoves
+     then 999999.0
+     else
+       let myEval1 = evalMorseTrajectoryPotential me st1
+           -- 相手の反撃候補を1手評価の高い順（先手にとって厳しい反撃順）にソートして上位6手を抽出
+           oppScored = sortBy (\(s1, _) (s2, _) -> compare s1 s2)
+                              [ (evalMorseTrajectoryPotential me (applyMove rm st1), rm) | rm <- oppMoves ]
+           worstReply = case oppScored of
+                          ((wScore, _):_) -> wScore
+                          []              -> myEval1
+       in barrierBonus + 0.35 * myEval1 + 0.65 * worstReply
 
 -- | 平手初期局面（または任意局面）から最大 maxPlies（512手）まで探索し、
 --   各ステップで Df-pn 詰み探索を試みつつ、詰み（Checkmate）に至る完全軌跡を生成
@@ -704,14 +828,13 @@ solveTrajectoryUpTo512 maxPlies startSt =
     go !ply !st !hist
       | ply > maxPlies = []
       | otherwise =
-          -- 1. まず現在の手番側が Df-pn で敵玉を即詰みにできるかチェック（相転移判定）
+          -- 1. まず現在の手番側が Df-pn で敵玉を即詰みにできるかチェック（Phase 4: 完全詰み相転移）
           let (isMate, matePv, usedNodes, _) = solveMateDfpn (min 31 (maxPlies - ply + 1)) 4000 st
           in if isMate && not (null matePv)
              then
-               -- Df-pn が完全詰みを発見！残りの詰み手順を一気に展開して終了
                expandMateLine ply st matePv usedNodes
              else
-               -- 2. まだ強制詰み圏外の場合、モースポテンシャル勾配に沿って最良の1手を選択
+               -- 2. 強制詰み圏外の場合、4段階モース・リアプノフ鞍点勾配に沿って最良の1手を選択
                let legalMoves = generateAllLegalMoves st
                    nonLoopMoves = filter (\m ->
                      let nextZ = zobrist (applyMove m st)
@@ -722,35 +845,18 @@ solveTrajectoryUpTo512 maxPlies startSt =
                   [] -> [] -- 合法手なし（詰み完了！）
                   (fallbackMv:_) ->
                     let scored =
-                          [ (scoreMove st m, m)
+                          [ (scoreMoveLyapunov st m, m)
                           | m <- candidateMoves ]
                         bestMv = case sortBy (\(s1, _) (s2, _) -> compare s2 s1) scored of
                           ((_, m):_) -> m
                           []         -> fallbackMv
-                        nextSt = applyMove bestMv st
-                        dS = evalKingDistance Sente nextSt
-                        dG = evalKingDistance Gote  nextSt
+                        phaseStr = describeMorsePhase st
+                        nextSt   = applyMove bestMv st
+                        dS       = evalKingDistance Sente nextSt
+                        dG       = evalKingDistance Gote  nextSt
                         nextHist = Map.insertWith (+) (zobrist nextSt) 1 hist
-                    in (ply, turn st, bestMv, dS, dG, "Morse-Gradient")
+                    in (ply, turn st, bestMv, dS, dG, phaseStr)
                        : go (ply + 1) nextSt nextHist
-
-    -- 1手先の評価＋相手の応手1手読み（ミニマックス勾配）でモース降下を選択
-    scoreMove :: State -> Move -> Double
-    scoreMove st m =
-      let me     = turn st
-          st1    = applyMove m st
-          -- もしこの1手で相手が詰むなら最高評価
-          oppMoves = if isKingUnderAttack (turn st1) (board st1)
-                     then generateEvasionMoves st1
-                     else generateAllLegalMoves st1
-      in if null oppMoves
-         then 999999.0
-         else
-           let myEval1 = evalMorseTrajectoryPotential me st1
-               -- 相手の上位応手に対する最小化（簡易2手読み）
-               oppSample = take 6 oppMoves
-               worstReply = minimum [ evalMorseTrajectoryPotential me (applyMove rm st1) | rm <- oppSample ]
-           in 0.4 * myEval1 + 0.6 * worstReply
 
     expandMateLine :: Int -> State -> [Move] -> Int -> [(Int, Player, Move, Double, Double, String)]
     expandMateLine _ _ [] _ = []
@@ -758,7 +864,7 @@ solveTrajectoryUpTo512 maxPlies startSt =
       let nextSt = applyMove m curSt
           dS     = evalKingDistance Sente nextSt
           dG     = evalKingDistance Gote  nextSt
-          tag    = "Df-pn Mate (nodes=" ++ show nodes ++ ")"
+          tag    = "Phase4:Df-pn-Mate (nodes=" ++ show nodes ++ ")"
       in (p, turn curSt, m, dS, dG, tag) : expandMateLine (p + 1) nextSt ms nodes
 
 -- ============================================================================
@@ -841,7 +947,7 @@ main = do
 
   putStrLn "\n  --- Key Milestones Along the Startpos -> Mate Trajectory ---"
   let milestones = [ entry | entry@(p, _, _, _, _, mode) <- trajectory
-                   , p <= 6 || p `mod` 15 == 0 || p >= totalPlies - 8 || "Df-pn" `elem` words mode ]
+                   , p <= 6 || p `mod` 10 == 0 || p >= totalPlies - 8 || "Phase4:Df-pn-Mate" `elem` words mode ]
   mapM_ (\(p, plr, mv, dS, dG, mode) ->
     printf "    Ply %3d [%5s]: %-6s | D(Sente)=%5.2f, D(Gote)=%5.2f | Mode: %s\n"
       p (show plr) (showMove mv) dS dG mode
