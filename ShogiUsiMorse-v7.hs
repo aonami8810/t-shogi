@@ -7,11 +7,11 @@ import System.IO
 import System.Exit
 import System.Process (createProcess, proc, CreateProcess(..), StdStream(..))
 import Control.Exception (try, SomeException)
-import Data.Bits (xor, shiftR)
+import Data.Bits (xor, shiftL, shiftR, (.&.), (.|.))
 import Data.Char (chr, ord, digitToInt, isDigit, isUpper, toUpper)
 import Data.List (sortBy, partition, isSuffixOf, isPrefixOf, foldl')
 import Data.Maybe (fromMaybe, listToMaybe)
-import Data.Word (Word64)
+import Data.Word (Word32, Word64)
 import qualified Data.Map.Strict as Map
 import qualified Data.Set as Set
 import MorseSuperHighways (senteSuperHighways, goteSuperHighways)
@@ -56,11 +56,12 @@ data Move
   | DropMove !PieceType !Square
   deriving (Eq, Ord, Show)
 
--- | Df-pn 転置表エントリ (Zobrist DAG ノード)
+-- | Df-pn 転置表エントリ (Zobrist DAG ノード + 持ち駒優越束マスク)
 data TTEntry = TTEntry
   { ttPn       :: !Int
   , ttDn       :: !Int
   , ttBestMove :: !(Maybe Move)
+  , ttHandMask :: !Word32
   } deriving (Show)
 
 type DfpnTable = Map.Map Word64 TTEntry
@@ -109,6 +110,44 @@ computeZobrist t bd hs =
                 ) acc hMap
               ) 0 hs
   in zobristTurn t `xor` bHash `xor` hHash
+
+-- | 持ち駒ベクトル H ∈ N^7 を 32bit 整数束 (Hand-Dominance Lattice) にビットパック
+packHandLattice :: Hand -> Word32
+packHandLattice h =
+  let g pt = fromIntegral (fromMaybe 0 (Map.lookup pt h)) :: Word32
+  in  (g Pawn .&. 0x1F)
+  .|. ((g Lance .&. 0x07) `shiftL` 5)
+  .|. ((g Knight .&. 0x07) `shiftL` 8)
+  .|. ((g Silver .&. 0x07) `shiftL` 11)
+  .|. ((g Gold .&. 0x07) `shiftL` 14)
+  .|. ((g Bishop .&. 0x03) `shiftL` 17)
+  .|. ((g Rook .&. 0x03) `shiftL` 19)
+
+-- | 持ち駒優越関係 H1 >= H2 の O(1) ビットマスク判定
+handDominates :: Word32 -> Word32 -> Bool
+handDominates !h1 !h2 =
+  ((h1 .&. 0x1F) >= (h2 .&. 0x1F)) &&
+  (((h1 `shiftR` 5) .&. 0x07) >= ((h2 `shiftR` 5) .&. 0x07)) &&
+  (((h1 `shiftR` 8) .&. 0x07) >= ((h2 `shiftR` 8) .&. 0x07)) &&
+  (((h1 `shiftR` 11) .&. 0x07) >= ((h2 `shiftR` 11) .&. 0x07)) &&
+  (((h1 `shiftR` 14) .&. 0x07) >= ((h2 `shiftR` 14) .&. 0x07)) &&
+  (((h1 `shiftR` 17) .&. 0x03) >= ((h2 `shiftR` 17) .&. 0x03)) &&
+  (((h1 `shiftR` 19) .&. 0x03) >= ((h2 `shiftR` 19) .&. 0x03))
+
+-- | 状態ハッシュから持ち駒成分を O(1) で分離した盤面単体ハッシュ Z_board
+boardOnlyZobrist :: State -> Word64
+boardOnlyZobrist State{..} =
+  Map.foldlWithKey' (\acc plr hMap ->
+    Map.foldlWithKey' (\a pt cnt ->
+      if cnt > 0 then a `xor` zobristHand plr pt cnt else a
+    ) acc hMap
+  ) zobrist hands
+
+attackerHandMask :: Bool -> State -> Word32
+attackerHandMask isOrNode State{..} =
+  let atkPlr = if isOrNode then turn else opponent turn
+      h = fromMaybe Map.empty (Map.lookup atkPlr hands)
+  in packHandLattice h
 
 -- ============================================================================
 -- 2. 8方向幾何単体（Direction8 Simplicial Complex）代数モデル
@@ -672,9 +711,11 @@ generateEvasionMoves st@State{..} =
           defBoardMoves = concatMap (\(sq, pc@(Piece _ pt)) ->
             let targets = filter (not . isFriendly) (pieceAttacks sq pc board)
             in concatMap (\tgt ->
-                 let canP = canPromote turn pt (snd sq) (snd tgt)
-                 in if canP then [NormalMove sq tgt True, NormalMove sq tgt False]
-                            else [NormalMove sq tgt False]
+                 let canP  = canPromote turn pt (snd sq) (snd tgt)
+                     mustP = mustPromote turn pt (snd tgt)
+                 in if canP
+                    then if mustP then [NormalMove sq tgt True] else [NormalMove sq tgt True, NormalMove sq tgt False]
+                    else [NormalMove sq tgt False]
                ) targets
             ) otherPieces
           myHand = fromMaybe emptyHand (Map.lookup turn hands)
@@ -687,13 +728,20 @@ generateEvasionMoves st@State{..} =
             , not (Map.member (x, y) board)
             , max (abs (x - kx)) (abs (y - ky)) <= 2
             ]
+          -- F5 シジジー無駄合縮約: 味方の利きが無い空間への合駒は最小価値駒1種にホモトピー同値縮約
+          isDefendedByOther sq =
+            any (\(pSq, pc) -> sq `elem` pieceAttacks pSq pc board) otherPieces
           interposeDrops =
-            [ DropMove pt sq
-            | pt <- handPts
-            , sq <- interposeSquares
-            , not (mustPromote turn pt (snd sq))
-            , not (pt == Pawn && hasPawnOnCol (fst sq))
-            ]
+            concatMap (\sq ->
+              let validPts =
+                    [ pt
+                    | pt <- handPts
+                    , not (mustPromote turn pt (snd sq))
+                    , not (pt == Pawn && hasPawnOnCol (fst sq))
+                    ]
+                  reducedPts = if isDefendedByOther sq then validPts else take 1 validPts
+              in [DropMove pt sq | pt <- reducedPts]
+            ) interposeSquares
           candidates = kingSteps ++ defBoardMoves ++ interposeDrops
       in filter (\m -> let State { board = nextBd } = applyMove m st in not (isKingUnderAttack turn nextBd)) candidates
   where
@@ -703,6 +751,9 @@ generateEvasionMoves st@State{..} =
 
 infPN :: Int
 infPN = 100000000
+
+dominanceTag :: Word64
+dominanceTag = 0x9E3779B97F4A7C15
 
 initNodePnDn :: Bool -> State -> (Int, Int)
 initNodePnDn isOrNode State{..}
@@ -714,13 +765,28 @@ initNodePnDn isOrNode State{..}
           let ch = round (countEscapeChambers turn kSq board)
           in (max 1 ch, 1)
 
+insertTT :: Bool -> State -> Int -> Int -> Maybe Move -> DfpnTable -> DfpnTable
+insertTT isOrNode st !pn !dn bm tt =
+  let !hMask = attackerHandMask isOrNode st
+      !entry = TTEntry pn dn bm hMask
+      !tt1   = Map.insert (zobrist st) entry tt
+  in if pn == 0 || dn == 0
+     then Map.insert (boardOnlyZobrist st `xor` dominanceTag) entry tt1
+     else tt1
+
 lookupTT :: Bool -> State -> DfpnTable -> (Int, Int, Maybe Move)
 lookupTT isOrNode st tt =
   case Map.lookup (zobrist st) tt of
-    Just (TTEntry p d bm) -> (p, d, bm)
+    Just (TTEntry p d bm _) -> (p, d, bm)
     Nothing ->
-      let (p0, d0) = initNodePnDn isOrNode st
-      in (p0, d0, Nothing)
+      case Map.lookup (boardOnlyZobrist st `xor` dominanceTag) tt of
+        Just (TTEntry 0 d bm recMask)
+          | handDominates (attackerHandMask isOrNode st) recMask -> (0, d, bm)
+        Just (TTEntry p 0 bm recMask)
+          | handDominates recMask (attackerHandMask isOrNode st) -> (p, 0, bm)
+        _ ->
+          let (p0, d0) = initNodePnDn isOrNode st
+          in (p0, d0, Nothing)
 
 addPN :: Int -> Int -> Int
 addPN a b
@@ -757,6 +823,7 @@ computeChildrenStats isOrNode children pathSet tt =
                          else (bestChild, bestMetric, secondMetric)
               in (newPn, newDn, bestC, bM, sM)
 
+-- | モース V-Path マクロ辺ホモトピー収縮 + 持ち駒優越束 Df-pn (最大512手)
 dfpnMID :: Bool -> State -> Int -> Int -> Int -> Int -> Set.Set Word64 -> DfpnTable -> Int
         -> (Int, Int, Maybe Move, DfpnTable, Int)
 dfpnMID isOrNode st thPn thDn depth maxDepth pathSet tt nodeBudget
@@ -764,20 +831,47 @@ dfpnMID isOrNode st thPn thDn depth maxDepth pathSet tt nodeBudget
       let (p, d, bm) = lookupTT isOrNode st tt
       in (p, d, bm, tt, 0)
   | depth >= maxDepth =
-      let tt' = Map.insert (zobrist st) (TTEntry infPN 0 Nothing) tt
+      let tt' = insertTT isOrNode st infPN 0 Nothing tt
       in (infPN, 0, Nothing, tt', nodeBudget - 1)
   | otherwise =
       let moves = if isOrNode then generateCheckMoves st else generateEvasionMoves st
-      in if null moves
-         then if isOrNode
-              then let tt' = Map.insert (zobrist st) (TTEntry infPN 0 Nothing) tt
-                   in (infPN, 0, Nothing, tt', nodeBudget - 1)
-              else let tt' = Map.insert (zobrist st) (TTEntry 0 infPN Nothing) tt
-                   in (0, infPN, Nothing, tt', nodeBudget - 1)
-         else
-           let children = [(m, applyMove m st) | m <- moves]
-               pathSet' = Set.insert (zobrist st) pathSet
-           in loopMID isOrNode st children thPn thDn depth maxDepth pathSet' tt (nodeBudget - 1)
+      in case moves of
+           [] ->
+             if isOrNode
+             then let tt' = insertTT True st infPN 0 Nothing tt
+                  in (infPN, 0, Nothing, tt', nodeBudget - 1)
+             else let tt' = insertTT False st 0 infPN Nothing tt
+                  in (0, infPN, Nothing, tt', nodeBudget - 1)
+           -- V-Path マクロ収縮: 受け方の合法応手が1通りのみの非臨界単体対は予算消費0で直ちに縮約
+           [onlyEv] | not isOrNode ->
+             let chSt = applyMove onlyEv st
+             in if Set.member (zobrist chSt) pathSet
+                then let tt' = insertTT False st infPN 0 (Just onlyEv) tt
+                     in (infPN, 0, Just onlyEv, tt', nodeBudget)
+                else
+                  let pathSet' = Set.insert (zobrist st) pathSet
+                      (cPn, cDn, _, ttAfter, budget') =
+                        dfpnMID True chSt thPn thDn (depth + 1) maxDepth pathSet' tt nodeBudget
+                      ttFinal = insertTT False st cPn cDn (Just onlyEv) ttAfter
+                  in (cPn, cDn, Just onlyEv, ttFinal, budget')
+           _ ->
+             let children = [(m, applyMove m st) | m <- moves]
+                 pathSet' = Set.insert (zobrist st) pathSet
+             in if isOrNode
+                then
+                  -- 1手詰み即座検出 (V-Path 終端収縮)
+                  case [ (m, chSt) | (m, chSt) <- children
+                       , not (Set.member (zobrist chSt) pathSet')
+                       , let (p, _, _) = lookupTT False chSt tt
+                       , p == 0 || null (generateEvasionMoves chSt) ] of
+                    ((winMv, winChSt):_) ->
+                      let tt1 = insertTT False winChSt 0 infPN Nothing tt
+                          tt2 = insertTT True st 0 infPN (Just winMv) tt1
+                      in (0, infPN, Just winMv, tt2, nodeBudget - 1)
+                    [] ->
+                      loopMID True st children thPn thDn depth maxDepth pathSet' tt (nodeBudget - 1)
+                else
+                  loopMID False st children thPn thDn depth maxDepth pathSet' tt (nodeBudget - 1)
 
 loopMID :: Bool -> State -> [(Move, State)] -> Int -> Int -> Int -> Int -> Set.Set Word64 -> DfpnTable -> Int
         -> (Int, Int, Maybe Move, DfpnTable, Int)
@@ -786,11 +880,11 @@ loopMID isOrNode st children thPn thDn depth maxDepth pathSet tt budget =
       bestMv = fmap (\(m, _, _, _) -> m) bestChild
   in if curPn >= thPn || curDn >= thDn || budget <= 0
      then
-       let tt' = Map.insert (zobrist st) (TTEntry curPn curDn bestMv) tt
+       let tt' = insertTT isOrNode st curPn curDn bestMv tt
        in (curPn, curDn, bestMv, tt', budget)
      else case bestChild of
        Nothing ->
-         let tt' = Map.insert (zobrist st) (TTEntry curPn curDn Nothing) tt
+         let tt' = insertTT isOrNode st curPn curDn Nothing tt
          in (curPn, curDn, Nothing, tt', budget)
        Just (_, childSt, cPn, cDn) ->
          let (childThPn, childThDn) =
@@ -940,7 +1034,7 @@ searchBestMoveWithCache state =
     Just bookMove ->
       (Right (bookMove, Nothing, True), state)
     Nothing ->
-      let (isMate, matePv, usedNodes, updatedTT) = solveMateDfpn 512 6000 state
+      let (isMate, matePv, usedNodes, updatedTT) = solveMateDfpn 512 15000 state
           stateWithTT = state { dfpnTT = updatedTT }
       in case matePv of
            (firstMateMove : _) | isMate ->
@@ -964,7 +1058,8 @@ searchBestMoveWithCache state =
               let nextState = applyMove m st
               in isSennichite (zobrist nextState) (history nextState)
             ) f5FilteredMoves
-          enemyKing = fromMaybe (5, if turn st == Sente then 1 else 9) (findKing (opponent (turn st)) (board st))
+          enemy = opponent (turn st)
+          enemyKing = fromMaybe (5, if turn st == Sente then 1 else 9) (findKing enemy (board st))
           dist (x1, y1) (x2, y2) = abs (x1 - x2) + abs (y1 - y2)
           prunedMoves =
             filter (\m -> case m of
@@ -972,6 +1067,7 @@ searchBestMoveWithCache state =
               DropMove _ sq    -> dist sq enemyKing <= 4
             ) safeMoves
           candMoves = if null prunedMoves then safeMoves else prunedMoves
+          nearBrinkmateManifold = countEscapeChambers enemy enemyKing (board st) <= 3.0
       in case f5FilteredMoves of
            [] -> (Left "resign", st)
            (firstF5:_) ->
@@ -980,11 +1076,27 @@ searchBestMoveWithCache state =
                _  ->
                  let scoredMoves = [ (scoreMoveLyapunov2Ply st m, m) | m <- candMoves ]
                      sorted = sortBy (\(s1, _) (s2, _) -> compare s2 s1) scoredMoves
-                     (bestScore, bestMove) = case sorted of
+                     -- 必至多様体 (Brinkmate Manifold) 接続: 上位候補手に対し512手V-Path詰めろ判定を接続
+                     (topCands, restCands) = splitAt 4 sorted
+                     boostedTop =
+                       if nearBrinkmateManifold
+                       then [ (if isBrinkmateThreat st m then s + 2500.0 else s, m) | (s, m) <- topCands ]
+                       else topCands
+                     finalSorted = sortBy (\(s1, _) (s2, _) -> compare s2 s1) (boostedTop ++ restCands)
+                     (bestScore, bestMove) = case finalSorted of
                        (x:_) -> x
                        []    -> (0.0, firstF5)
                      newCache = Map.insert (zobrist st) (bestScore, bestMove) (cache st)
                  in (Right (bestMove, Nothing, False), st { cache = newCache })
+    isBrinkmateThreat :: State -> Move -> Bool
+    isBrinkmateThreat st mv =
+      let me = turn st
+          st1 = applyMove mv st
+          passSt = st1 { turn = me, zobrist = computeZobrist me (board st1) (hands st1) }
+      in if isKingUnderAttack me (board st1) || isKingUnderAttack (opponent me) (board st1)
+         then False
+         else let (isM, _, _, _) = solveMateDfpn 512 800 passSt
+              in isM
     scoreMoveLyapunov2Ply :: State -> Move -> Double
     scoreMoveLyapunov2Ply st mv =
       let s1 = scoreMoveLyapunov st mv
@@ -1135,6 +1247,12 @@ usiLoop mSolver currentState = do
               let lyap = evalMorseLyapunovPotential (turn currentState) (applyMove bestMv currentState)
               putStrLn $ "info string [Morse-Lyapunov V-Path] book hit lyapunov=" ++ show (round lyap :: Int) ++ " pv " ++ showMove bestMv
               putStrLn $ "bestmove " ++ showMove bestMv
+              usiLoop mSolver nextState
+            Right (_, Just (pv@(m:_), nodes), False) | (case m of DropMove Pawn _ -> False; _ -> True) -> do
+              putStrLn $ "info score mate " ++ show (length pv)
+                      ++ " nodes " ++ show nodes
+                      ++ " pv " ++ unwords (map showMove pv)
+              putStrLn $ "bestmove " ++ showMove m
               usiLoop mSolver nextState
             Right (fallbackMv, mMateInfo, False) -> do
               mSolver' <- ensureSubSolver mSolver
