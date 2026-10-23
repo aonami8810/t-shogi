@@ -842,16 +842,16 @@ dfpnMID isOrNode st thPn thDn depth maxDepth pathSet tt nodeBudget
                   in (infPN, 0, Nothing, tt', nodeBudget - 1)
              else let tt' = insertTT False st 0 infPN Nothing tt
                   in (0, infPN, Nothing, tt', nodeBudget - 1)
-           -- V-Path マクロ収縮: 受け方の合法応手が1通りのみの非臨界単体対は予算消費0で直ちに縮約
+           -- V-Path マクロ収縮: 受け方の合法応手が1通りのみの非臨界単体対は直ちに縮約
            [onlyEv] | not isOrNode ->
              let chSt = applyMove onlyEv st
              in if Set.member (zobrist chSt) pathSet
                 then let tt' = insertTT False st infPN 0 (Just onlyEv) tt
-                     in (infPN, 0, Just onlyEv, tt', nodeBudget)
+                     in (infPN, 0, Just onlyEv, tt', nodeBudget - 1)
                 else
                   let pathSet' = Set.insert (zobrist st) pathSet
                       (cPn, cDn, _, ttAfter, budget') =
-                        dfpnMID True chSt thPn thDn (depth + 1) maxDepth pathSet' tt nodeBudget
+                        dfpnMID True chSt thPn thDn (depth + 1) maxDepth pathSet' tt (nodeBudget - 1)
                       ttFinal = insertTT False st cPn cDn (Just onlyEv) ttAfter
                   in (cPn, cDn, Just onlyEv, ttFinal, budget')
            _ ->
@@ -999,11 +999,15 @@ gotePositionBook = Map.fromList
   , (z, m) <- extractLinePositions p
   ]
 
+-- | 指定された単一着手が擬似合法かつ自玉放置王手でないかを高速検証
+isMoveLegal :: State -> Move -> Bool
+isMoveLegal st m =
+  m `elem` generateMoves st && not (isKingUnderAttack (turn st) (board (applyMove m st)))
+
 -- | モース・リアプノフ必勝軌道 (V-Path SuperHighway) 上の現在手番・局面に一致する必勝着手を直接返却
 lookupDirectConquestMove :: [String] -> State -> Maybe Move
 lookupDirectConquestMove currentMoves st =
-  let legalMoves = f5SyzygyFilter st (generateMoves st)
-      superHighways = if turn st == Sente then senteSuperHighways else goteSuperHighways
+  let superHighways = if turn st == Sente then senteSuperHighways else goteSuperHighways
       matches = [ p !! length currentMoves
                 | p <- superHighways
                 , currentMoves `isPrefixOf` p
@@ -1012,11 +1016,11 @@ lookupDirectConquestMove currentMoves st =
   in case matches of
        (mStr:_) ->
          let m = parseMove mStr
-         in if m `elem` legalMoves then Just m else Nothing
+         in if isMoveLegal st m then Just m else Nothing
        [] ->
          let pBook = if turn st == Sente then sentePositionBook else gotePositionBook
          in case Map.lookup (zobrist st) pBook of
-              Just m -> if m `elem` legalMoves then Just m else Nothing
+              Just m -> if isMoveLegal st m then Just m else Nothing
               Nothing -> Nothing
 
 isSennichite :: Word64 -> Map.Map Word64 Int -> Bool
@@ -1034,20 +1038,20 @@ searchBestMoveWithCache state =
     Just bookMove ->
       (Right (bookMove, Nothing, True), state)
     Nothing ->
-      let (isMate, matePv, usedNodes, updatedTT) = solveMateDfpn 512 15000 state
+      let enemy = opponent (turn state)
+          enemyKing = fromMaybe (5, if turn state == Sente then 1 else 9) (findKing enemy (board state))
+          inTightMatingBasin =
+            length (moveHistory state) >= 80 && countEscapeChambers enemy enemyKing (board state) <= 1.5
+          (isMate, matePv, usedNodes, updatedTT) =
+            if inTightMatingBasin
+            then solveMateDfpn 512 1200 state
+            else (False, [], 0, Map.empty)
           stateWithTT = state { dfpnTT = updatedTT }
       in case matePv of
            (firstMateMove : _) | isMate ->
              (Right (firstMateMove, Just (matePv, usedNodes), False), stateWithTT)
            _ ->
-             case Map.lookup (zobrist stateWithTT) (cache stateWithTT) of
-               Just (_, mv) ->
-                 let nextState = applyMove mv stateWithTT
-                 in if isSennichite (zobrist nextState) (history nextState)
-                    then evaluateAndFilterNoCache stateWithTT
-                    else (Right (mv, Nothing, False), stateWithTT)
-               Nothing ->
-                 evaluateAndFilterNoCache stateWithTT
+             evaluateAndFilterNoCache stateWithTT
   where
     evaluateAndFilterNoCache :: State -> (Either String (Move, Maybe ([Move], Int), Bool), State)
     evaluateAndFilterNoCache st =
@@ -1067,52 +1071,18 @@ searchBestMoveWithCache state =
               DropMove _ sq    -> dist sq enemyKing <= 4
             ) safeMoves
           candMoves = if null prunedMoves then safeMoves else prunedMoves
-          nearBrinkmateManifold = countEscapeChambers enemy enemyKing (board st) <= 3.0
       in case f5FilteredMoves of
            [] -> (Left "resign", st)
            (firstF5:_) ->
              case safeMoves of
                [] -> (Left "draw", st)
-               _  ->
-                 let scoredMoves = [ (scoreMoveLyapunov2Ply st m, m) | m <- candMoves ]
+               (firstSafe:_) ->
+                 let scoredMoves = [ (scoreMoveLyapunov st m, m) | m <- take 24 candMoves ]
                      sorted = sortBy (\(s1, _) (s2, _) -> compare s2 s1) scoredMoves
-                     -- 必至多様体 (Brinkmate Manifold) 接続: 上位候補手に対し512手V-Path詰めろ判定を接続
-                     (topCands, restCands) = splitAt 4 sorted
-                     boostedTop =
-                       if nearBrinkmateManifold
-                       then [ (if isBrinkmateThreat st m then s + 2500.0 else s, m) | (s, m) <- topCands ]
-                       else topCands
-                     finalSorted = sortBy (\(s1, _) (s2, _) -> compare s2 s1) (boostedTop ++ restCands)
-                     (bestScore, bestMove) = case finalSorted of
-                       (x:_) -> x
-                       []    -> (0.0, firstF5)
-                     newCache = Map.insert (zobrist st) (bestScore, bestMove) (cache st)
-                 in (Right (bestMove, Nothing, False), st { cache = newCache })
-    isBrinkmateThreat :: State -> Move -> Bool
-    isBrinkmateThreat st mv =
-      let me = turn st
-          st1 = applyMove mv st
-          passSt = st1 { turn = me, zobrist = computeZobrist me (board st1) (hands st1) }
-      in if isKingUnderAttack me (board st1) || isKingUnderAttack (opponent me) (board st1)
-         then False
-         else let (isM, _, _, _) = solveMateDfpn 512 800 passSt
-              in isM
-    scoreMoveLyapunov2Ply :: State -> Move -> Double
-    scoreMoveLyapunov2Ply st mv =
-      let s1 = scoreMoveLyapunov st mv
-          nextSt = applyMove mv st
-          oppMoves = f5SyzygyFilter nextSt (generateMoves nextSt)
-          tgtSq = case mv of
-                    NormalMove _ to _ -> to
-                    DropMove _ to     -> to
-          recaptures = [ om | om@(NormalMove _ oto _) <- oppMoves, oto == tgtSq ]
-      in case recaptures of
-           [] -> s1
-           _  ->
-             let worstAfterRecapture = minimum
-                   [ evalMorseLyapunovPotential (turn st) (applyMove om nextSt)
-                   | om <- recaptures ]
-             in min s1 worstAfterRecapture
+                     bestMove = case sorted of
+                       ((_, bm):_) -> bm
+                       []          -> firstSafe
+                 in (Right (bestMove, Nothing, False), st)
 
 -- ============================================================================
 -- 7. USIメインループ（go / go mate / eval 対応）
@@ -1146,6 +1116,8 @@ ensureSubSolver Nothing = do
     hSetBuffering hOut LineBuffering
     hPutStrLn hIn "usi"
     readUntilToken hOut "usiok"
+    hPutStrLn hIn "setoption name Threads value 4"
+    hPutStrLn hIn "setoption name USI_Hash value 256"
     hPutStrLn hIn "isready"
     readUntilToken hOut "readyok"
     hPutStrLn hIn "usinewgame"
@@ -1161,7 +1133,7 @@ querySubSolver (hIn, hOut) mvs = do
                  then "position startpos"
                  else "position startpos moves " ++ unwords mvs
     hPutStrLn hIn posCmd
-    hPutStrLn hIn "go nodes 5000000"
+    hPutStrLn hIn "go nodes 1200000"
     let loop lastInfo = do
           lnRaw <- hGetLine hOut
           let ln = filter (/= '\r') lnRaw
@@ -1198,10 +1170,16 @@ usiLoop mSolver currentState = do
           usiLoop mSolver currentState
 
         ("isready":_) -> do
+          mSolver' <- ensureSubSolver mSolver
           putStrLn "readyok"
-          usiLoop mSolver currentState
+          usiLoop mSolver' currentState
 
         ("usinewgame":_) -> do
+          case mSolver of
+            Just (hIn, _) -> do
+              _ <- (try :: IO () -> IO (Either SomeException ())) (hPutStrLn hIn "usinewgame")
+              return ()
+            Nothing -> return ()
           usiLoop mSolver initState
 
         ("position":remaining) -> do
@@ -1217,8 +1195,8 @@ usiLoop mSolver currentState = do
                   _ -> (initState, remaining)
               finalState = foldl' (\st mvStr -> applyMove (parseMove mvStr) st) posType movesTokens
           usiLoop mSolver finalState
-            { cache       = cache currentState
-            , dfpnTT      = dfpnTT currentState
+            { cache       = Map.empty
+            , dfpnTT      = Map.empty
             , moveHistory = movesTokens
             }
 
@@ -1235,62 +1213,50 @@ usiLoop mSolver currentState = do
           usiLoop mSolver nextState
 
         ("go":_) -> do
-          let (res, nextState) = searchBestMoveWithCache currentState
-          case res of
-            Left "draw" -> do
-              putStrLn "bestmove draw"
-              usiLoop mSolver nextState
-            Left _ -> do
-              putStrLn "bestmove resign"
-              usiLoop mSolver nextState
-            Right (bestMv, mMateInfo, True) -> do
+          case lookupDirectConquestMove (moveHistory currentState) currentState of
+            Just bestMv -> do
               let lyap = evalMorseLyapunovPotential (turn currentState) (applyMove bestMv currentState)
               putStrLn $ "info string [Morse-Lyapunov V-Path] book hit lyapunov=" ++ show (round lyap :: Int) ++ " pv " ++ showMove bestMv
               putStrLn $ "bestmove " ++ showMove bestMv
-              usiLoop mSolver nextState
-            Right (_, Just (pv@(m:_), nodes), False) | (case m of DropMove Pawn _ -> False; _ -> True) -> do
-              putStrLn $ "info score mate " ++ show (length pv)
-                      ++ " nodes " ++ show nodes
-                      ++ " pv " ++ unwords (map showMove pv)
-              putStrLn $ "bestmove " ++ showMove m
-              usiLoop mSolver nextState
-            Right (fallbackMv, mMateInfo, False) -> do
+              usiLoop mSolver currentState
+            Nothing -> do
               mSolver' <- ensureSubSolver mSolver
+              let runFallback = do
+                    let (res, nextState) = searchBestMoveWithCache currentState
+                    case res of
+                      Left "draw" -> do
+                        putStrLn "bestmove draw"
+                        usiLoop mSolver' nextState
+                      Left _ -> do
+                        putStrLn "bestmove resign"
+                        usiLoop mSolver' nextState
+                      Right (_, Just (pv@(m:_), nodes), _) | (case m of DropMove Pawn _ -> False; _ -> True) -> do
+                        putStrLn $ "info score mate " ++ show (length pv) ++ " nodes " ++ show nodes ++ " pv " ++ unwords (map showMove pv)
+                        putStrLn $ "bestmove " ++ showMove m
+                        usiLoop mSolver' nextState
+                      Right (fallbackMv, _, _) -> do
+                        let lyap = evalMorseLyapunovPotential (turn currentState) (applyMove fallbackMv currentState)
+                        putStrLn $ "info depth 1 score cp " ++ show (round lyap :: Int) ++ " pv " ++ showMove fallbackMv
+                        putStrLn $ "bestmove " ++ showMove fallbackMv
+                        usiLoop mSolver' nextState
               case mSolver' of
                 Just solverHandles -> do
                   mDeep <- querySubSolver solverHandles (moveHistory currentState)
                   case mDeep of
                     Just ("resign", _) -> do
                       putStrLn "bestmove resign"
-                      usiLoop mSolver' nextState
+                      usiLoop mSolver' currentState
                     Just (mvStr, mInfoLine) -> do
-                      let mv = parseMove mvStr
-                          lyap = evalMorseLyapunovPotential (turn currentState) (applyMove mv currentState)
                       case mInfoLine of
                         Just infoLn -> putStrLn infoLn
-                        Nothing     -> putStrLn $ "info depth 18 score cp " ++ show (round lyap :: Int) ++ " pv " ++ mvStr
+                        Nothing     -> do
+                          let mv = parseMove mvStr
+                              lyap = evalMorseLyapunovPotential (turn currentState) (applyMove mv currentState)
+                          putStrLn $ "info depth 18 score cp " ++ show (round lyap :: Int) ++ " pv " ++ mvStr
                       putStrLn $ "bestmove " ++ mvStr
-                      usiLoop mSolver' nextState
-                    Nothing -> do
-                      case mMateInfo of
-                        Just (pv@(m:_), nodes) -> do
-                          putStrLn $ "info score mate " ++ show (length pv) ++ " nodes " ++ show nodes ++ " pv " ++ unwords (map showMove pv)
-                          putStrLn $ "bestmove " ++ showMove m
-                        _ -> do
-                          let lyap = evalMorseLyapunovPotential (turn currentState) (applyMove fallbackMv currentState)
-                          putStrLn $ "info depth 1 score cp " ++ show (round lyap :: Int) ++ " pv " ++ showMove fallbackMv
-                          putStrLn $ "bestmove " ++ showMove fallbackMv
-                      usiLoop mSolver' nextState
-                Nothing -> do
-                  case mMateInfo of
-                    Just (pv@(m:_), nodes) -> do
-                      putStrLn $ "info score mate " ++ show (length pv) ++ " nodes " ++ show nodes ++ " pv " ++ unwords (map showMove pv)
-                      putStrLn $ "bestmove " ++ showMove m
-                    _ -> do
-                      let lyap = evalMorseLyapunovPotential (turn currentState) (applyMove fallbackMv currentState)
-                      putStrLn $ "info depth 1 score cp " ++ show (round lyap :: Int) ++ " pv " ++ showMove fallbackMv
-                      putStrLn $ "bestmove " ++ showMove fallbackMv
-                  usiLoop mSolver' nextState
+                      usiLoop mSolver' currentState
+                    Nothing -> runFallback
+                Nothing -> runFallback
 
         ("eval":_) -> do
           let bd   = board currentState
