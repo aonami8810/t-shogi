@@ -5,8 +5,6 @@ module Main where
 
 import System.IO
 import System.Exit
-import System.Process (createProcess, proc, CreateProcess(..), StdStream(..))
-import Control.Exception (try, SomeException)
 import Data.Bits (xor, shiftL, shiftR, (.&.), (.|.))
 import Data.Char (chr, ord, digitToInt, isDigit, isUpper, toUpper)
 import Data.List (sortBy, partition, isSuffixOf, isPrefixOf, foldl')
@@ -1076,7 +1074,7 @@ searchBestMoveWithCache state =
           (_, safeMoves) =
             partition (\m ->
               let nextState = applyMove m st
-              in isSennichite (zobrist nextState) (history nextState)
+              in isRepeatingMove st m || isSennichite (zobrist nextState) (history nextState)
             ) f5FilteredMoves
           enemy = opponent (turn st)
           enemyKing = fromMaybe (5, if turn st == Sente then 1 else 9) (findKing enemy (board st))
@@ -1101,94 +1099,17 @@ searchBestMoveWithCache state =
                  in (Right (bestMove, Nothing, False), st)
 
 -- ============================================================================
--- 7. USIメインループ（go / go mate / eval 対応）
+-- 7. USIメインループ（go / go mate / eval 対応・純粋モースエンジン）
 -- ============================================================================
-
-type SubSolver = Maybe (Handle, Handle)
-
-readUntilToken :: Handle -> String -> IO ()
-readUntilToken hOut target = do
-  eof <- hIsEOF hOut
-  if eof
-    then return ()
-    else do
-      ln <- hGetLine hOut
-      if target `isPrefixOf` ln || target `isSuffixOf` (filter (/= '\r') ln)
-        then return ()
-        else readUntilToken hOut target
-
-ensureSubSolver :: SubSolver -> IO SubSolver
-ensureSubSolver (Just hs) = return (Just hs)
-ensureSubSolver Nothing = do
-  res <- (try :: IO (Handle, Handle) -> IO (Either SomeException (Handle, Handle))) $ do
-    let cp = (proc "C:\\Suisho5-YaneuraOu-v7.5.0-windows\\YaneuraOu_NNUE-tournament-clang++-avx2.exe" [])
-               { cwd = Just "C:\\Suisho5-YaneuraOu-v7.5.0-windows"
-               , std_in = CreatePipe
-               , std_out = CreatePipe
-               , std_err = CreatePipe
-               }
-    (Just hIn, Just hOut, _, _) <- createProcess cp
-    hSetBuffering hIn LineBuffering
-    hSetBuffering hOut LineBuffering
-    hPutStrLn hIn "usi"
-    readUntilToken hOut "usiok"
-    hPutStrLn hIn "setoption name Threads value 12"
-    hPutStrLn hIn "setoption name USI_Hash value 1024"
-    hPutStrLn hIn "setoption name DrawValueBlack value -25"
-    hPutStrLn hIn "setoption name DrawValueWhite value -25"
-    hPutStrLn hIn "isready"
-    readUntilToken hOut "readyok"
-    hPutStrLn hIn "usinewgame"
-    return (hIn, hOut)
-  case res of
-    Right hs -> return (Just hs)
-    Left _   -> return Nothing
-
-selectSubSolverNodes :: [String] -> Int
-selectSubSolverNodes goTokens =
-  case dropWhile (/= "byoyomi") goTokens of
-    ("byoyomi":valStr:_) ->
-      case reads valStr :: [(Int, String)] of
-        ((byo, _):_)
-          | byo < 1500 -> 3000000
-          | byo < 3500 -> 10000000
-          | otherwise  -> 16000000
-        _ -> 16000000
-    _ -> 16000000
-
-querySubSolver :: (Handle, Handle) -> Int -> [String] -> [String] -> IO (Maybe (String, Maybe String))
-querySubSolver (hIn, hOut) nodeBudget mvs allowedRootMoves = do
-  res <- (try :: IO (String, Maybe String) -> IO (Either SomeException (String, Maybe String))) $ do
-    let posCmd = if null mvs
-                 then "position startpos"
-                 else "position startpos moves " ++ unwords mvs
-        reSearchNodes = max 2000000 (min 4000000 (nodeBudget `div` 3))
-        goCmd  = if null allowedRootMoves
-                 then "go nodes " ++ show nodeBudget
-                 else "go nodes " ++ show reSearchNodes ++ " searchmoves " ++ unwords allowedRootMoves
-    hPutStrLn hIn posCmd
-    hPutStrLn hIn goCmd
-    let loop lastInfo = do
-          lnRaw <- hGetLine hOut
-          let ln = filter (/= '\r') lnRaw
-              ws = words ln
-          case ws of
-            ("bestmove":bm:_) -> return (bm, lastInfo)
-            ("info":_) | "score" `elem` ws && "pv" `elem` ws -> loop (Just ln)
-            _ -> loop lastInfo
-    loop Nothing
-  case res of
-    Right r -> return (Just r)
-    Left _  -> return Nothing
 
 main :: IO ()
 main = do
   hSetBuffering stdin LineBuffering
   hSetBuffering stdout LineBuffering
-  usiLoop Nothing initState
+  usiLoop initState
 
-usiLoop :: SubSolver -> State -> IO ()
-usiLoop mSolver currentState = do
+usiLoop :: State -> IO ()
+usiLoop currentState = do
   eof <- isEOF
   if eof
     then exitSuccess
@@ -1196,25 +1117,19 @@ usiLoop mSolver currentState = do
       line <- getLine
       let tokens = words line
       case tokens of
-        [] -> usiLoop mSolver currentState
+        [] -> usiLoop currentState
         ("usi":_) -> do
           putStrLn "id name ShogiMorseEngine_Haskell_v7_Dfpn512"
           putStrLn "id author Shogi_Topology_Project"
           putStrLn "usiok"
-          usiLoop mSolver currentState
+          usiLoop currentState
 
         ("isready":_) -> do
-          mSolver' <- ensureSubSolver mSolver
           putStrLn "readyok"
-          usiLoop mSolver' currentState
+          usiLoop currentState
 
         ("usinewgame":_) -> do
-          case mSolver of
-            Just (hIn, _) -> do
-              _ <- (try :: IO () -> IO (Either SomeException ())) (hPutStrLn hIn "usinewgame")
-              return ()
-            Nothing -> return ()
-          usiLoop mSolver initState
+          usiLoop initState
 
         ("position":remaining) -> do
           let (posType, movesTokens) =
@@ -1228,7 +1143,7 @@ usiLoop mSolver currentState = do
                     in (parseSfen bStr tStr hStr, mvToks)
                   _ -> (initState, remaining)
               finalState = foldl' (\st mvStr -> applyMove (parseMove mvStr) st) posType movesTokens
-          usiLoop mSolver finalState
+          usiLoop finalState
             { cache       = Map.empty
             , dfpnTT      = Map.empty
             , moveHistory = movesTokens
@@ -1244,64 +1159,31 @@ usiLoop mSolver currentState = do
           if isMate && not (null matePv)
             then putStrLn $ "checkmate " ++ unwords (map showMove matePv)
             else putStrLn "checkmate nomate"
-          usiLoop mSolver nextState
+          usiLoop nextState
 
-        ("go":goTokens) -> do
-          case lookupDirectConquestMove (moveHistory currentState) currentState of
-            Just bestMv -> do
+        ("go":_) -> do
+          let (res, nextState) = searchBestMoveWithCache currentState
+          case res of
+            Left "draw" -> do
+              putStrLn "bestmove draw"
+              usiLoop nextState
+            Left _ -> do
+              putStrLn "bestmove resign"
+              usiLoop nextState
+            Right (bestMv, _, True) -> do
               let lyap = evalMorseLyapunovPotential (turn currentState) (applyMove bestMv currentState)
               putStrLn $ "info string [Morse-Lyapunov V-Path] book hit lyapunov=" ++ show (round lyap :: Int) ++ " pv " ++ showMove bestMv
               putStrLn $ "bestmove " ++ showMove bestMv
-              usiLoop mSolver currentState
-            Nothing -> do
-              mSolver' <- ensureSubSolver mSolver
-              let nodeBudget = selectSubSolverNodes goTokens
-                  runFallback = do
-                    let (res, nextState) = searchBestMoveWithCache currentState
-                    case res of
-                      Left "draw" -> do
-                        putStrLn "bestmove draw"
-                        usiLoop mSolver' nextState
-                      Left _ -> do
-                        putStrLn "bestmove resign"
-                        usiLoop mSolver' nextState
-                      Right (_, Just (pv@(m:_), nodes), _) | (case m of DropMove Pawn _ -> False; _ -> True) -> do
-                        putStrLn $ "info score mate " ++ show (length pv) ++ " nodes " ++ show nodes ++ " pv " ++ unwords (map showMove pv)
-                        putStrLn $ "bestmove " ++ showMove m
-                        usiLoop mSolver' nextState
-                      Right (fallbackMv, _, _) -> do
-                        let lyap = evalMorseLyapunovPotential (turn currentState) (applyMove fallbackMv currentState)
-                        putStrLn $ "info depth 1 score cp " ++ show (round lyap :: Int) ++ " pv " ++ showMove fallbackMv
-                        putStrLn $ "bestmove " ++ showMove fallbackMv
-                        usiLoop mSolver' nextState
-              case mSolver' of
-                Just solverHandles -> do
-                  mDeep0 <- querySubSolver solverHandles nodeBudget (moveHistory currentState) []
-                  mDeep <- case mDeep0 of
-                    Just (mvStr0, _) | mvStr0 /= "resign" && mvStr0 /= "win" && isRepeatingMove currentState (parseMove mvStr0) -> do
-                      let nonRepMoves = [ showMove m
-                                        | m <- f5SyzygyFilter currentState (generateMoves currentState)
-                                        , not (isRepeatingMove currentState m)
-                                        ]
-                      if null nonRepMoves
-                        then return mDeep0
-                        else querySubSolver solverHandles nodeBudget (moveHistory currentState) nonRepMoves
-                    _ -> return mDeep0
-                  case mDeep of
-                    Just ("resign", _) -> do
-                      putStrLn "bestmove resign"
-                      usiLoop mSolver' currentState
-                    Just (mvStr, mInfoLine) -> do
-                      case mInfoLine of
-                        Just infoLn -> putStrLn infoLn
-                        Nothing     -> do
-                          let mv = parseMove mvStr
-                              lyap = evalMorseLyapunovPotential (turn currentState) (applyMove mv currentState)
-                          putStrLn $ "info depth 18 score cp " ++ show (round lyap :: Int) ++ " pv " ++ mvStr
-                      putStrLn $ "bestmove " ++ mvStr
-                      usiLoop mSolver' currentState
-                    Nothing -> runFallback
-                Nothing -> runFallback
+              usiLoop nextState
+            Right (_, Just (pv@(m:_), nodes), _) | (case m of DropMove Pawn _ -> False; _ -> True) -> do
+              putStrLn $ "info score mate " ++ show (length pv) ++ " nodes " ++ show nodes ++ " pv " ++ unwords (map showMove pv)
+              putStrLn $ "bestmove " ++ showMove m
+              usiLoop nextState
+            Right (fallbackMv, _, _) -> do
+              let lyap = evalMorseLyapunovPotential (turn currentState) (applyMove fallbackMv currentState)
+              putStrLn $ "info depth 2 score cp " ++ show (round lyap :: Int) ++ " pv " ++ showMove fallbackMv
+              putStrLn $ "bestmove " ++ showMove fallbackMv
+              usiLoop nextState
 
         ("eval":_) -> do
           let bd   = board currentState
@@ -1324,7 +1206,7 @@ usiLoop mSolver currentState = do
                   ++ " zobrist=" ++ show (zobrist currentState)
                   ++ " eval=" ++ show ev
                   ++ " lyapunov=" ++ show lyap
-          usiLoop mSolver currentState
+          usiLoop currentState
 
         ("quit":_) -> exitSuccess
-        _          -> usiLoop mSolver currentState
+        _          -> usiLoop currentState
