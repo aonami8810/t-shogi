@@ -1011,10 +1011,14 @@ isMoveLegal st m =
      && not (isKingUnderAttack (turn st) (board nextSt))
 
 -- | 着手 m が過去の同一局面を再訪するかどうかを O(1) 判定
+--   序中盤（70手目以下）は1回目の再訪（nxtRep >= 1）から千日手予備軍として排除し、
+--   終盤（71手目以降）は寄せ・受けの手順前後を妨げないよう3回目出現（nxtRep >= 2）のみを排除する
 isRepeatingMove :: State -> Move -> Bool
 isRepeatingMove st m =
   let nextSt = applyMove m st
-  in fromMaybe 0 (Map.lookup (zobrist nextSt) (history st)) >= 1
+      nxtRep = fromMaybe 0 (Map.lookup (zobrist nextSt) (history st))
+      threshold = if length (moveHistory st) <= 70 then 1 else 2
+  in nxtRep >= threshold
 
 -- | モース・リアプノフ必勝軌道 (V-Path SuperHighway) 上の現在手番・局面に一致する必勝着手を直接返却
 lookupDirectConquestMove :: [String] -> State -> Maybe Move
@@ -1117,7 +1121,7 @@ ensureSubSolver :: SubSolver -> IO SubSolver
 ensureSubSolver (Just hs) = return (Just hs)
 ensureSubSolver Nothing = do
   res <- (try :: IO (Handle, Handle) -> IO (Either SomeException (Handle, Handle))) $ do
-    let cp = (proc "C:\\Suisho5-YaneuraOu-v7.5.0-windows\\YaneuraOu_NNUE-tournament-clang++-zen2.exe" [])
+    let cp = (proc "C:\\Suisho5-YaneuraOu-v7.5.0-windows\\YaneuraOu_NNUE-tournament-clang++-avx2.exe" [])
                { cwd = Just "C:\\Suisho5-YaneuraOu-v7.5.0-windows"
                , std_in = CreatePipe
                , std_out = CreatePipe
@@ -1128,10 +1132,10 @@ ensureSubSolver Nothing = do
     hSetBuffering hOut LineBuffering
     hPutStrLn hIn "usi"
     readUntilToken hOut "usiok"
-    hPutStrLn hIn "setoption name Threads value 4"
-    hPutStrLn hIn "setoption name USI_Hash value 256"
-    hPutStrLn hIn "setoption name DrawValueBlack value -30000"
-    hPutStrLn hIn "setoption name DrawValueWhite value -30000"
+    hPutStrLn hIn "setoption name Threads value 12"
+    hPutStrLn hIn "setoption name USI_Hash value 1024"
+    hPutStrLn hIn "setoption name DrawValueBlack value -25"
+    hPutStrLn hIn "setoption name DrawValueWhite value -25"
     hPutStrLn hIn "isready"
     readUntilToken hOut "readyok"
     hPutStrLn hIn "usinewgame"
@@ -1140,15 +1144,28 @@ ensureSubSolver Nothing = do
     Right hs -> return (Just hs)
     Left _   -> return Nothing
 
-querySubSolver :: (Handle, Handle) -> [String] -> [String] -> IO (Maybe (String, Maybe String))
-querySubSolver (hIn, hOut) mvs allowedRootMoves = do
+selectSubSolverNodes :: [String] -> Int
+selectSubSolverNodes goTokens =
+  case dropWhile (/= "byoyomi") goTokens of
+    ("byoyomi":valStr:_) ->
+      case reads valStr :: [(Int, String)] of
+        ((byo, _):_)
+          | byo < 1500 -> 3000000
+          | byo < 3500 -> 10000000
+          | otherwise  -> 16000000
+        _ -> 16000000
+    _ -> 16000000
+
+querySubSolver :: (Handle, Handle) -> Int -> [String] -> [String] -> IO (Maybe (String, Maybe String))
+querySubSolver (hIn, hOut) nodeBudget mvs allowedRootMoves = do
   res <- (try :: IO (String, Maybe String) -> IO (Either SomeException (String, Maybe String))) $ do
     let posCmd = if null mvs
                  then "position startpos"
                  else "position startpos moves " ++ unwords mvs
+        reSearchNodes = max 2000000 (min 4000000 (nodeBudget `div` 3))
         goCmd  = if null allowedRootMoves
-                 then "go nodes 1200000"
-                 else "go nodes 1000000 searchmoves " ++ unwords allowedRootMoves
+                 then "go nodes " ++ show nodeBudget
+                 else "go nodes " ++ show reSearchNodes ++ " searchmoves " ++ unwords allowedRootMoves
     hPutStrLn hIn posCmd
     hPutStrLn hIn goCmd
     let loop lastInfo = do
@@ -1229,7 +1246,7 @@ usiLoop mSolver currentState = do
             else putStrLn "checkmate nomate"
           usiLoop mSolver nextState
 
-        ("go":_) -> do
+        ("go":goTokens) -> do
           case lookupDirectConquestMove (moveHistory currentState) currentState of
             Just bestMv -> do
               let lyap = evalMorseLyapunovPotential (turn currentState) (applyMove bestMv currentState)
@@ -1238,7 +1255,8 @@ usiLoop mSolver currentState = do
               usiLoop mSolver currentState
             Nothing -> do
               mSolver' <- ensureSubSolver mSolver
-              let runFallback = do
+              let nodeBudget = selectSubSolverNodes goTokens
+                  runFallback = do
                     let (res, nextState) = searchBestMoveWithCache currentState
                     case res of
                       Left "draw" -> do
@@ -1258,7 +1276,7 @@ usiLoop mSolver currentState = do
                         usiLoop mSolver' nextState
               case mSolver' of
                 Just solverHandles -> do
-                  mDeep0 <- querySubSolver solverHandles (moveHistory currentState) []
+                  mDeep0 <- querySubSolver solverHandles nodeBudget (moveHistory currentState) []
                   mDeep <- case mDeep0 of
                     Just (mvStr0, _) | mvStr0 /= "resign" && mvStr0 /= "win" && isRepeatingMove currentState (parseMove mvStr0) -> do
                       let nonRepMoves = [ showMove m
@@ -1267,7 +1285,7 @@ usiLoop mSolver currentState = do
                                         ]
                       if null nonRepMoves
                         then return mDeep0
-                        else querySubSolver solverHandles (moveHistory currentState) nonRepMoves
+                        else querySubSolver solverHandles nodeBudget (moveHistory currentState) nonRepMoves
                     _ -> return mDeep0
                   case mDeep of
                     Just ("resign", _) -> do
