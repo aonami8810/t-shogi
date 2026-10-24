@@ -999,10 +999,22 @@ gotePositionBook = Map.fromList
   , (z, m) <- extractLinePositions p
   ]
 
--- | 指定された単一着手が擬似合法かつ自玉放置王手でないかを高速検証
+-- | 指定された単一着手が擬似合法・自玉放置王手なし・かつ過去局面への再訪（千日手ループ）でないかを高速検証
 isMoveLegal :: State -> Move -> Bool
 isMoveLegal st m =
-  m `elem` generateMoves st && not (isKingUnderAttack (turn st) (board (applyMove m st)))
+  let nextSt = applyMove m st
+      curRep = fromMaybe 0 (Map.lookup (zobrist st) (history st))
+      nxtRep = fromMaybe 0 (Map.lookup (zobrist nextSt) (history st))
+  in curRep <= 1
+     && nxtRep == 0
+     && m `elem` generateMoves st
+     && not (isKingUnderAttack (turn st) (board nextSt))
+
+-- | 着手 m が過去の同一局面を再訪するかどうかを O(1) 判定
+isRepeatingMove :: State -> Move -> Bool
+isRepeatingMove st m =
+  let nextSt = applyMove m st
+  in fromMaybe 0 (Map.lookup (zobrist nextSt) (history st)) >= 1
 
 -- | モース・リアプノフ必勝軌道 (V-Path SuperHighway) 上の現在手番・局面に一致する必勝着手を直接返却
 lookupDirectConquestMove :: [String] -> State -> Maybe Move
@@ -1026,7 +1038,7 @@ lookupDirectConquestMove currentMoves st =
 isSennichite :: Word64 -> Map.Map Word64 Int -> Bool
 isSennichite z hist =
   case Map.lookup z hist of
-    Just count -> count >= 4
+    Just count -> count >= 2
     Nothing    -> False
 
 -- | 1. まずモース・リアプノフ必勝軌道 (V-Path SuperHighway / Zobrist 商空間置換表) を照会
@@ -1118,6 +1130,8 @@ ensureSubSolver Nothing = do
     readUntilToken hOut "usiok"
     hPutStrLn hIn "setoption name Threads value 4"
     hPutStrLn hIn "setoption name USI_Hash value 256"
+    hPutStrLn hIn "setoption name DrawValueBlack value -30000"
+    hPutStrLn hIn "setoption name DrawValueWhite value -30000"
     hPutStrLn hIn "isready"
     readUntilToken hOut "readyok"
     hPutStrLn hIn "usinewgame"
@@ -1126,14 +1140,17 @@ ensureSubSolver Nothing = do
     Right hs -> return (Just hs)
     Left _   -> return Nothing
 
-querySubSolver :: (Handle, Handle) -> [String] -> IO (Maybe (String, Maybe String))
-querySubSolver (hIn, hOut) mvs = do
+querySubSolver :: (Handle, Handle) -> [String] -> [String] -> IO (Maybe (String, Maybe String))
+querySubSolver (hIn, hOut) mvs allowedRootMoves = do
   res <- (try :: IO (String, Maybe String) -> IO (Either SomeException (String, Maybe String))) $ do
     let posCmd = if null mvs
                  then "position startpos"
                  else "position startpos moves " ++ unwords mvs
+        goCmd  = if null allowedRootMoves
+                 then "go nodes 1200000"
+                 else "go nodes 1000000 searchmoves " ++ unwords allowedRootMoves
     hPutStrLn hIn posCmd
-    hPutStrLn hIn "go nodes 1200000"
+    hPutStrLn hIn goCmd
     let loop lastInfo = do
           lnRaw <- hGetLine hOut
           let ln = filter (/= '\r') lnRaw
@@ -1241,7 +1258,17 @@ usiLoop mSolver currentState = do
                         usiLoop mSolver' nextState
               case mSolver' of
                 Just solverHandles -> do
-                  mDeep <- querySubSolver solverHandles (moveHistory currentState)
+                  mDeep0 <- querySubSolver solverHandles (moveHistory currentState) []
+                  mDeep <- case mDeep0 of
+                    Just (mvStr0, _) | mvStr0 /= "resign" && mvStr0 /= "win" && isRepeatingMove currentState (parseMove mvStr0) -> do
+                      let nonRepMoves = [ showMove m
+                                        | m <- f5SyzygyFilter currentState (generateMoves currentState)
+                                        , not (isRepeatingMove currentState m)
+                                        ]
+                      if null nonRepMoves
+                        then return mDeep0
+                        else querySubSolver solverHandles (moveHistory currentState) nonRepMoves
+                    _ -> return mDeep0
                   case mDeep of
                     Just ("resign", _) -> do
                       putStrLn "bestmove resign"
